@@ -1,0 +1,777 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bulletproof CTAボタン・ジェネレーター</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        body {
+            font-family: 'Noto Sans JP', sans-serif;
+            background-color: #f8fafc;
+        }
+    </style>
+</head>
+<body class="text-slate-800 min-h-screen flex flex-col">
+
+    <!-- ヘッダー -->
+    <header class="bg-white border-b border-slate-200 sticky top-0 z-50 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <div class="bg-indigo-600 text-white p-2 rounded-lg">
+                    <i data-lucide="mail" class="w-6 h-6"></i>
+                </div>
+                <div>
+                    <h1 class="text-lg font-bold text-slate-950 tracking-tight">CTAジェネレーター</h1>
+                </div>
+            </div>
+            <div class="flex items-center space-x-2">
+                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-indigo-100 text-indigo-800">
+                    <span class="w-1.5 h-1.5 mr-1.5 rounded-full bg-indigo-500"></span>汎用デザイン版
+                </span>
+            </div>
+        </div>
+    </header>
+
+    <!-- メインコンテンツ -->
+    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+            
+            <!-- 左側：コントロールパネル (5 cols) -->
+            <section class="lg:col-span-5 space-y-6">
+                <!-- 設定フォームカード -->
+                <div class="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm space-y-6">
+                    <div class="flex items-center justify-between border-b border-slate-100 pb-4">
+                        <h2 class="font-bold text-slate-900 flex items-center gap-2">
+                            <i data-lucide="sliders" class="w-5 h-5 text-indigo-600"></i>
+                            ボタンのカスタム設定
+                        </h2>
+                        <button id="btnReset" class="text-xs text-slate-500 hover:text-indigo-600 flex items-center gap-1 transition-colors">
+                            <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i>初期化
+                        </button>
+                    </div>
+
+                    <!-- 1. ボタンテキスト設定 -->
+                    <div class="space-y-2">
+                        <label class="block text-sm font-bold text-slate-700 flex items-center justify-between">
+                            <span>① ボタンテキスト <span class="text-xs text-indigo-600 font-normal">※少し低めのハードルが推奨</span></span>
+                            <span class="text-xs text-slate-400 font-normal" id="textCharCount">0/20文字</span>
+                        </label>
+                        <input type="text" id="inputButtonText" value="詳細をチェックする" maxlength="30"
+                               class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm transition-all"
+                               placeholder="例：詳細をチェックする">
+                    </div>
+
+                    <!-- 2. リンク先URL -->
+                    <div class="space-y-2">
+                        <label class="block text-sm font-bold text-slate-700">② リンク先URL (遷移先)</label>
+                        <div class="relative">
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <i data-lucide="link" class="w-4 h-4 text-slate-400"></i>
+                            </div>
+                            <input type="url" id="inputUrl" value="https://example.com"
+                                   class="w-full pl-9 pr-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm transition-all"
+                                   placeholder="https://example.com">
+                        </div>
+                    </div>
+
+                    <!-- 3. カラーモード ＆ プリセット ＆ カラーピッカー -->
+                    <div class="space-y-4 border-t border-slate-100 pt-4">
+                        <div class="flex items-center justify-between">
+                            <label class="block text-sm font-bold text-slate-700">③ 配色の設定</label>
+                            <!-- モード切り替えタブ -->
+                            <div class="flex bg-slate-100 p-0.5 rounded-lg text-xs">
+                                <button id="tabSolid" class="px-3 py-1 font-bold rounded-md transition-all">単色</button>
+                                <button id="tabGradient" class="px-3 py-1 font-bold rounded-md transition-all">グラデーション</button>
+                            </div>
+                        </div>
+
+                        <!-- 動的プリセット表示エリア -->
+                        <div class="space-y-2">
+                            <span class="text-xs font-semibold text-slate-400 block" id="presetLabel">推奨プリセットカラー</span>
+                            <div class="grid grid-cols-5 gap-2" id="presetContainer">
+                                <!-- JSでカラープリセットを動的に描画 -->
+                            </div>
+                        </div>
+
+                        <!-- カスタムカラーピッカー(双方向バインド) -->
+                        <div class="grid grid-cols-2 gap-4 bg-slate-50 p-3 rounded-xl border border-slate-100">
+                            <div class="space-y-1.5">
+                                <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider" id="colorStartTitle">開始色 (メイン色)</label>
+                                <div class="flex items-center space-x-2">
+                                    <input type="color" id="pickerColorStart" class="w-8 h-8 rounded border border-slate-300 cursor-pointer p-0 bg-transparent">
+                                    <input type="text" id="textColorStart" class="w-full px-2 py-1 border border-slate-300 rounded text-xs font-mono focus:outline-none focus:ring-1 focus:ring-indigo-500 bg-white" value="#FF6B00">
+                                </div>
+                            </div>
+                            <div class="space-y-1.5 transition-all duration-300" id="gradientEndContainer">
+                                <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider">終了色</label>
+                                <div class="flex items-center space-x-2">
+                                    <input type="color" id="pickerColorEnd" class="w-8 h-8 rounded border border-slate-300 cursor-pointer p-0 bg-transparent">
+                                    <input type="text" id="textColorEnd" class="w-full px-2 py-1 border border-slate-300 rounded text-xs font-mono focus:outline-none focus:ring-1 focus:ring-indigo-500 bg-white" value="#FF8800">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 枠線の色設定（連動モードと単体カラーピッカー） -->
+                        <div class="space-y-2 bg-slate-50 p-3 rounded-xl border border-slate-100">
+                            <div class="flex items-center justify-between">
+                                <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider">枠線の色 (Border Color)</label>
+                                <label class="inline-flex items-center cursor-pointer">
+                                    <input type="checkbox" id="checkSyncBorder" class="sr-only peer" checked>
+                                    <div class="relative w-7 h-4 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-3 after:width-3 after:transition-all peer-checked:bg-indigo-600"></div>
+                                    <span class="ms-1.5 text-[10px] font-bold text-slate-600">メイン色と同期</span>
+                                </label>
+                            </div>
+                            <div class="flex items-center space-x-2 transition-all duration-300 mt-1" id="borderColorPickerContainer">
+                                <input type="color" id="pickerBorderColor" class="w-8 h-8 rounded border border-slate-300 cursor-pointer p-0 bg-transparent">
+                                <input type="text" id="textBorderColor" class="w-full px-2 py-1 border border-slate-300 rounded text-xs font-mono focus:outline-none focus:ring-1 focus:ring-indigo-500 bg-white" value="#FF6B00">
+                            </div>
+                        </div>
+
+                        <!-- グラデーションの角度（グラデーション時のみ表示） -->
+                        <div class="space-y-2 transition-all duration-300" id="gradientAngleContainer">
+                            <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider">グラデーションの方向</label>
+                            <select id="selectGradientAngle" class="w-full px-3 py-1.5 border border-slate-300 rounded-lg text-sm bg-white focus:outline-none focus:ring-1 focus:ring-indigo-500">
+                                <option value="135deg" selected>斜め右下 (135°)</option>
+                                <option value="90deg">上から下 (90°)</option>
+                                <option value="180deg">左から右 (180°)</option>
+                                <option value="45deg">斜め右上 (45°)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- 5. 追加調整 (角丸 / 影 / サイズ / 枠線の太さ) -->
+                    <div class="border-t border-slate-100 pt-4 space-y-4">
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="space-y-2">
+                                <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider">角の丸み</label>
+                                <select id="selectBorderRadius" class="w-full px-2 py-1.5 border border-slate-300 rounded-lg text-xs bg-white focus:outline-none focus:ring-1 focus:ring-indigo-500">
+                                    <option value="0px">直角 (0px)</option>
+                                    <option value="4px">少し丸い (4px)</option>
+                                    <option value="8px" selected>標準 (8px)</option>
+                                    <option value="12px">丸み強め (12px)</option>
+                                    <option value="999px">丸 (999px)</option>
+                                </select>
+                            </div>
+                            <div class="space-y-2">
+                                <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider">立体感 (影)</label>
+                                <select id="selectShadow" class="w-full px-2 py-1.5 border border-slate-300 rounded-lg text-xs bg-white focus:outline-none focus:ring-1 focus:ring-indigo-500">
+                                    <option value="none">なし (None)</option>
+                                    <option value="light">弱 (Light)</option>
+                                    <option value="medium" selected>中 (Medium)</option>
+                                    <option value="strong">強 (Strong)</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="space-y-2">
+                                <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider">ボタンの高さ</label>
+                                <select id="selectPaddingY" class="w-full px-2 py-1.5 border border-slate-300 rounded-lg text-xs bg-white focus:outline-none focus:ring-1 focus:ring-indigo-500">
+                                    <option value="10px 24px">コンパクト</option>
+                                    <option value="12px 32px" selected>標準 (推奨)</option>
+                                    <option value="16px 40px">大きめ</option>
+                                </select>
+                            </div>
+                            <div class="space-y-2">
+                                <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider">枠線の太さ (Border)</label>
+                                <select id="selectBorderWidth" class="w-full px-2 py-1.5 border border-slate-300 rounded-lg text-xs bg-white focus:outline-none focus:ring-1 focus:ring-indigo-500">
+                                    <option value="0px">なし (0px)</option>
+                                    <option value="1px" selected>細い (1px)</option>
+                                    <option value="2px">普通 (2px)</option>
+                                    <option value="3px">太い (3px)</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="space-y-2">
+                                <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider">フォントの種類 (Font Family)</label>
+                                <select id="selectFontFamily" class="w-full px-2 py-1.5 border border-slate-300 rounded-lg text-xs bg-white focus:outline-none focus:ring-1 focus:ring-indigo-500">
+                                    <option value="'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', Meiryo, sans-serif" selected>ゴシック体 (標準 / サンセリフ)</option>
+                                    <option value="'Yu Gothic', YuGothic, 'Hiragino Kaku Gothic ProN', sans-serif">游ゴシック体</option>
+                                    <option value="'Meiryo', 'MS PGothic', sans-serif">メイリオ</option>
+                                    <option value="'Hiragino Mincho ProN', 'MS Mincho', Georgia, serif">明朝体 (セリフ)</option>
+                                    <option value="'Hiragino Maru Gothic ProN', sans-serif">丸ゴシック体</option>
+                                </select>
+                            </div>
+                            <div class="space-y-2">
+                                <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider">配置位置 (Alignment)</label>
+                                <select id="selectAlignment" class="w-full px-2 py-1.5 border border-slate-300 rounded-lg text-xs bg-white focus:outline-none focus:ring-1 focus:ring-indigo-500">
+                                    <option value="left">左寄せ (Left)</option>
+                                    <option value="center" selected>中央揃え (Center)</option>
+                                    <option value="right">右寄せ (Right)</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 右側：プレビュー ＆ コード (7 cols) -->
+            <section class="lg:col-span-7 space-y-6 flex flex-col">
+                
+                <!-- プレビュー表示エリア -->
+                <div class="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden flex flex-col flex-grow">
+                    <div class="border-b border-slate-200 px-6 py-4 flex items-center justify-between bg-slate-50">
+                        <div class="flex items-center space-x-2">
+                            <div class="w-3 h-3 rounded-full bg-red-400"></div>
+                            <div class="w-3 h-3 rounded-full bg-yellow-400"></div>
+                            <div class="w-3 h-3 rounded-full bg-green-400"></div>
+                            <span class="text-xs font-bold text-slate-500 ml-2">プレビュー表示</span>
+                        </div>
+                        <!-- ダークモードトグラー -->
+                        <button id="btnDarkToggle" class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium border border-slate-300 bg-white text-slate-700 hover:bg-slate-50 transition-all shadow-sm">
+                            <i data-lucide="moon" class="w-3.5 h-3.5"></i>
+                            <span id="darkToggleLabel">ダークモードをテスト</span>
+                        </button>
+                    </div>
+
+                    <!-- リアルプレビューキャンバス -->
+                    <div id="previewCanvas" class="p-6 flex flex-col items-center justify-center transition-all bg-white duration-300 flex-grow relative min-h-[120px]">
+                        <div class="w-full px-4">
+                            <!-- 実際の生成されるHTMLを入れる領域 -->
+                            <div id="actualBtnContainer" class="py-1"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 生成されたコード ＆ コピーアクション -->
+                <div class="bg-slate-900 text-slate-300 rounded-2xl p-6 shadow-sm space-y-4">
+                    <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+                        <div class="flex items-center space-x-2">
+                            <i data-lucide="code" class="w-5 h-5 text-indigo-400"></i>
+                            <span class="font-bold text-slate-100 text-sm">HTMLコードコピー</span>
+                        </div>
+                        <span class="text-[10px] text-slate-500">配配メール/ブラストメール等にペースト対応</span>
+                    </div>
+
+                    <div class="relative">
+                        <textarea id="outputHtmlCode" readonly rows="6"
+                                  class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 font-mono text-xs text-indigo-300 focus:outline-none resize-none select-all"></textarea>
+                    </div>
+
+                    <div class="flex flex-col sm:flex-row gap-3">
+                        <button id="btnCopy" class="flex-1 bg-indigo-600 hover:bg-indigo-500 text-white py-3 px-4 rounded-xl font-bold text-sm flex items-center justify-center gap-2 transition-all shadow-md active:scale-[0.98]">
+                            <i data-lucide="copy" class="w-4 h-4"></i>
+                            <span>HTMLコードをコピーする</span>
+                        </button>
+                    </div>
+                </div>
+
+            </section>
+        </div>
+    </main>
+
+    <!-- フッター -->
+    <footer class="bg-white border-t border-slate-200 py-6 mt-12">
+        <div class="max-w-7xl mx-auto px-4 text-center text-xs text-slate-500 space-y-2">
+            <p>※本ツールのボタン構造は、テーブル・セル構造を採用した「Bulletproof Buttons」標準に基づき、マルチパート配信やモバイル最適化に対応しています。</p>
+            <p>© 2026 STANDS inc. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- コピー完了通知トースト -->
+    <div id="copyToast" class="fixed bottom-6 right-6 bg-slate-900 text-white px-5 py-3 rounded-xl shadow-2xl flex items-center space-x-2 transform translate-y-20 opacity-0 transition-all duration-300 ease-out z-50 pointer-events-none">
+        <div class="bg-emerald-500 text-white rounded-full p-1">
+            <i data-lucide="check" class="w-4 h-4"></i>
+        </div>
+        <div class="text-sm font-bold">HTMLコードをクリップボードにコピーしました！</div>
+    </div>
+
+    <!-- 非表示のコピー用ワークスペース -->
+    <textarea id="copyWorkspace" class="absolute left-[-9999px] top-[-9999px]" aria-hidden="true"></textarea>
+
+    <script>
+        // 状態（State）管理
+        const state = {
+            buttonText: "詳細をチェックする",
+            url: "https://example.com",
+            colorMode: "gradient", // 'solid' or 'gradient'
+            solidColor: "#FF6B00",
+            gradientStart: "#FF6B00",
+            gradientEnd: "#FF8800",
+            gradientAngle: "135deg",
+            borderRadius: "8px",
+            shadowType: "medium", // 'none', 'light', 'medium', 'strong'
+            paddingY: "12px 32px",
+            borderWidth: "1px",
+            borderColor: "#FF6B00",
+            syncBorderColor: true, // ボーダーカラーをメインカラー(開始色)と同期するか
+            fontFamily: "'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', Meiryo, sans-serif",
+            alignment: "center", // 'left', 'center', 'right'
+            isDarkMode: false
+        };
+
+        // カラープリセット
+        const solidPresets = [
+            { name: "オレンジ (CV率最大クラス)", color: "#FF6B00" },
+            { name: "ブルー (信頼・誠実)", color: "#0066cc" },
+            { name: "グリーン (安心・登録促進)", color: "#10B981" },
+            { name: "レッド (緊急性)", color: "#EF4444" },
+            { name: "ダークスレート (シック)", color: "#1E293B" }
+        ];
+
+        const gradientPresets = [
+            { name: "サンライズオレンジ", start: "#FF4500", end: "#FF8C00" },
+            { name: "オーシャンブルー", start: "#0052D4", end: "#4364F7" },
+            { name: "フォレストグリーン", start: "#11998e", end: "#38ef7d" },
+            { name: "パッションレッド", start: "#e52d27", end: "#b31217" },
+            { name: "ミッドナイトスレート", start: "#334155", end: "#0f172a" }
+        ];
+
+        // DOM要素の参照
+        const inputButtonText = document.getElementById('inputButtonText');
+        const inputUrl = document.getElementById('inputUrl');
+        const selectBorderRadius = document.getElementById('selectBorderRadius');
+        const selectShadow = document.getElementById('selectShadow');
+        const selectPaddingY = document.getElementById('selectPaddingY');
+        const selectBorderWidth = document.getElementById('selectBorderWidth');
+        const selectGradientAngle = document.getElementById('selectGradientAngle');
+        const selectFontFamily = document.getElementById('selectFontFamily');
+        const selectAlignment = document.getElementById('selectAlignment');
+        
+        const tabSolid = document.getElementById('tabSolid');
+        const tabGradient = document.getElementById('tabGradient');
+        const presetContainer = document.getElementById('presetContainer');
+        const presetLabel = document.getElementById('presetLabel');
+        
+        const pickerColorStart = document.getElementById('pickerColorStart');
+        const textColorStart = document.getElementById('textColorStart');
+        const pickerColorEnd = document.getElementById('pickerColorEnd');
+        const textColorEnd = document.getElementById('textColorEnd');
+        const colorStartTitle = document.getElementById('colorStartTitle');
+        const gradientEndContainer = document.getElementById('gradientEndContainer');
+        const gradientAngleContainer = document.getElementById('gradientAngleContainer');
+
+        const checkSyncBorder = document.getElementById('checkSyncBorder');
+        const borderColorPickerContainer = document.getElementById('borderColorPickerContainer');
+        const pickerBorderColor = document.getElementById('pickerBorderColor');
+        const textBorderColor = document.getElementById('textBorderColor');
+
+        const actualBtnContainer = document.getElementById('actualBtnContainer');
+        const outputHtmlCode = document.getElementById('outputHtmlCode');
+        const btnCopy = document.getElementById('btnCopy');
+        const btnReset = document.getElementById('btnReset');
+        const btnDarkToggle = document.getElementById('btnDarkToggle');
+        const darkToggleLabel = document.getElementById('darkToggleLabel');
+        const previewCanvas = document.getElementById('previewCanvas');
+        const copyToast = document.getElementById('copyToast');
+        const copyWorkspace = document.getElementById('copyWorkspace');
+
+        const textCharCount = document.getElementById('textCharCount');
+
+        // タブ切り替えとプリセットの描画
+        function renderPresets() {
+            presetContainer.innerHTML = '';
+            const presets = state.colorMode === 'solid' ? solidPresets : gradientPresets;
+            presetLabel.textContent = state.colorMode === 'solid' ? "単色：推奨カラープリセット" : "グラデ：推奨カラープリセット";
+
+            presets.forEach((preset, index) => {
+                const btn = document.createElement('button');
+                btn.className = "color-swatch h-10 rounded-lg border-2 border-white ring-2 ring-transparent transition-all relative flex items-center justify-center text-white cursor-pointer";
+                btn.title = preset.name;
+
+                if (state.colorMode === 'solid') {
+                    btn.style.backgroundColor = preset.color;
+                    // 現在選択されている色と一致しているかチェック
+                    if (state.solidColor === preset.color) {
+                        btn.className += " ring-indigo-600 ring-offset-1";
+                        btn.innerHTML = '<i data-lucide="check" class="w-4 h-4 text-white"></i>';
+                    }
+                } else {
+                    btn.style.background = `linear-gradient(135deg, ${preset.start} 0%, ${preset.end} 100%)`;
+                    // 現在選択されているグラデーションと一致しているかチェック
+                    if (state.gradientStart === preset.start && state.gradientEnd === preset.end) {
+                        btn.className += " ring-indigo-600 ring-offset-1";
+                        btn.innerHTML = '<i data-lucide="check" class="w-4 h-4 text-white"></i>';
+                    }
+                }
+
+                btn.addEventListener('click', () => {
+                    if (state.colorMode === 'solid') {
+                        state.solidColor = preset.color;
+                        pickerColorStart.value = preset.color;
+                        textColorStart.value = preset.color;
+                        if (state.syncBorderColor) {
+                            state.borderColor = preset.color;
+                            pickerBorderColor.value = preset.color;
+                            textBorderColor.value = preset.color;
+                        }
+                    } else {
+                        state.gradientStart = preset.start;
+                        state.gradientEnd = preset.end;
+                        pickerColorStart.value = preset.start;
+                        textColorStart.value = preset.start;
+                        pickerColorEnd.value = preset.end;
+                        textColorEnd.value = preset.end;
+                        if (state.syncBorderColor) {
+                            state.borderColor = preset.start;
+                            pickerBorderColor.value = preset.start;
+                            textBorderColor.value = preset.start;
+                        }
+                    }
+                    renderPresets();
+                    generateCta();
+                });
+
+                presetContainer.appendChild(btn);
+            });
+            lucide.createIcons();
+        }
+
+        // カラーUI表示制御のアップデート
+        function updateColorModeUi() {
+            if (state.colorMode === 'solid') {
+                tabSolid.className = "px-3 py-1 font-bold rounded-md transition-all bg-white text-slate-800 shadow-sm";
+                tabGradient.className = "px-3 py-1 font-bold rounded-md transition-all text-slate-500 hover:text-slate-800";
+                
+                colorStartTitle.textContent = "単体カラー選択";
+                gradientEndContainer.classList.add('opacity-40', 'pointer-events-none');
+                gradientAngleContainer.classList.add('hidden');
+            } else {
+                tabGradient.className = "px-3 py-1 font-bold rounded-md transition-all bg-white text-slate-800 shadow-sm";
+                tabSolid.className = "px-3 py-1 font-bold rounded-md transition-all text-slate-500 hover:text-slate-800";
+                
+                colorStartTitle.textContent = "開始色";
+                gradientEndContainer.classList.remove('opacity-40', 'pointer-events-none');
+                gradientAngleContainer.classList.remove('hidden');
+            }
+            renderPresets();
+            generateCta();
+        }
+
+        // 文字数カウンター更新
+        function updateCharCounters() {
+            textCharCount.textContent = `${inputButtonText.value.length}/20文字`;
+            if (inputButtonText.value.length > 20) {
+                textCharCount.classList.add('text-amber-600');
+            } else {
+                textCharCount.classList.remove('text-amber-600');
+            }
+        }
+
+        // HTMLインラインコードの生成（Outlook等のテーブル崩れ耐性を持つBulletproof仕様）
+        function generateCta() {
+            const btnText = inputButtonText.value.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+            const targetUrl = inputUrl.value || "#";
+            const borderRadius = selectBorderRadius.value;
+            const paddingValue = selectPaddingY.value; // 例: "12px 32px"
+            const pValues = paddingValue.split(' ');
+            const padTopBottom = pValues[0] || '12px';
+            const padLeftRight = pValues[1] || '32px';
+            const fontFamily = selectFontFamily.value;
+            
+            // 色情報
+            const startColor = state.colorMode === 'solid' ? state.solidColor : state.gradientStart;
+            const endColor = state.gradientEnd;
+            const fallbackColor = startColor; // Outlookなどのためのフォールバック単一色
+            
+            // ボーダー情報
+            const borderWidth = selectBorderWidth.value;
+            const borderColor = state.borderColor;
+            let borderStyle = 'none';
+            if (borderWidth !== '0px') {
+                borderStyle = `solid ${borderWidth} ${borderColor}`;
+            }
+
+            // シャドウ用のCSS
+            let shadowStyle = '';
+            if (state.shadowType === 'light') {
+                shadowStyle = 'box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);';
+            } else if (state.shadowType === 'medium') {
+                shadowStyle = 'box-shadow: 0 4px 6px rgba(0, 0, 0, 0.12), 0 1px 3px rgba(0, 0, 0, 0.08);';
+            } else if (state.shadowType === 'strong') {
+                shadowStyle = 'box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.15), 0 4px 6px -2px rgba(0, 0, 0, 0.1);';
+            }
+
+            // グラデーション/ソリッドのインラインCSS背景
+            let backgroundStyle = '';
+            if (state.colorMode === 'solid') {
+                backgroundStyle = `background-color: ${startColor};`;
+            } else {
+                backgroundStyle = `background-color: ${startColor}; background: ${startColor}; background: linear-gradient(${state.gradientAngle}, ${startColor} 0%, ${endColor} 100%);`;
+            }
+
+            // 配置位置に応じた margin
+            let marginStyle = 'margin: 20px auto;';
+            if (state.alignment === 'left') {
+                marginStyle = 'margin: 20px auto 20px 0;';
+            } else if (state.alignment === 'right') {
+                marginStyle = 'margin: 20px 0 20px auto;';
+            }
+
+            // 崩れないHTMLメール対応用 Bulletproof テーブル構造
+            const generatedHtml = `<!-- BULLETPROOF CTA BUTTON SECTION START -->
+<div class="cta-button-container" style="text-align: ${state.alignment}; margin: 20px 0; font-family: ${fontFamily};">
+  <table border="0" cellpadding="0" cellspacing="0" align="${state.alignment}" style="border-collapse: separate; mso-table-lspace: 0pt; mso-table-rspace: 0pt; width: auto; ${marginStyle} ${shadowStyle}">
+    <tr>
+      <td align="center" valign="middle" bgcolor="${fallbackColor}" style="font-family: ${fontFamily}; font-size: 16px; vertical-align: middle; ${backgroundStyle} border-radius: ${borderRadius}; border: ${borderStyle}; text-align: center; ${shadowStyle}">
+        <a href="${targetUrl}" target="_blank" style="display: inline-block; color: #ffffff; ${backgroundStyle} border: ${borderStyle}; border-radius: ${borderRadius}; box-sizing: border-box; cursor: pointer; text-decoration: none; font-size: 16px; font-weight: bold; margin: 0; padding: ${padTopBottom} ${padLeftRight}; text-transform: none; transition: background-color 0.2s ease, border-color 0.2s ease; ${shadowStyle}">${btnText}</a>
+      </td>
+    </tr>
+  </table>
+</div>
+<!-- BULLETPROOF CTA BUTTON SECTION END -->`;
+
+            // プレビューコンテナへの描画
+            actualBtnContainer.innerHTML = generatedHtml;
+
+            // テキストエリアへのコード反映
+            outputHtmlCode.value = generatedHtml;
+
+            updateCharCounters();
+        }
+
+        // コピーアクション
+        function copyToClipboard() {
+            copyWorkspace.value = outputHtmlCode.value;
+            copyWorkspace.select();
+            
+            try {
+                const successful = document.execCommand('copy');
+                if (successful) {
+                    showToast();
+                } else {
+                    console.error('コピーに失敗しました');
+                }
+            } catch (err) {
+                console.error('ブラウザがコピー機能をサポートしていません: ', err);
+            }
+        }
+
+        // トースト通知の表示
+        function showToast() {
+            copyToast.classList.remove('translate-y-20', 'opacity-0');
+            copyToast.classList.add('translate-y-0', 'opacity-100');
+
+            setTimeout(() => {
+                copyToast.classList.remove('translate-y-0', 'opacity-100');
+                copyToast.classList.add('translate-y-20', 'opacity-0');
+            }, 2500);
+        }
+
+        // 状態初期化
+        function resetToDefault() {
+            state.buttonText = "詳細をチェックする";
+            state.url = "https://example.com";
+            state.colorMode = "gradient";
+            state.solidColor = "#FF6B00";
+            state.gradientStart = "#FF6B00";
+            state.gradientEnd = "#FF8800";
+            state.gradientAngle = "135deg";
+            state.borderRadius = "8px";
+            state.shadowType = "medium";
+            state.paddingY = "12px 32px";
+            state.borderWidth = "1px";
+            state.borderColor = "#FF6B00";
+            state.syncBorderColor = true;
+            state.fontFamily = "'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', Meiryo, sans-serif";
+            state.alignment = "center";
+            
+            inputButtonText.value = state.buttonText;
+            inputUrl.value = state.url;
+            selectBorderRadius.value = state.borderRadius;
+            selectShadow.value = state.shadowType;
+            selectPaddingY.value = state.paddingY;
+            selectBorderWidth.value = state.borderWidth;
+            selectGradientAngle.value = state.gradientAngle;
+            selectFontFamily.value = state.fontFamily;
+            selectAlignment.value = state.alignment;
+
+            pickerColorStart.value = state.gradientStart;
+            textColorStart.value = state.gradientStart;
+            pickerColorEnd.value = state.gradientEnd;
+            textColorEnd.value = state.gradientEnd;
+
+            checkSyncBorder.checked = true;
+            pickerBorderColor.value = state.borderColor;
+            textBorderColor.value = state.borderColor;
+
+            if (state.isDarkMode) {
+                toggleDarkMode();
+            }
+
+            updateBorderSyncUi();
+            updateColorModeUi();
+        }
+
+        // 枠線カラー同期トグルの制御
+        function updateBorderSyncUi() {
+            state.syncBorderColor = checkSyncBorder.checked;
+            if (state.syncBorderColor) {
+                borderColorPickerContainer.style.display = 'none';
+                const mainColor = state.colorMode === 'solid' ? state.solidColor : state.gradientStart;
+                state.borderColor = mainColor;
+                pickerBorderColor.value = mainColor;
+                textBorderColor.value = mainColor;
+            } else {
+                borderColorPickerContainer.style.display = 'flex';
+            }
+            generateCta();
+        }
+
+        // ダークモードトグル
+        function toggleDarkMode() {
+            state.isDarkMode = !state.isDarkMode;
+            if (state.isDarkMode) {
+                previewCanvas.classList.remove('bg-white');
+                previewCanvas.classList.add('bg-slate-800');
+                btnDarkToggle.classList.add('bg-indigo-600', 'text-white', 'border-indigo-600');
+                darkToggleLabel.textContent = "通常モードに戻す";
+            } else {
+                previewCanvas.classList.remove('bg-slate-800');
+                previewCanvas.classList.add('bg-white');
+                btnDarkToggle.classList.remove('bg-indigo-600', 'text-white', 'border-indigo-600');
+                darkToggleLabel.textContent = "ダークモードをテスト";
+            }
+        }
+
+        // 各種イベントリスナーの設定
+        inputButtonText.addEventListener('input', (e) => {
+            state.buttonText = e.target.value;
+            generateCta();
+        });
+        inputUrl.addEventListener('input', (e) => {
+            state.url = e.target.value;
+            generateCta();
+        });
+        selectBorderRadius.addEventListener('change', (e) => {
+            state.borderRadius = e.target.value;
+            generateCta();
+        });
+        selectShadow.addEventListener('change', (e) => {
+            state.shadowType = e.target.value;
+            generateCta();
+        });
+        selectPaddingY.addEventListener('change', (e) => {
+            state.paddingY = e.target.value;
+            generateCta();
+        });
+        selectBorderWidth.addEventListener('change', (e) => {
+            state.borderWidth = e.target.value;
+            generateCta();
+        });
+        selectGradientAngle.addEventListener('change', (e) => {
+            state.gradientAngle = e.target.value;
+            generateCta();
+        });
+        selectFontFamily.addEventListener('change', (e) => {
+            state.fontFamily = e.target.value;
+            generateCta();
+        });
+        selectAlignment.addEventListener('change', (e) => {
+            state.alignment = e.target.value;
+            generateCta();
+        });
+
+        // タブ制御
+        tabSolid.addEventListener('click', () => {
+            state.colorMode = 'solid';
+            if (state.syncBorderColor) {
+                state.borderColor = state.solidColor;
+                pickerBorderColor.value = state.solidColor;
+                textBorderColor.value = state.solidColor;
+            }
+            updateColorModeUi();
+        });
+        tabGradient.addEventListener('click', () => {
+            state.colorMode = 'gradient';
+            if (state.syncBorderColor) {
+                state.borderColor = state.gradientStart;
+                pickerBorderColor.value = state.gradientStart;
+                textBorderColor.value = state.gradientStart;
+            }
+            updateColorModeUi();
+        });
+
+        // カラーピッカー・テキストボックスの双方向バインド
+        pickerColorStart.addEventListener('input', (e) => {
+            const val = e.target.value;
+            textColorStart.value = val;
+            if (state.colorMode === 'solid') {
+                state.solidColor = val;
+            } else {
+                state.gradientStart = val;
+            }
+            if (state.syncBorderColor) {
+                state.borderColor = val;
+                pickerBorderColor.value = val;
+                textBorderColor.value = val;
+            }
+            renderPresets();
+            generateCta();
+        });
+        textColorStart.addEventListener('input', (e) => {
+            const val = e.target.value;
+            if (/^#[0-9A-F]{6}$/i.test(val)) {
+                pickerColorStart.value = val;
+                if (state.colorMode === 'solid') {
+                    state.solidColor = val;
+                } else {
+                    state.gradientStart = val;
+                }
+                if (state.syncBorderColor) {
+                    state.borderColor = val;
+                    pickerBorderColor.value = val;
+                    textBorderColor.value = val;
+                }
+                renderPresets();
+                generateCta();
+            }
+        });
+
+        // グラデーション終了色
+        pickerColorEnd.addEventListener('input', (e) => {
+            const val = e.target.value;
+            textColorEnd.value = val;
+            state.gradientEnd = val;
+            renderPresets();
+            generateCta();
+        });
+        textColorEnd.addEventListener('input', (e) => {
+            const val = e.target.value;
+            if (/^#[0-9A-F]{6}$/i.test(val)) {
+                pickerColorEnd.value = val;
+                state.gradientEnd = val;
+                renderPresets();
+                generateCta();
+            }
+        });
+
+        // 枠線の色設定リスナー
+        checkSyncBorder.addEventListener('change', updateBorderSyncUi);
+        
+        pickerBorderColor.addEventListener('input', (e) => {
+            const val = e.target.value;
+            textBorderColor.value = val;
+            state.borderColor = val;
+            generateCta();
+        });
+        textBorderColor.addEventListener('input', (e) => {
+            const val = e.target.value;
+            if (/^#[0-9A-F]{6}$/i.test(val)) {
+                pickerBorderColor.value = val;
+                state.borderColor = val;
+                generateCta();
+            }
+        });
+
+        btnCopy.addEventListener('click', copyToClipboard);
+        btnReset.addEventListener('click', resetToDefault);
+        btnDarkToggle.addEventListener('click', toggleDarkMode);
+
+        // 初期ロード実行
+        window.addEventListener('DOMContentLoaded', () => {
+            lucide.createIcons();
+            updateBorderSyncUi();
+            updateColorModeUi();
+        });
+    </script>
+</body>
+</html>
