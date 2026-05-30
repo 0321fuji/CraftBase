@@ -288,10 +288,46 @@
     <textarea id="copyWorkspace" class="absolute left-[-9999px] top-[-9999px]" aria-hidden="true"></textarea>
 
     <script>
+        function generateRandomId(length = 5) {
+            const chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
+            let id = '';
+            for (let i = 0; i < length; i += 1) {
+                id += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+            return id;
+        }
+
+        function sanitizeToken(value, fallback) {
+            const normalized = (value || '')
+                .toLowerCase()
+                .normalize('NFKD')
+                .replace(/[\u0300-\u036f]/g, '')
+                .replace(/[^a-z0-9]+/g, '-')
+                .replace(/^-+|-+$/g, '');
+
+            return normalized || fallback;
+        }
+
+        function escapeHtml(value) {
+            return String(value)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#39;');
+        }
+
+        function escapeAttribute(value) {
+            return String(value)
+                .replace(/&/g, '&amp;')
+                .replace(/"/g, '&quot;');
+        }
+
         // 状態（State）管理
         const state = {
             buttonText: "詳細をチェックする",
             url: "https://example.com",
+            blockId: generateRandomId(),
             colorMode: "gradient", // 'solid' or 'gradient'
             solidColor: "#FF6B00",
             gradientStart: "#FF6B00",
@@ -365,6 +401,22 @@
         const copyWorkspace = document.getElementById('copyWorkspace');
 
         const textCharCount = document.getElementById('textCharCount');
+
+        function getProjectTokenFromUrl(urlValue) {
+            try {
+                const parsed = new URL(urlValue);
+                const hostname = sanitizeToken(parsed.hostname.replace(/^www\./, ''), 'project');
+                const firstSegment = hostname.split('-')[0];
+                return firstSegment || 'project';
+            } catch (error) {
+                return 'project';
+            }
+        }
+
+        function getClassPrefix(blockId) {
+            const projectToken = getProjectTokenFromUrl(inputUrl.value || state.url);
+            return `onb-custom-${projectToken}-button-${blockId}-cta`;
+        }
 
         // タブ切り替えとプリセットの描画
         function renderPresets() {
@@ -458,14 +510,18 @@
 
         // HTMLインラインコードの生成（Outlook等のテーブル崩れ耐性を持つBulletproof仕様）
         function generateCta() {
-            const btnText = inputButtonText.value.replace(/</g, "&lt;").replace(/>/g, "&gt;");
-            const targetUrl = inputUrl.value || "#";
+            const btnText = escapeHtml(inputButtonText.value);
+            const targetUrl = escapeAttribute(inputUrl.value || "#");
             const borderRadius = selectBorderRadius.value;
             const paddingValue = selectPaddingY.value; // 例: "12px 32px"
             const pValues = paddingValue.split(' ');
             const padTopBottom = pValues[0] || '12px';
             const padLeftRight = pValues[1] || '32px';
             const fontFamily = selectFontFamily.value;
+            // 生成のたびに新しい識別子を採番してクラス衝突を防ぐ
+            const blockId = generateRandomId();
+            state.blockId = blockId;
+            const classPrefix = getClassPrefix(blockId);
             
             // 色情報
             const startColor = state.colorMode === 'solid' ? state.solidColor : state.gradientStart;
@@ -508,11 +564,11 @@
 
             // 崩れないHTMLメール対応用 Bulletproof テーブル構造
             const generatedHtml = `<!-- BULLETPROOF CTA BUTTON SECTION START -->
-<div class="cta-button-container" style="text-align: ${state.alignment}; margin: 20px 0; font-family: ${fontFamily};">
-  <table border="0" cellpadding="0" cellspacing="0" align="${state.alignment}" style="border-collapse: separate; mso-table-lspace: 0pt; mso-table-rspace: 0pt; width: auto; ${marginStyle} ${shadowStyle}">
+<div class="${classPrefix}" style="text-align: ${state.alignment}; margin: 20px 0; font-family: ${fontFamily};">
+  <table class="${classPrefix}__table" border="0" cellpadding="0" cellspacing="0" align="${state.alignment}" style="border-collapse: separate; mso-table-lspace: 0pt; mso-table-rspace: 0pt; width: auto; ${marginStyle} ${shadowStyle}">
     <tr>
-      <td align="center" valign="middle" bgcolor="${fallbackColor}" style="font-family: ${fontFamily}; font-size: 16px; vertical-align: middle; ${backgroundStyle} border-radius: ${borderRadius}; border: ${borderStyle}; text-align: center; ${shadowStyle}">
-        <a href="${targetUrl}" target="_blank" style="display: inline-block; color: #ffffff; ${backgroundStyle} border: ${borderStyle}; border-radius: ${borderRadius}; box-sizing: border-box; cursor: pointer; text-decoration: none; font-size: 16px; font-weight: bold; margin: 0; padding: ${padTopBottom} ${padLeftRight}; text-transform: none; transition: background-color 0.2s ease, border-color 0.2s ease; ${shadowStyle}">${btnText}</a>
+      <td class="${classPrefix}__cell" align="center" valign="middle" bgcolor="${fallbackColor}" style="font-family: ${fontFamily}; font-size: 16px; vertical-align: middle; ${backgroundStyle} border-radius: ${borderRadius}; border: ${borderStyle}; text-align: center; ${shadowStyle}">
+        <a class="${classPrefix}__link" href="${targetUrl}" target="_blank" style="display: inline-block; color: #ffffff; ${backgroundStyle} border: ${borderStyle}; border-radius: ${borderRadius}; box-sizing: border-box; cursor: pointer; text-decoration: none; font-size: 16px; font-weight: bold; margin: 0; padding: ${padTopBottom} ${padLeftRight}; text-transform: none; transition: background-color 0.2s ease, border-color 0.2s ease; ${shadowStyle}">${btnText}</a>
       </td>
     </tr>
   </table>
@@ -560,6 +616,7 @@
         function resetToDefault() {
             state.buttonText = "詳細をチェックする";
             state.url = "https://example.com";
+            state.blockId = generateRandomId();
             state.colorMode = "gradient";
             state.solidColor = "#FF6B00";
             state.gradientStart = "#FF6B00";
