@@ -25,11 +25,8 @@
     <header class="bg-white border-b border-slate-200 sticky top-0 z-50 shadow-sm">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
             <div class="flex items-center space-x-3">
-                <div class="bg-indigo-600 text-white p-2 rounded-lg">
-                    <i data-lucide="mail" class="w-6 h-6"></i>
-                </div>
                 <div>
-                    <h1 class="text-lg font-bold text-slate-950 tracking-tight">CTAジェネレーター</h1>
+                    <h1 class="text-lg font-bold text-slate-950 tracking-tight">ジェネレーター</h1>
                 </div>
             </div>
             <div class="flex items-center space-x-2">
@@ -58,23 +55,13 @@
                         </button>
                     </div>
 
-                    <!-- 1. ボタンテキスト設定 -->
-                    <div class="space-y-2">
-                        <label class="block text-sm font-bold text-slate-700 flex items-center justify-between">
-                            <span>① ボタンテキスト</span>
-                            <span class="text-xs text-slate-400 font-normal" id="textCharCount">0/20文字</span>
-                        </label>
-                        <input type="text" id="inputButtonText" value="詳細をチェックする" maxlength="30"
-                               class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm transition-all"
-                               placeholder="例：詳細をチェックする">
-                    </div>
-
-                    <!-- 2. アクション設定 -->
+                    <!-- 1. アクション設定 -->
                     <div class="space-y-3">
-                        <label class="block text-sm font-bold text-slate-700">② ボタン押下時の動作</label>
+                        <label class="block text-sm font-bold text-slate-700">① ボタン押下時の動作</label>
                         <select id="selectActionType" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
                             <option value="link" selected>リンク先URLへ遷移</option>
                             <option value="popup">ポップアップ起動</option>
+                            <option value="chat">チャット起動</option>
                         </select>
 
                         <div id="urlFieldGroup" class="space-y-2">
@@ -96,6 +83,25 @@
                                    placeholder="例: 4c5a4c5ed3bf50335dcba25e38006116">
                             <p class="text-[11px] text-slate-500">ボタン押下時に `STANDSMotion.changeGoal('ポップアップID')` を実行します（32桁の英数字ID）。</p>
                         </div>
+
+                        <div id="chatIdFieldGroup" class="space-y-2 hidden">
+                            <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider">チャットID</label>
+                            <input type="text" id="inputChatId" value=""
+                                   class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm transition-all"
+                                   placeholder="例: 805c6fc516cc5a5c044d73661c56af6f">
+                            <p class="text-[11px] text-slate-500">ボタン押下時に `STANDSMotion.mountAiChat('チャットID')` を実行します（32桁の英数字ID）。</p>
+                        </div>
+                    </div>
+
+                    <!-- 2. ボタンテキスト設定 -->
+                    <div class="space-y-2">
+                        <label class="block text-sm font-bold text-slate-700 flex items-center justify-between">
+                            <span>② ボタンテキスト</span>
+                            <span class="text-xs text-slate-400 font-normal" id="textCharCount">0/20文字</span>
+                        </label>
+                        <input type="text" id="inputButtonText" value="詳細をチェックする" maxlength="30"
+                               class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm transition-all"
+                               placeholder="例：詳細をチェックする">
                     </div>
 
                     <!-- 3. カラーモード ＆ プリセット ＆ カラーピッカー -->
@@ -135,14 +141,14 @@
                             </div>
                         </div>
 
-                        <!-- 枠線の色設定（連動モードと単体カラーピッカー） -->
+                        <!-- 枠線の色設定 -->
                         <div class="space-y-2 bg-slate-50 p-3 rounded-xl border border-slate-100">
                             <div class="flex items-center justify-between">
                                 <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider">枠線の色 (Border Color)</label>
                                 <label class="inline-flex items-center cursor-pointer">
-                                    <input type="checkbox" id="checkSyncBorder" class="sr-only peer" checked>
+                                    <input type="checkbox" id="checkNoBorder" class="sr-only peer">
                                     <div class="relative w-7 h-4 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-3 after:width-3 after:transition-all peer-checked:bg-indigo-600"></div>
-                                    <span class="ms-1.5 text-[10px] font-bold text-slate-600">メイン色と同期</span>
+                                    <span class="ms-1.5 text-[10px] font-bold text-slate-600">枠線なし</span>
                                 </label>
                             </div>
                             <div class="flex items-center space-x-2 transition-all duration-300 mt-1" id="borderColorPickerContainer">
@@ -304,7 +310,7 @@
     <textarea id="copyWorkspace" class="absolute left-[-9999px] top-[-9999px]" aria-hidden="true"></textarea>
 
     <script>
-        function generateRandomId(length = 5) {
+        function generateRandomId(length = 7) {
             const chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
             let id = '';
             for (let i = 0; i < length; i += 1) {
@@ -349,8 +355,9 @@
         const state = {
             buttonText: "詳細をチェックする",
             url: "https://example.com",
-            actionType: "link", // 'link' or 'popup'
+            actionType: "link", // 'link' or 'popup' or 'chat'
             popupId: "",
+            chatId: "",
             blockId: generateRandomId(),
             colorMode: "gradient", // 'solid' or 'gradient'
             solidColor: "#FF6B00",
@@ -361,8 +368,9 @@
             shadowType: "medium", // 'none', 'light', 'medium', 'strong'
             paddingY: "12px 32px",
             borderWidth: "1px",
+            lastBorderWidth: "1px",
             borderColor: "#FF6B00",
-            syncBorderColor: true, // ボーダーカラーをメインカラー(開始色)と同期するか
+            noBorder: false,
             fontFamily: "'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', Meiryo, sans-serif",
             alignment: "center", // 'left', 'center', 'right'
             isDarkMode: false
@@ -390,8 +398,10 @@
         const selectActionType = document.getElementById('selectActionType');
         const inputUrl = document.getElementById('inputUrl');
         const inputPopupId = document.getElementById('inputPopupId');
+        const inputChatId = document.getElementById('inputChatId');
         const urlFieldGroup = document.getElementById('urlFieldGroup');
         const popupIdFieldGroup = document.getElementById('popupIdFieldGroup');
+        const chatIdFieldGroup = document.getElementById('chatIdFieldGroup');
         const selectBorderRadius = document.getElementById('selectBorderRadius');
         const selectShadow = document.getElementById('selectShadow');
         const selectPaddingY = document.getElementById('selectPaddingY');
@@ -413,7 +423,7 @@
         const gradientEndContainer = document.getElementById('gradientEndContainer');
         const gradientAngleContainer = document.getElementById('gradientAngleContainer');
 
-        const checkSyncBorder = document.getElementById('checkSyncBorder');
+        const checkNoBorder = document.getElementById('checkNoBorder');
         const borderColorPickerContainer = document.getElementById('borderColorPickerContainer');
         const pickerBorderColor = document.getElementById('pickerBorderColor');
         const textBorderColor = document.getElementById('textBorderColor');
@@ -451,9 +461,15 @@
             if (state.actionType === 'popup') {
                 urlFieldGroup.classList.add('hidden');
                 popupIdFieldGroup.classList.remove('hidden');
+                chatIdFieldGroup.classList.add('hidden');
+            } else if (state.actionType === 'chat') {
+                urlFieldGroup.classList.add('hidden');
+                popupIdFieldGroup.classList.add('hidden');
+                chatIdFieldGroup.classList.remove('hidden');
             } else {
                 urlFieldGroup.classList.remove('hidden');
                 popupIdFieldGroup.classList.add('hidden');
+                chatIdFieldGroup.classList.add('hidden');
             }
         }
 
@@ -489,11 +505,6 @@
                         state.solidColor = preset.color;
                         pickerColorStart.value = preset.color;
                         textColorStart.value = preset.color;
-                        if (state.syncBorderColor) {
-                            state.borderColor = preset.color;
-                            pickerBorderColor.value = preset.color;
-                            textBorderColor.value = preset.color;
-                        }
                     } else {
                         state.gradientStart = preset.start;
                         state.gradientEnd = preset.end;
@@ -501,11 +512,6 @@
                         textColorStart.value = preset.start;
                         pickerColorEnd.value = preset.end;
                         textColorEnd.value = preset.end;
-                        if (state.syncBorderColor) {
-                            state.borderColor = preset.start;
-                            pickerBorderColor.value = preset.start;
-                            textBorderColor.value = preset.start;
-                        }
                     }
                     renderPresets();
                     generateCta();
@@ -552,6 +558,7 @@
             const btnText = escapeHtml(inputButtonText.value);
             const targetUrl = escapeAttribute(inputUrl.value || "#");
             const popupId = escapeSingleQuotedJsString(inputPopupId.value.trim());
+            const chatId = escapeSingleQuotedJsString(inputChatId.value.trim());
             const borderRadius = selectBorderRadius.value;
             const paddingValue = selectPaddingY.value; // 例: "12px 32px"
             const pValues = paddingValue.split(' ');
@@ -594,9 +601,13 @@
             }
 
             // Onboarding向けのシンプルな非テーブル構造
-            const actionElement = state.actionType === 'popup'
-                ? `<button type="button" class="${classPrefix}__action" onclick="STANDSMotion.changeGoal('${popupId}');document.querySelectorAll('.stands-hint-content').forEach(hint=>{if(window.getComputedStyle(hint).display!=='none'){const closeBtn=hint.querySelector('.stands-hint-close');if(closeBtn)closeBtn.click();}});" style="display: inline-block; color: #ffffff; ${backgroundStyle} border: ${borderStyle}; border-radius: ${borderRadius}; box-sizing: border-box; cursor: pointer; text-decoration: none; font-size: 16px; font-weight: bold; margin: 0; padding: ${padTopBottom} ${padLeftRight}; text-transform: none; transition: background-color 0.2s ease, border-color 0.2s ease; ${shadowStyle}">${btnText}</button>`
-                : `<a class="${classPrefix}__action" href="${targetUrl}" target="_blank" style="display: inline-block; color: #ffffff; ${backgroundStyle} border: ${borderStyle}; border-radius: ${borderRadius}; box-sizing: border-box; cursor: pointer; text-decoration: none; font-size: 16px; font-weight: bold; margin: 0; padding: ${padTopBottom} ${padLeftRight}; text-transform: none; transition: background-color 0.2s ease, border-color 0.2s ease; ${shadowStyle}">${btnText}</a>`;
+            const closeVisibleHintsScript = "document.querySelectorAll('.stands-hint-content').forEach(hint=>{if(window.getComputedStyle(hint).display!=='none'){const closeBtn=hint.querySelector('.stands-hint-close');if(closeBtn)closeBtn.click();}});";
+            let actionElement = `<a class="${classPrefix}__action" href="${targetUrl}" target="_blank" style="display: inline-block; color: #ffffff; ${backgroundStyle} border: ${borderStyle}; border-radius: ${borderRadius}; box-sizing: border-box; cursor: pointer; text-decoration: none; font-size: 16px; font-weight: bold; margin: 0; padding: ${padTopBottom} ${padLeftRight}; text-transform: none; transition: background-color 0.2s ease, border-color 0.2s ease; ${shadowStyle}">${btnText}</a>`;
+            if (state.actionType === 'popup') {
+                actionElement = `<button type="button" class="${classPrefix}__action" onclick="STANDSMotion.changeGoal('${popupId}');${closeVisibleHintsScript}" style="display: inline-block; color: #ffffff; ${backgroundStyle} border: ${borderStyle}; border-radius: ${borderRadius}; box-sizing: border-box; cursor: pointer; text-decoration: none; font-size: 16px; font-weight: bold; margin: 0; padding: ${padTopBottom} ${padLeftRight}; text-transform: none; transition: background-color 0.2s ease, border-color 0.2s ease; ${shadowStyle}">${btnText}</button>`;
+            } else if (state.actionType === 'chat') {
+                actionElement = `<button type="button" class="${classPrefix}__action" onclick="STANDSMotion.mountAiChat('${chatId}');${closeVisibleHintsScript}" style="display: inline-block; color: #ffffff; ${backgroundStyle} border: ${borderStyle}; border-radius: ${borderRadius}; box-sizing: border-box; cursor: pointer; text-decoration: none; font-size: 16px; font-weight: bold; margin: 0; padding: ${padTopBottom} ${padLeftRight}; text-transform: none; transition: background-color 0.2s ease, border-color 0.2s ease; ${shadowStyle}">${btnText}</button>`;
+            }
 
             const generatedHtml = `<!-- CTA BUTTON SECTION START -->
 <div class="${classPrefix}" style="text-align: ${state.alignment}; margin: 20px 0; font-family: ${fontFamily};">
@@ -647,6 +658,7 @@
             state.url = "https://example.com";
             state.actionType = "link";
             state.popupId = "";
+            state.chatId = "";
             state.blockId = generateRandomId();
             state.colorMode = "gradient";
             state.solidColor = "#FF6B00";
@@ -657,8 +669,9 @@
             state.shadowType = "medium";
             state.paddingY = "12px 32px";
             state.borderWidth = "1px";
+            state.lastBorderWidth = "1px";
             state.borderColor = "#FF6B00";
-            state.syncBorderColor = true;
+            state.noBorder = false;
             state.fontFamily = "'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', Meiryo, sans-serif";
             state.alignment = "center";
             
@@ -666,6 +679,7 @@
             selectActionType.value = state.actionType;
             inputUrl.value = state.url;
             inputPopupId.value = state.popupId;
+            inputChatId.value = state.chatId;
             selectBorderRadius.value = state.borderRadius;
             selectShadow.value = state.shadowType;
             selectPaddingY.value = state.paddingY;
@@ -679,7 +693,7 @@
             pickerColorEnd.value = state.gradientEnd;
             textColorEnd.value = state.gradientEnd;
 
-            checkSyncBorder.checked = true;
+            checkNoBorder.checked = false;
             pickerBorderColor.value = state.borderColor;
             textBorderColor.value = state.borderColor;
 
@@ -688,20 +702,28 @@
             }
 
             updateActionTypeUi();
-            updateBorderSyncUi();
+            updateBorderStyleUi();
             updateColorModeUi();
         }
 
-        // 枠線カラー同期トグルの制御
-        function updateBorderSyncUi() {
-            state.syncBorderColor = checkSyncBorder.checked;
-            if (state.syncBorderColor) {
+        // 枠線なしトグルの制御
+        function updateBorderStyleUi() {
+            state.noBorder = checkNoBorder.checked;
+            if (state.noBorder) {
+                if (selectBorderWidth.value !== '0px') {
+                    state.lastBorderWidth = selectBorderWidth.value;
+                }
+                selectBorderWidth.value = '0px';
+                state.borderWidth = '0px';
+                selectBorderWidth.disabled = true;
                 borderColorPickerContainer.style.display = 'none';
-                const mainColor = state.colorMode === 'solid' ? state.solidColor : state.gradientStart;
-                state.borderColor = mainColor;
-                pickerBorderColor.value = mainColor;
-                textBorderColor.value = mainColor;
             } else {
+                selectBorderWidth.disabled = false;
+                if (selectBorderWidth.value === '0px') {
+                    const restoreWidth = state.lastBorderWidth !== '0px' ? state.lastBorderWidth : '1px';
+                    selectBorderWidth.value = restoreWidth;
+                    state.borderWidth = restoreWidth;
+                }
                 borderColorPickerContainer.style.display = 'flex';
             }
             generateCta();
@@ -741,6 +763,10 @@
             state.popupId = e.target.value;
             generateCta();
         });
+        inputChatId.addEventListener('input', (e) => {
+            state.chatId = e.target.value;
+            generateCta();
+        });
         selectBorderRadius.addEventListener('change', (e) => {
             state.borderRadius = e.target.value;
             generateCta();
@@ -755,6 +781,9 @@
         });
         selectBorderWidth.addEventListener('change', (e) => {
             state.borderWidth = e.target.value;
+            if (state.borderWidth !== '0px') {
+                state.lastBorderWidth = state.borderWidth;
+            }
             generateCta();
         });
         selectGradientAngle.addEventListener('change', (e) => {
@@ -773,20 +802,10 @@
         // タブ制御
         tabSolid.addEventListener('click', () => {
             state.colorMode = 'solid';
-            if (state.syncBorderColor) {
-                state.borderColor = state.solidColor;
-                pickerBorderColor.value = state.solidColor;
-                textBorderColor.value = state.solidColor;
-            }
             updateColorModeUi();
         });
         tabGradient.addEventListener('click', () => {
             state.colorMode = 'gradient';
-            if (state.syncBorderColor) {
-                state.borderColor = state.gradientStart;
-                pickerBorderColor.value = state.gradientStart;
-                textBorderColor.value = state.gradientStart;
-            }
             updateColorModeUi();
         });
 
@@ -799,11 +818,6 @@
             } else {
                 state.gradientStart = val;
             }
-            if (state.syncBorderColor) {
-                state.borderColor = val;
-                pickerBorderColor.value = val;
-                textBorderColor.value = val;
-            }
             renderPresets();
             generateCta();
         });
@@ -815,11 +829,6 @@
                     state.solidColor = val;
                 } else {
                     state.gradientStart = val;
-                }
-                if (state.syncBorderColor) {
-                    state.borderColor = val;
-                    pickerBorderColor.value = val;
-                    textBorderColor.value = val;
                 }
                 renderPresets();
                 generateCta();
@@ -845,7 +854,7 @@
         });
 
         // 枠線の色設定リスナー
-        checkSyncBorder.addEventListener('change', updateBorderSyncUi);
+        checkNoBorder.addEventListener('change', updateBorderStyleUi);
         
         pickerBorderColor.addEventListener('input', (e) => {
             const val = e.target.value;
@@ -870,7 +879,7 @@
         window.addEventListener('DOMContentLoaded', () => {
             lucide.createIcons();
             updateActionTypeUi();
-            updateBorderSyncUi();
+            updateBorderStyleUi();
             updateColorModeUi();
         });
     </script>
