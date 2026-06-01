@@ -39,6 +39,14 @@
 
     <!-- メインコンテンツ -->
     <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div class="mb-5">
+            <div class="inline-flex bg-slate-100 p-1 rounded-xl text-sm">
+                <button id="tabPageCta" class="px-4 py-2 rounded-lg font-bold transition-all">CTAボタン</button>
+                <button id="tabPageFaq" class="px-4 py-2 rounded-lg font-bold transition-all">FAQアコーディオン</button>
+            </div>
+        </div>
+
+        <div id="ctaPage">
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
             
             <!-- 左側：コントロールパネル (5 cols) -->
@@ -288,6 +296,115 @@
 
             </section>
         </div>
+        </div>
+
+        <div id="faqPage" class="hidden">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+                <section class="lg:col-span-5 space-y-6">
+                    <div class="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm space-y-6">
+                        <div class="flex items-center justify-between border-b border-slate-100 pb-4">
+                            <h2 class="font-bold text-slate-900 flex items-center gap-2">
+                                <i data-lucide="list" class="w-5 h-5 text-indigo-600"></i>
+                                FAQアコーディオン設定
+                            </h2>
+                            <button id="btnFaqReset" class="text-xs text-slate-500 hover:text-indigo-600 flex items-center gap-1 transition-colors">
+                                <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i>初期化
+                            </button>
+                        </div>
+
+                        <div class="space-y-3">
+                            <div class="flex items-center justify-between">
+                                <label class="block text-sm font-bold text-slate-700">FAQ項目</label>
+                                <button id="btnAddFaqItem" type="button" class="px-2.5 py-1.5 rounded-lg bg-indigo-50 text-indigo-700 text-xs font-bold hover:bg-indigo-100 transition-colors">質問を追加</button>
+                            </div>
+                            <div id="faqListContainer" class="space-y-3"></div>
+                        </div>
+
+                        <div class="border-t border-slate-100 pt-4 space-y-3">
+                            <label class="block text-sm font-bold text-slate-700">デザイン調整</label>
+                            <div class="grid grid-cols-2 gap-3">
+                                <div>
+                                    <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider">質問文字色</label>
+                                    <input type="color" id="faqQuestionColor" class="mt-1 w-full h-9 rounded border border-slate-300" value="#555555">
+                                </div>
+                                <div>
+                                    <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider">質問背景色</label>
+                                    <input type="color" id="faqQuestionBgColor" class="mt-1 w-full h-9 rounded border border-slate-300" value="#ffffff">
+                                </div>
+                                <div>
+                                    <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider">回答文字色</label>
+                                    <input type="color" id="faqAnswerColor" class="mt-1 w-full h-9 rounded border border-slate-300" value="#555555">
+                                </div>
+                                <div>
+                                    <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider">アイコン色</label>
+                                    <input type="color" id="faqIconColor" class="mt-1 w-full h-9 rounded border border-slate-300" value="#555555">
+                                </div>
+                                <div>
+                                    <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider">質問文字サイズ</label>
+                                    <select id="faqQuestionSize" class="mt-1 w-full px-2 py-2 border border-slate-300 rounded-lg text-xs">
+                                        <option value="14px">14px</option>
+                                        <option value="16px" selected>16px</option>
+                                        <option value="18px">18px</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider">回答文字サイズ</label>
+                                    <select id="faqAnswerSize" class="mt-1 w-full px-2 py-2 border border-slate-300 rounded-lg text-xs">
+                                        <option value="14px">14px</option>
+                                        <option value="16px" selected>16px</option>
+                                        <option value="18px">18px</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider">アイコンサイズ</label>
+                                    <select id="faqIconSize" class="mt-1 w-full px-2 py-2 border border-slate-300 rounded-lg text-xs">
+                                        <option value="14px">14px</option>
+                                        <option value="16px">16px</option>
+                                        <option value="18px" selected>18px</option>
+                                        <option value="20px">20px</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider">質問背景色の角丸</label>
+                                    <select id="faqRadius" class="mt-1 w-full px-2 py-2 border border-slate-300 rounded-lg text-xs">
+                                        <option value="4px">4px</option>
+                                        <option value="5px" selected>5px</option>
+                                        <option value="8px">8px</option>
+                                        <option value="12px">12px</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="lg:col-span-7 space-y-6 flex flex-col">
+                    <div class="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden flex flex-col">
+                        <div class="border-b border-slate-200 px-6 py-4 bg-slate-50">
+                            <span class="text-xs font-bold text-slate-500">プレビュー表示</span>
+                        </div>
+                        <div id="faqPreviewCanvas" class="p-6 bg-white min-h-[240px]">
+                            <div id="faqPreviewContent"></div>
+                        </div>
+                    </div>
+
+                    <div class="bg-slate-900 text-slate-300 rounded-2xl p-6 shadow-sm space-y-4">
+                        <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+                            <div class="flex items-center space-x-2">
+                                <i data-lucide="code" class="w-5 h-5 text-indigo-400"></i>
+                                <span class="font-bold text-slate-100 text-sm">HTMLコードコピー</span>
+                            </div>
+                            <span class="text-[10px] text-slate-500">OnboardingのHTMLブロックにそのまま貼り付け対応</span>
+                        </div>
+                        <textarea id="outputFaqHtmlCode" readonly rows="10" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 font-mono text-xs text-indigo-300 focus:outline-none resize-none select-all"></textarea>
+                        <button id="btnFaqCopy" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white py-3 px-4 rounded-xl font-bold text-sm flex items-center justify-center gap-2 transition-all shadow-md active:scale-[0.98]">
+                            <i data-lucide="copy" class="w-4 h-4"></i>
+                            <span>HTMLコードをコピーする</span>
+                        </button>
+                    </div>
+                </section>
+            </div>
+        </div>
     </main>
 
     <!-- フッター -->
@@ -439,6 +556,42 @@
         const copyWorkspace = document.getElementById('copyWorkspace');
 
         const textCharCount = document.getElementById('textCharCount');
+        const tabPageCta = document.getElementById('tabPageCta');
+        const tabPageFaq = document.getElementById('tabPageFaq');
+        const ctaPage = document.getElementById('ctaPage');
+        const faqPage = document.getElementById('faqPage');
+        const faqListContainer = document.getElementById('faqListContainer');
+        const btnAddFaqItem = document.getElementById('btnAddFaqItem');
+        const btnFaqReset = document.getElementById('btnFaqReset');
+        const faqQuestionColor = document.getElementById('faqQuestionColor');
+        const faqQuestionBgColor = document.getElementById('faqQuestionBgColor');
+        const faqAnswerColor = document.getElementById('faqAnswerColor');
+        const faqIconColor = document.getElementById('faqIconColor');
+        const faqIconSize = document.getElementById('faqIconSize');
+        const faqRadius = document.getElementById('faqRadius');
+        const faqQuestionSize = document.getElementById('faqQuestionSize');
+        const faqAnswerSize = document.getElementById('faqAnswerSize');
+        const faqPreviewContent = document.getElementById('faqPreviewContent');
+        const outputFaqHtmlCode = document.getElementById('outputFaqHtmlCode');
+        const btnFaqCopy = document.getElementById('btnFaqCopy');
+
+        const faqDefaultItems = [
+            { question: "Q1: 質問を記載します。", answer: "回答を記載します。\n改行する際にはbrを加えます。\n分かりやすく、端的に書きましょう。" },
+            { question: "Q2: 質問を記載します。", answer: "回答を記載します。\n改行する際にはbrを加えます。\n分かりやすく、端的に書きましょう。" }
+        ];
+
+        const faqState = {
+            items: faqDefaultItems.map((item) => ({ ...item })),
+            questionColor: "#555555",
+            questionBgColor: "#ffffff",
+            answerColor: "#555555",
+            iconColor: "#555555",
+            iconSize: "18px",
+            radius: "5px",
+            questionSize: "16px",
+            answerSize: "16px",
+            focusedFaqIndex: null
+        };
 
         function getProjectTokenFromUrl(urlValue) {
             try {
@@ -454,6 +607,154 @@
         function getClassPrefix(blockId) {
             const projectToken = getProjectTokenFromUrl(inputUrl.value || state.url);
             return `onb-custom-${projectToken}-button-${blockId}-cta`;
+        }
+
+        function getFaqClassPrefix() {
+            const projectToken = getProjectTokenFromUrl(inputUrl.value || state.url);
+            return `onb-faq-${projectToken}-${generateRandomId(7)}`;
+        }
+
+        function escapeMultilineTextToHtml(value) {
+            return escapeHtml(value).replace(/\r?\n/g, "<br />");
+        }
+
+        function updatePageTabUi(page) {
+            const isCta = page === "cta";
+            ctaPage.classList.toggle("hidden", !isCta);
+            faqPage.classList.toggle("hidden", isCta);
+
+            tabPageCta.className = isCta
+                ? "px-4 py-2 rounded-lg font-bold transition-all bg-white text-slate-900 shadow-sm"
+                : "px-4 py-2 rounded-lg font-bold transition-all text-slate-600 hover:text-slate-900";
+            tabPageFaq.className = !isCta
+                ? "px-4 py-2 rounded-lg font-bold transition-all bg-white text-slate-900 shadow-sm"
+                : "px-4 py-2 rounded-lg font-bold transition-all text-slate-600 hover:text-slate-900";
+        }
+
+        function renderFaqEditor() {
+            const openIndexes = new Set(
+                Array.from(faqListContainer.querySelectorAll("details[data-faq-editor-item][open]"))
+                    .map((detail) => Number(detail.dataset.faqEditorItem))
+                    .filter((index) => !Number.isNaN(index))
+            );
+
+            faqListContainer.innerHTML = "";
+            faqState.items.forEach((item, index) => {
+                const details = document.createElement("details");
+                details.dataset.faqEditorItem = String(index);
+                details.className = "rounded-xl border border-slate-200 bg-slate-50 overflow-hidden";
+
+                const isFocused = faqState.focusedFaqIndex === index;
+                if (isFocused || openIndexes.has(index) || (openIndexes.size === 0 && index === 0)) {
+                    details.open = true;
+                }
+
+                details.innerHTML = `
+                    <summary class="list-none cursor-pointer px-3 py-2.5 flex items-center justify-between text-sm font-bold text-slate-700 border-b border-slate-200">
+                        <span class="truncate pr-3" data-faq-summary-title="${index}">${escapeHtml(item.question) || "質問を入力"}</span>
+                        <span class="text-slate-400 text-xs">開閉</span>
+                    </summary>
+                    <div class="p-3 space-y-2">
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs font-bold text-slate-500 uppercase tracking-wider">FAQ ${index + 1}</span>
+                            <button type="button" data-faq-remove="${index}" class="text-[11px] font-bold text-rose-600 hover:text-rose-700 ${faqState.items.length <= 1 ? "opacity-40 pointer-events-none" : ""}">削除</button>
+                        </div>
+                        <div>
+                            <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider">質問</label>
+                            <input type="text" data-faq-question="${index}" value="${escapeAttribute(item.question)}" class="mt-1 w-full px-2.5 py-2 border border-slate-300 rounded-lg text-sm" />
+                        </div>
+                        <div>
+                            <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider">回答</label>
+                            <textarea data-faq-answer="${index}" rows="3" class="mt-1 w-full px-2.5 py-2 border border-slate-300 rounded-lg text-sm">${escapeHtml(item.answer)}</textarea>
+                        </div>
+                    </div>
+                `;
+                faqListContainer.appendChild(details);
+            });
+            faqState.focusedFaqIndex = null;
+        }
+
+        function generateFaq() {
+            const faqPrefix = getFaqClassPrefix();
+            const faqBlocks = faqState.items.map((item) => {
+                return `<details class="${faqPrefix}">
+  <summary>${escapeHtml(item.question)}</summary>
+  <div class="${faqPrefix}__panel">
+    <p class="${faqPrefix}__content">
+      ${escapeMultilineTextToHtml(item.answer)}
+    </p>
+  </div>
+</details>`;
+            }).join("\n");
+
+            const faqHtml = `${faqBlocks}
+<style>
+  .${faqPrefix}:not([open]) {
+    margin-bottom: 7px;
+  }
+
+  .${faqPrefix} summary {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+    padding: 0.7em 1.8em 0.7em 0.9em;
+    border-radius: ${faqState.radius};
+    background-color: ${faqState.questionBgColor};
+    color: ${faqState.questionColor};
+    font-size: ${faqState.questionSize};
+    font-weight: bold;
+    cursor: pointer;
+  }
+
+  .${faqPrefix} summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .${faqPrefix} summary::after {
+    content: "+";
+    position: absolute;
+    right: 0.55em;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: ${faqState.iconSize};
+    font-weight: 400;
+    line-height: 1;
+    color: ${faqState.iconColor};
+    transition: transform 0.3s ease;
+  }
+
+  .${faqPrefix}[open] summary::after {
+    transform: translateY(-50%) rotate(45deg);
+  }
+
+  .${faqPrefix}__panel {
+    overflow: hidden;
+    max-height: 0;
+    transition: max-height 0.4s ease;
+  }
+
+  .${faqPrefix}[open] .${faqPrefix}__panel {
+    max-height: 500px;
+  }
+
+  .${faqPrefix}__content {
+    transform: translateY(-10px);
+    opacity: 0;
+    margin: 0 0 0 10px;
+    color: ${faqState.answerColor};
+    font-size: ${faqState.answerSize};
+    transition: transform 0.5s, opacity 0.5s;
+  }
+
+  .${faqPrefix}[open] .${faqPrefix}__content {
+    transform: none;
+    opacity: 1;
+  }
+</style>`;
+
+            faqPreviewContent.innerHTML = faqHtml;
+            outputFaqHtmlCode.value = faqHtml;
         }
 
         function updateActionTypeUi() {
@@ -706,6 +1007,31 @@
             updateColorModeUi();
         }
 
+        function resetFaqToDefault() {
+            faqState.items = faqDefaultItems.map((item) => ({ ...item }));
+            faqState.questionColor = "#555555";
+            faqState.questionBgColor = "#ffffff";
+            faqState.answerColor = "#555555";
+            faqState.iconColor = "#555555";
+            faqState.iconSize = "18px";
+            faqState.radius = "5px";
+            faqState.questionSize = "16px";
+            faqState.answerSize = "16px";
+            faqState.focusedFaqIndex = null;
+
+            faqQuestionColor.value = faqState.questionColor;
+            faqQuestionBgColor.value = faqState.questionBgColor;
+            faqAnswerColor.value = faqState.answerColor;
+            faqIconColor.value = faqState.iconColor;
+            faqIconSize.value = faqState.iconSize;
+            faqRadius.value = faqState.radius;
+            faqQuestionSize.value = faqState.questionSize;
+            faqAnswerSize.value = faqState.answerSize;
+
+            renderFaqEditor();
+            generateFaq();
+        }
+
         // 枠線なしトグルの制御
         function updateBorderStyleUi() {
             state.noBorder = checkNoBorder.checked;
@@ -766,6 +1092,74 @@
         inputChatId.addEventListener('input', (e) => {
             state.chatId = e.target.value;
             generateCta();
+        });
+        faqListContainer.addEventListener('input', (e) => {
+            const questionIndex = e.target.dataset.faqQuestion;
+            const answerIndex = e.target.dataset.faqAnswer;
+            if (questionIndex !== undefined) {
+                const idx = Number(questionIndex);
+                faqState.items[idx].question = e.target.value;
+                const summaryTitle = faqListContainer.querySelector(`[data-faq-summary-title="${idx}"]`);
+                if (summaryTitle) {
+                    summaryTitle.textContent = e.target.value || "質問を入力";
+                }
+                generateFaq();
+                return;
+            }
+            if (answerIndex !== undefined) {
+                faqState.items[Number(answerIndex)].answer = e.target.value;
+                generateFaq();
+            }
+        });
+        faqListContainer.addEventListener('click', (e) => {
+            const removeIndex = e.target.dataset.faqRemove;
+            if (removeIndex === undefined) return;
+            if (faqState.items.length <= 1) return;
+            faqState.items.splice(Number(removeIndex), 1);
+            renderFaqEditor();
+            generateFaq();
+        });
+        btnAddFaqItem.addEventListener('click', () => {
+            faqState.items.push({
+                question: `Q${faqState.items.length + 1}: 質問を記載します。`,
+                answer: "回答を記載します。"
+            });
+            faqState.focusedFaqIndex = faqState.items.length - 1;
+            renderFaqEditor();
+            generateFaq();
+        });
+        btnFaqReset.addEventListener('click', resetFaqToDefault);
+        faqQuestionColor.addEventListener('input', (e) => {
+            faqState.questionColor = e.target.value;
+            generateFaq();
+        });
+        faqQuestionBgColor.addEventListener('input', (e) => {
+            faqState.questionBgColor = e.target.value;
+            generateFaq();
+        });
+        faqAnswerColor.addEventListener('input', (e) => {
+            faqState.answerColor = e.target.value;
+            generateFaq();
+        });
+        faqIconColor.addEventListener('input', (e) => {
+            faqState.iconColor = e.target.value;
+            generateFaq();
+        });
+        faqIconSize.addEventListener('change', (e) => {
+            faqState.iconSize = e.target.value;
+            generateFaq();
+        });
+        faqRadius.addEventListener('change', (e) => {
+            faqState.radius = e.target.value;
+            generateFaq();
+        });
+        faqQuestionSize.addEventListener('change', (e) => {
+            faqState.questionSize = e.target.value;
+            generateFaq();
+        });
+        faqAnswerSize.addEventListener('change', (e) => {
+            faqState.answerSize = e.target.value;
+            generateFaq();
         });
         selectBorderRadius.addEventListener('change', (e) => {
             state.borderRadius = e.target.value;
@@ -872,8 +1266,22 @@
         });
 
         btnCopy.addEventListener('click', copyToClipboard);
+        btnFaqCopy.addEventListener('click', () => {
+            copyWorkspace.value = outputFaqHtmlCode.value;
+            copyWorkspace.select();
+            try {
+                const successful = document.execCommand('copy');
+                if (successful) {
+                    showToast();
+                }
+            } catch (err) {
+                console.error('ブラウザがコピー機能をサポートしていません: ', err);
+            }
+        });
         btnReset.addEventListener('click', resetToDefault);
         btnDarkToggle.addEventListener('click', toggleDarkMode);
+        tabPageCta.addEventListener('click', () => updatePageTabUi("cta"));
+        tabPageFaq.addEventListener('click', () => updatePageTabUi("faq"));
 
         // 初期ロード実行
         window.addEventListener('DOMContentLoaded', () => {
@@ -881,6 +1289,8 @@
             updateActionTypeUi();
             updateBorderStyleUi();
             updateColorModeUi();
+            resetFaqToDefault();
+            updatePageTabUi("cta");
         });
     </script>
 </body>
