@@ -248,7 +248,7 @@
                             <i data-lucide="code" class="w-5 h-5 text-indigo-400"></i>
                             <span class="font-bold text-slate-100 text-sm">HTMLコードコピー</span>
                         </div>
-                        <span class="text-[10px] text-slate-500">配配メール/ブラストメール等にペースト対応</span>
+                        <span class="text-[10px] text-slate-500">OnboardingのHTMLブロックにそのまま貼り付け対応</span>
                     </div>
 
                     <div class="relative">
@@ -271,7 +271,7 @@
     <!-- フッター -->
     <footer class="bg-white border-t border-slate-200 py-6 mt-12">
         <div class="max-w-7xl mx-auto px-4 text-center text-xs text-slate-500 space-y-2">
-            <p>※本ツールのボタン構造は、テーブル・セル構造を採用した「Bulletproof Buttons」標準に基づき、マルチパート配信やモバイル最適化に対応しています。</p>
+            <p>※本ツールのボタン構造は、Onboardingで扱いやすいシンプルな非テーブル構造（div + a）を採用しています。</p>
             <p>© 2026 STANDS inc. All rights reserved.</p>
         </div>
     </footer>
@@ -508,7 +508,7 @@
             }
         }
 
-        // HTMLインラインコードの生成（Outlook等のテーブル崩れ耐性を持つBulletproof仕様）
+        // HTMLインラインコードの生成（Onboarding向け非テーブル構造）
         function generateCta() {
             const btnText = escapeHtml(inputButtonText.value);
             const targetUrl = escapeAttribute(inputUrl.value || "#");
@@ -526,7 +526,6 @@
             // 色情報
             const startColor = state.colorMode === 'solid' ? state.solidColor : state.gradientStart;
             const endColor = state.gradientEnd;
-            const fallbackColor = startColor; // Outlookなどのためのフォールバック単一色
             
             // ボーダー情報
             const borderWidth = selectBorderWidth.value;
@@ -554,26 +553,12 @@
                 backgroundStyle = `background-color: ${startColor}; background: ${startColor}; background: linear-gradient(${state.gradientAngle}, ${startColor} 0%, ${endColor} 100%);`;
             }
 
-            // 配置位置に応じた margin
-            let marginStyle = 'margin: 20px auto;';
-            if (state.alignment === 'left') {
-                marginStyle = 'margin: 20px auto 20px 0;';
-            } else if (state.alignment === 'right') {
-                marginStyle = 'margin: 20px 0 20px auto;';
-            }
-
-            // 崩れないHTMLメール対応用 Bulletproof テーブル構造
-            const generatedHtml = `<!-- BULLETPROOF CTA BUTTON SECTION START -->
+            // Onboarding向けのシンプルな非テーブル構造
+            const generatedHtml = `<!-- CTA BUTTON SECTION START -->
 <div class="${classPrefix}" style="text-align: ${state.alignment}; margin: 20px 0; font-family: ${fontFamily};">
-  <table class="${classPrefix}__table" border="0" cellpadding="0" cellspacing="0" align="${state.alignment}" style="border-collapse: separate; mso-table-lspace: 0pt; mso-table-rspace: 0pt; width: auto; ${marginStyle} ${shadowStyle}">
-    <tr>
-      <td class="${classPrefix}__cell" align="center" valign="middle" bgcolor="${fallbackColor}" style="font-family: ${fontFamily}; font-size: 16px; vertical-align: middle; ${backgroundStyle} border-radius: ${borderRadius}; border: ${borderStyle}; text-align: center; ${shadowStyle}">
-        <a class="${classPrefix}__link" href="${targetUrl}" target="_blank" style="display: inline-block; color: #ffffff; ${backgroundStyle} border: ${borderStyle}; border-radius: ${borderRadius}; box-sizing: border-box; cursor: pointer; text-decoration: none; font-size: 16px; font-weight: bold; margin: 0; padding: ${padTopBottom} ${padLeftRight}; text-transform: none; transition: background-color 0.2s ease, border-color 0.2s ease; ${shadowStyle}">${btnText}</a>
-      </td>
-    </tr>
-  </table>
+  <a class="${classPrefix}__link" href="${targetUrl}" target="_blank" style="display: inline-block; color: #ffffff; ${backgroundStyle} border: ${borderStyle}; border-radius: ${borderRadius}; box-sizing: border-box; cursor: pointer; text-decoration: none; font-size: 16px; font-weight: bold; margin: 0; padding: ${padTopBottom} ${padLeftRight}; text-transform: none; transition: background-color 0.2s ease, border-color 0.2s ease; ${shadowStyle}">${btnText}</a>
 </div>
-<!-- BULLETPROOF CTA BUTTON SECTION END -->`;
+<!-- CTA BUTTON SECTION END -->`;
 
             // プレビューコンテナへの描画
             actualBtnContainer.innerHTML = generatedHtml;
