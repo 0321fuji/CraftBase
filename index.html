@@ -61,7 +61,7 @@
                     <!-- 1. ボタンテキスト設定 -->
                     <div class="space-y-2">
                         <label class="block text-sm font-bold text-slate-700 flex items-center justify-between">
-                            <span>① ボタンテキスト <span class="text-xs text-indigo-600 font-normal">※少し低めのハードルが推奨</span></span>
+                            <span>① ボタンテキスト</span>
                             <span class="text-xs text-slate-400 font-normal" id="textCharCount">0/20文字</span>
                         </label>
                         <input type="text" id="inputButtonText" value="詳細をチェックする" maxlength="30"
@@ -69,16 +69,32 @@
                                placeholder="例：詳細をチェックする">
                     </div>
 
-                    <!-- 2. リンク先URL -->
-                    <div class="space-y-2">
-                        <label class="block text-sm font-bold text-slate-700">② リンク先URL (遷移先)</label>
-                        <div class="relative">
-                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                <i data-lucide="link" class="w-4 h-4 text-slate-400"></i>
+                    <!-- 2. アクション設定 -->
+                    <div class="space-y-3">
+                        <label class="block text-sm font-bold text-slate-700">② ボタン押下時の動作</label>
+                        <select id="selectActionType" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+                            <option value="link" selected>リンク先URLへ遷移</option>
+                            <option value="popup">ポップアップ起動</option>
+                        </select>
+
+                        <div id="urlFieldGroup" class="space-y-2">
+                            <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider">リンク先URL (遷移先)</label>
+                            <div class="relative">
+                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                    <i data-lucide="link" class="w-4 h-4 text-slate-400"></i>
+                                </div>
+                                <input type="url" id="inputUrl" value="https://example.com"
+                                       class="w-full pl-9 pr-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm transition-all"
+                                       placeholder="https://example.com">
                             </div>
-                            <input type="url" id="inputUrl" value="https://example.com"
-                                   class="w-full pl-9 pr-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm transition-all"
-                                   placeholder="https://example.com">
+                        </div>
+
+                        <div id="popupIdFieldGroup" class="space-y-2 hidden">
+                            <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider">ポップアップID</label>
+                            <input type="text" id="inputPopupId" value=""
+                                   class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm transition-all"
+                                   placeholder="例: 4c5a4c5ed3bf50335dcba25e38006116">
+                            <p class="text-[11px] text-slate-500">ボタン押下時に `STANDSMotion.changeGoal('ポップアップID')` を実行します（32桁の英数字ID）。</p>
                         </div>
                     </div>
 
@@ -217,7 +233,7 @@
             <section class="lg:col-span-7 space-y-6 flex flex-col">
                 
                 <!-- プレビュー表示エリア -->
-                <div class="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden flex flex-col flex-grow">
+                <div class="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden flex flex-col">
                     <div class="border-b border-slate-200 px-6 py-4 flex items-center justify-between bg-slate-50">
                         <div class="flex items-center space-x-2">
                             <div class="w-3 h-3 rounded-full bg-red-400"></div>
@@ -233,7 +249,7 @@
                     </div>
 
                     <!-- リアルプレビューキャンバス -->
-                    <div id="previewCanvas" class="p-6 flex flex-col items-center justify-center transition-all bg-white duration-300 flex-grow relative min-h-[120px]">
+                    <div id="previewCanvas" class="p-4 flex flex-col items-center justify-center transition-all bg-white duration-300 relative min-h-[200px]">
                         <div class="w-full px-4">
                             <!-- 実際の生成されるHTMLを入れる領域 -->
                             <div id="actualBtnContainer" class="py-1"></div>
@@ -323,10 +339,18 @@
                 .replace(/"/g, '&quot;');
         }
 
+        function escapeSingleQuotedJsString(value) {
+            return String(value)
+                .replace(/\\/g, '\\\\')
+                .replace(/'/g, "\\'");
+        }
+
         // 状態（State）管理
         const state = {
             buttonText: "詳細をチェックする",
             url: "https://example.com",
+            actionType: "link", // 'link' or 'popup'
+            popupId: "",
             blockId: generateRandomId(),
             colorMode: "gradient", // 'solid' or 'gradient'
             solidColor: "#FF6B00",
@@ -363,7 +387,11 @@
 
         // DOM要素の参照
         const inputButtonText = document.getElementById('inputButtonText');
+        const selectActionType = document.getElementById('selectActionType');
         const inputUrl = document.getElementById('inputUrl');
+        const inputPopupId = document.getElementById('inputPopupId');
+        const urlFieldGroup = document.getElementById('urlFieldGroup');
+        const popupIdFieldGroup = document.getElementById('popupIdFieldGroup');
         const selectBorderRadius = document.getElementById('selectBorderRadius');
         const selectShadow = document.getElementById('selectShadow');
         const selectPaddingY = document.getElementById('selectPaddingY');
@@ -416,6 +444,17 @@
         function getClassPrefix(blockId) {
             const projectToken = getProjectTokenFromUrl(inputUrl.value || state.url);
             return `onb-custom-${projectToken}-button-${blockId}-cta`;
+        }
+
+        function updateActionTypeUi() {
+            state.actionType = selectActionType.value;
+            if (state.actionType === 'popup') {
+                urlFieldGroup.classList.add('hidden');
+                popupIdFieldGroup.classList.remove('hidden');
+            } else {
+                urlFieldGroup.classList.remove('hidden');
+                popupIdFieldGroup.classList.add('hidden');
+            }
         }
 
         // タブ切り替えとプリセットの描画
@@ -512,6 +551,7 @@
         function generateCta() {
             const btnText = escapeHtml(inputButtonText.value);
             const targetUrl = escapeAttribute(inputUrl.value || "#");
+            const popupId = escapeSingleQuotedJsString(inputPopupId.value.trim());
             const borderRadius = selectBorderRadius.value;
             const paddingValue = selectPaddingY.value; // 例: "12px 32px"
             const pValues = paddingValue.split(' ');
@@ -554,9 +594,13 @@
             }
 
             // Onboarding向けのシンプルな非テーブル構造
+            const actionElement = state.actionType === 'popup'
+                ? `<button type="button" class="${classPrefix}__action" onclick="STANDSMotion.changeGoal('${popupId}');document.querySelectorAll('.stands-hint-content').forEach(hint=>{if(window.getComputedStyle(hint).display!=='none'){const closeBtn=hint.querySelector('.stands-hint-close');if(closeBtn)closeBtn.click();}});" style="display: inline-block; color: #ffffff; ${backgroundStyle} border: ${borderStyle}; border-radius: ${borderRadius}; box-sizing: border-box; cursor: pointer; text-decoration: none; font-size: 16px; font-weight: bold; margin: 0; padding: ${padTopBottom} ${padLeftRight}; text-transform: none; transition: background-color 0.2s ease, border-color 0.2s ease; ${shadowStyle}">${btnText}</button>`
+                : `<a class="${classPrefix}__action" href="${targetUrl}" target="_blank" style="display: inline-block; color: #ffffff; ${backgroundStyle} border: ${borderStyle}; border-radius: ${borderRadius}; box-sizing: border-box; cursor: pointer; text-decoration: none; font-size: 16px; font-weight: bold; margin: 0; padding: ${padTopBottom} ${padLeftRight}; text-transform: none; transition: background-color 0.2s ease, border-color 0.2s ease; ${shadowStyle}">${btnText}</a>`;
+
             const generatedHtml = `<!-- CTA BUTTON SECTION START -->
 <div class="${classPrefix}" style="text-align: ${state.alignment}; margin: 20px 0; font-family: ${fontFamily};">
-  <a class="${classPrefix}__link" href="${targetUrl}" target="_blank" style="display: inline-block; color: #ffffff; ${backgroundStyle} border: ${borderStyle}; border-radius: ${borderRadius}; box-sizing: border-box; cursor: pointer; text-decoration: none; font-size: 16px; font-weight: bold; margin: 0; padding: ${padTopBottom} ${padLeftRight}; text-transform: none; transition: background-color 0.2s ease, border-color 0.2s ease; ${shadowStyle}">${btnText}</a>
+  ${actionElement}
 </div>
 <!-- CTA BUTTON SECTION END -->`;
 
@@ -601,6 +645,8 @@
         function resetToDefault() {
             state.buttonText = "詳細をチェックする";
             state.url = "https://example.com";
+            state.actionType = "link";
+            state.popupId = "";
             state.blockId = generateRandomId();
             state.colorMode = "gradient";
             state.solidColor = "#FF6B00";
@@ -617,7 +663,9 @@
             state.alignment = "center";
             
             inputButtonText.value = state.buttonText;
+            selectActionType.value = state.actionType;
             inputUrl.value = state.url;
+            inputPopupId.value = state.popupId;
             selectBorderRadius.value = state.borderRadius;
             selectShadow.value = state.shadowType;
             selectPaddingY.value = state.paddingY;
@@ -639,6 +687,7 @@
                 toggleDarkMode();
             }
 
+            updateActionTypeUi();
             updateBorderSyncUi();
             updateColorModeUi();
         }
@@ -679,8 +728,17 @@
             state.buttonText = e.target.value;
             generateCta();
         });
+        selectActionType.addEventListener('change', (e) => {
+            state.actionType = e.target.value;
+            updateActionTypeUi();
+            generateCta();
+        });
         inputUrl.addEventListener('input', (e) => {
             state.url = e.target.value;
+            generateCta();
+        });
+        inputPopupId.addEventListener('input', (e) => {
+            state.popupId = e.target.value;
             generateCta();
         });
         selectBorderRadius.addEventListener('change', (e) => {
@@ -811,6 +869,7 @@
         // 初期ロード実行
         window.addEventListener('DOMContentLoaded', () => {
             lucide.createIcons();
+            updateActionTypeUi();
             updateBorderSyncUi();
             updateColorModeUi();
         });
