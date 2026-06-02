@@ -43,6 +43,7 @@
             <div class="inline-flex bg-slate-100 p-1 rounded-xl text-sm">
                 <button id="tabPageCta" class="px-4 py-2 rounded-lg font-bold transition-all">CTAボタン</button>
                 <button id="tabPageFaq" class="px-4 py-2 rounded-lg font-bold transition-all">FAQアコーディオン</button>
+                <button id="tabPageCompare" class="px-4 py-2 rounded-lg font-bold transition-all">比較表</button>
             </div>
         </div>
 
@@ -405,6 +406,136 @@
                 </section>
             </div>
         </div>
+
+        <div id="comparePage" class="hidden">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+                <section class="lg:col-span-5 space-y-6">
+                    <div class="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm space-y-6">
+                        <div class="flex items-center justify-between border-b border-slate-100 pb-4">
+                            <h2 class="font-bold text-slate-900 flex items-center gap-2">
+                                <i data-lucide="table-properties" class="w-5 h-5 text-indigo-600"></i>
+                                比較表ジェネレーター
+                            </h2>
+                            <button id="btnCompareReset" class="text-xs text-slate-500 hover:text-indigo-600 flex items-center gap-1 transition-colors">
+                                <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i>初期化
+                            </button>
+                        </div>
+
+                        <details class="rounded-xl border border-slate-200 bg-slate-50 overflow-hidden" open>
+                            <summary class="list-none cursor-pointer px-3 py-2.5 flex items-center justify-between text-sm font-bold text-slate-700 border-b border-slate-200">
+                                <span>見出し設定</span>
+                                <span class="text-slate-400 text-xs">開閉</span>
+                            </summary>
+                            <div class="p-3 space-y-2">
+                                <div class="rounded-lg border border-slate-200 p-2.5 bg-slate-50 space-y-1.5">
+                                    <div class="text-xs font-bold text-slate-700">比較項目列</div>
+                                    <input id="compareHeaderLabel" type="text" class="w-full px-2.5 py-2 border border-slate-300 rounded-lg text-sm" value="比較項目" />
+                                    <div class="grid grid-cols-3 gap-2">
+                                        <div>
+                                            <label class="block text-[11px] text-slate-500">フォント</label>
+                                            <select id="compareBaseHeaderFontSize" class="mt-1 w-full px-2 py-1.5 border border-slate-300 rounded-lg text-xs bg-white h-8">
+                                                <option value="14px">14px</option>
+                                                <option value="16px" selected>16px</option>
+                                                <option value="18px">18px</option>
+                                                <option value="20px">20px</option>
+                                            </select>
+                                        </div>
+                                        <div>
+                                            <label class="block text-[11px] text-slate-500">文字色</label>
+                                            <input id="compareBaseHeaderTextColor" type="color" class="mt-1 w-full h-8 rounded border border-slate-300" value="#334155" />
+                                        </div>
+                                        <div>
+                                            <label class="block text-[11px] text-slate-500">背景色</label>
+                                            <input id="compareBaseHeaderBgColor" type="color" class="mt-1 w-full h-8 rounded border border-slate-300" value="#f8fafc" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="rounded-lg border border-slate-200 p-2.5 bg-slate-50 space-y-1.5">
+                                    <div class="text-xs font-bold text-slate-700">プランA列</div>
+                                    <input id="compareColALabel" type="text" class="w-full px-2.5 py-2 border border-slate-300 rounded-lg text-sm" value="プランA" />
+                                    <div class="grid grid-cols-3 gap-2">
+                                        <div>
+                                            <label class="block text-[11px] text-slate-500">フォント</label>
+                                            <select id="compareColAHeaderFontSize" class="mt-1 w-full px-2 py-1.5 border border-slate-300 rounded-lg text-xs bg-white h-8">
+                                                <option value="14px">14px</option>
+                                                <option value="16px" selected>16px</option>
+                                                <option value="18px">18px</option>
+                                                <option value="20px">20px</option>
+                                            </select>
+                                        </div>
+                                        <div>
+                                            <label class="block text-[11px] text-slate-500">文字色</label>
+                                            <input id="compareColATextColor" type="color" class="mt-1 w-full h-8 rounded border border-slate-300" value="#0f766e" />
+                                        </div>
+                                        <div>
+                                            <label class="block text-[11px] text-slate-500">背景色</label>
+                                            <input id="compareColABgColor" type="color" class="mt-1 w-full h-8 rounded border border-slate-300" value="#e8f5f2" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="rounded-lg border border-slate-200 p-2.5 bg-slate-50 space-y-1.5">
+                                    <div class="text-xs font-bold text-slate-700">プランB列</div>
+                                    <input id="compareColBLabel" type="text" class="w-full px-2.5 py-2 border border-slate-300 rounded-lg text-sm" value="プランB" />
+                                    <div class="grid grid-cols-3 gap-2">
+                                        <div>
+                                            <label class="block text-[11px] text-slate-500">フォント</label>
+                                            <select id="compareColBHeaderFontSize" class="mt-1 w-full px-2 py-1.5 border border-slate-300 rounded-lg text-xs bg-white h-8">
+                                                <option value="14px">14px</option>
+                                                <option value="16px" selected>16px</option>
+                                                <option value="18px">18px</option>
+                                                <option value="20px">20px</option>
+                                            </select>
+                                        </div>
+                                        <div>
+                                            <label class="block text-[11px] text-slate-500">文字色</label>
+                                            <input id="compareColBTextColor" type="color" class="mt-1 w-full h-8 rounded border border-slate-300" value="#b91c1c" />
+                                        </div>
+                                        <div>
+                                            <label class="block text-[11px] text-slate-500">背景色</label>
+                                            <input id="compareColBBgColor" type="color" class="mt-1 w-full h-8 rounded border border-slate-300" value="#fef2f2" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </details>
+
+                        <div class="space-y-3 border-t border-slate-100 pt-4">
+                            <div class="flex items-center justify-between">
+                                <label class="block text-sm font-bold text-slate-700">行データ</label>
+                                <button id="btnAddCompareRow" type="button" class="px-2.5 py-1.5 rounded-lg bg-indigo-50 text-indigo-700 text-xs font-bold hover:bg-indigo-100 transition-colors">行を追加</button>
+                            </div>
+                            <div id="compareRowsContainer" class="space-y-3"></div>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="lg:col-span-7 space-y-6">
+                    <div class="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden">
+                        <div class="border-b border-slate-200 px-6 py-4 bg-slate-50">
+                            <span class="text-xs font-bold text-slate-500">プレビュー表示</span>
+                        </div>
+                        <div id="comparePreviewCanvas" class="p-6 bg-white min-h-[240px]">
+                            <div id="comparePreviewContent"></div>
+                        </div>
+                    </div>
+
+                    <div class="bg-slate-900 text-slate-300 rounded-2xl p-6 shadow-sm space-y-4">
+                        <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+                            <div class="flex items-center space-x-2">
+                                <i data-lucide="code" class="w-5 h-5 text-indigo-400"></i>
+                                <span class="font-bold text-slate-100 text-sm">HTMLコードコピー</span>
+                            </div>
+                            <span class="text-[10px] text-slate-500">OnboardingのHTMLブロックにそのまま貼り付け対応</span>
+                        </div>
+                        <textarea id="outputCompareHtmlCode" readonly rows="10" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 font-mono text-xs text-indigo-300 focus:outline-none resize-none select-all"></textarea>
+                        <button id="btnCompareCopy" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white py-3 px-4 rounded-xl font-bold text-sm flex items-center justify-center gap-2 transition-all shadow-md active:scale-[0.98]">
+                            <i data-lucide="copy" class="w-4 h-4"></i>
+                            <span>HTMLコードをコピーする</span>
+                        </button>
+                    </div>
+                </section>
+            </div>
+        </div>
     </main>
 
     <!-- フッター -->
@@ -558,8 +689,10 @@
         const textCharCount = document.getElementById('textCharCount');
         const tabPageCta = document.getElementById('tabPageCta');
         const tabPageFaq = document.getElementById('tabPageFaq');
+        const tabPageCompare = document.getElementById('tabPageCompare');
         const ctaPage = document.getElementById('ctaPage');
         const faqPage = document.getElementById('faqPage');
+        const comparePage = document.getElementById('comparePage');
         const faqListContainer = document.getElementById('faqListContainer');
         const btnAddFaqItem = document.getElementById('btnAddFaqItem');
         const btnFaqReset = document.getElementById('btnFaqReset');
@@ -574,6 +707,24 @@
         const faqPreviewContent = document.getElementById('faqPreviewContent');
         const outputFaqHtmlCode = document.getElementById('outputFaqHtmlCode');
         const btnFaqCopy = document.getElementById('btnFaqCopy');
+        const btnCompareReset = document.getElementById('btnCompareReset');
+        const compareHeaderLabel = document.getElementById('compareHeaderLabel');
+        const compareColALabel = document.getElementById('compareColALabel');
+        const compareColBLabel = document.getElementById('compareColBLabel');
+        const compareBaseHeaderFontSize = document.getElementById('compareBaseHeaderFontSize');
+        const compareColAHeaderFontSize = document.getElementById('compareColAHeaderFontSize');
+        const compareColBHeaderFontSize = document.getElementById('compareColBHeaderFontSize');
+        const compareBaseHeaderTextColor = document.getElementById('compareBaseHeaderTextColor');
+        const compareBaseHeaderBgColor = document.getElementById('compareBaseHeaderBgColor');
+        const compareColATextColor = document.getElementById('compareColATextColor');
+        const compareColABgColor = document.getElementById('compareColABgColor');
+        const compareColBTextColor = document.getElementById('compareColBTextColor');
+        const compareColBBgColor = document.getElementById('compareColBBgColor');
+        const btnAddCompareRow = document.getElementById('btnAddCompareRow');
+        const compareRowsContainer = document.getElementById('compareRowsContainer');
+        const comparePreviewContent = document.getElementById('comparePreviewContent');
+        const outputCompareHtmlCode = document.getElementById('outputCompareHtmlCode');
+        const btnCompareCopy = document.getElementById('btnCompareCopy');
 
         const faqDefaultItems = [
             { question: "Q1: 質問を記載します。", answer: "回答を記載します。\n改行する際にはbrを加えます。\n分かりやすく、端的に書きましょう。" },
@@ -591,6 +742,47 @@
             questionSize: "16px",
             answerSize: "16px",
             focusedFaqIndex: null
+        };
+
+        function createCompareRow(values = {}) {
+            return {
+                label: values.label || "",
+                a: values.a || "",
+                b: values.b || "",
+                labelFontSize: values.labelFontSize || "16px",
+                labelTextColor: values.labelTextColor || "#334155",
+                labelBgColor: values.labelBgColor || "#f8fafc",
+                aFontSize: values.aFontSize || "16px",
+                aTextColor: values.aTextColor || "#334155",
+                aBgColor: values.aBgColor || "#ffffff",
+                bFontSize: values.bFontSize || "16px",
+                bTextColor: values.bTextColor || "#334155",
+                bBgColor: values.bBgColor || "#ffffff"
+            };
+        }
+
+        const compareDefaultRows = [
+            createCompareRow({ label: "月額料金", a: "¥9,800", b: "¥19,800" }),
+            createCompareRow({ label: "初期設定サポート", a: "メールのみ", b: "専任担当あり" }),
+            createCompareRow({ label: "外部連携", a: "一部対応", b: "フル対応" })
+        ];
+
+        const compareState = {
+            headerLabel: "比較項目",
+            colALabel: "プランA",
+            colBLabel: "プランB",
+            baseHeaderFontSize: "16px",
+            colAHeaderFontSize: "16px",
+            colBHeaderFontSize: "16px",
+            baseHeaderTextColor: "#334155",
+            baseHeaderBgColor: "#f8fafc",
+            colATextColor: "#0f766e",
+            colABgColor: "#e8f5f2",
+            colBTextColor: "#b91c1c",
+            colBBgColor: "#fef2f2",
+            rows: compareDefaultRows.map((row) => ({ ...row })),
+            focusedRowIndex: null,
+            blockId: generateRandomId(7)
         };
 
         function getProjectTokenFromUrl(urlValue) {
@@ -614,19 +806,30 @@
             return `onb-faq-${projectToken}-${generateRandomId(7)}`;
         }
 
+        function getCompareClassPrefix() {
+            const projectToken = getProjectTokenFromUrl(inputUrl.value || state.url);
+            return `onb-compare-${projectToken}-${compareState.blockId}`;
+        }
+
         function escapeMultilineTextToHtml(value) {
             return escapeHtml(value).replace(/\r?\n/g, "<br />");
         }
 
         function updatePageTabUi(page) {
             const isCta = page === "cta";
+            const isFaq = page === "faq";
+            const isCompare = page === "compare";
             ctaPage.classList.toggle("hidden", !isCta);
-            faqPage.classList.toggle("hidden", isCta);
+            faqPage.classList.toggle("hidden", !isFaq);
+            comparePage.classList.toggle("hidden", !isCompare);
 
             tabPageCta.className = isCta
                 ? "px-4 py-2 rounded-lg font-bold transition-all bg-white text-slate-900 shadow-sm"
                 : "px-4 py-2 rounded-lg font-bold transition-all text-slate-600 hover:text-slate-900";
-            tabPageFaq.className = !isCta
+            tabPageFaq.className = isFaq
+                ? "px-4 py-2 rounded-lg font-bold transition-all bg-white text-slate-900 shadow-sm"
+                : "px-4 py-2 rounded-lg font-bold transition-all text-slate-600 hover:text-slate-900";
+            tabPageCompare.className = isCompare
                 ? "px-4 py-2 rounded-lg font-bold transition-all bg-white text-slate-900 shadow-sm"
                 : "px-4 py-2 rounded-lg font-bold transition-all text-slate-600 hover:text-slate-900";
         }
@@ -755,6 +958,196 @@
 
             faqPreviewContent.innerHTML = faqHtml;
             outputFaqHtmlCode.value = faqHtml;
+        }
+
+        function renderCompareRows() {
+            compareRowsContainer.innerHTML = "";
+            compareState.rows.forEach((row, index) => {
+                const wrapper = document.createElement("details");
+                wrapper.dataset.compareRow = String(index);
+                wrapper.className = "rounded-xl border border-slate-200 bg-slate-50 overflow-hidden";
+
+                if (compareState.focusedRowIndex === index || (compareState.focusedRowIndex === null && index === 0)) {
+                    wrapper.open = true;
+                }
+
+                wrapper.innerHTML = `
+                    <summary class="list-none cursor-pointer px-3 py-2.5 flex items-center justify-between text-sm font-bold text-slate-700 border-b border-slate-200">
+                        <span class="truncate pr-3" data-compare-row-title="${index}">${escapeHtml(row.label) || "比較項目を入力"}</span>
+                        <span class="text-slate-400 text-xs">開閉</span>
+                    </summary>
+                    <div class="p-3 space-y-3">
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs font-bold text-slate-500 uppercase tracking-wider">行 ${index + 1}</span>
+                            <button type="button" data-compare-remove-row="${index}" class="text-[11px] font-bold text-rose-600 hover:text-rose-700 ${compareState.rows.length <= 1 ? "opacity-40 pointer-events-none" : ""}">削除</button>
+                        </div>
+                        <div class="space-y-2">
+                            <div class="rounded-lg border border-slate-200 bg-white p-2.5 space-y-1.5">
+                                <div class="text-xs font-bold text-slate-700">比較項目セル</div>
+                                <input type="text" data-compare-row-label="${index}" value="${escapeAttribute(row.label)}" class="w-full px-2.5 py-2 border border-slate-300 rounded-lg text-sm" placeholder="比較項目" />
+                                <div class="grid grid-cols-3 gap-2">
+                                    <div>
+                                        <label class="block text-[11px] text-slate-500">フォント</label>
+                                        <select data-compare-row-label-font-size="${index}" class="mt-1 w-full px-2 py-1.5 border border-slate-300 rounded-lg text-xs bg-white h-8">
+                                            <option value="14px" ${row.labelFontSize === "14px" ? "selected" : ""}>14px</option>
+                                            <option value="16px" ${row.labelFontSize === "16px" ? "selected" : ""}>16px</option>
+                                            <option value="18px" ${row.labelFontSize === "18px" ? "selected" : ""}>18px</option>
+                                            <option value="20px" ${row.labelFontSize === "20px" ? "selected" : ""}>20px</option>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label class="block text-[11px] text-slate-500">文字色</label>
+                                        <input type="color" data-compare-row-label-text-color="${index}" class="mt-1 w-full h-8 rounded border border-slate-300" value="${escapeAttribute(row.labelTextColor)}" />
+                                    </div>
+                                    <div>
+                                        <label class="block text-[11px] text-slate-500">背景色</label>
+                                        <input type="color" data-compare-row-label-bg-color="${index}" class="mt-1 w-full h-8 rounded border border-slate-300" value="${escapeAttribute(row.labelBgColor)}" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="rounded-lg border border-slate-200 bg-white p-2.5 space-y-1.5">
+                                <div class="text-xs font-bold text-slate-700">${escapeHtml(compareState.colALabel || "プランA")}セル</div>
+                                <input type="text" data-compare-row-a="${index}" value="${escapeAttribute(row.a)}" class="w-full px-2.5 py-2 border border-slate-300 rounded-lg text-sm" placeholder="${escapeAttribute(compareState.colALabel)}" />
+                                <div class="grid grid-cols-3 gap-2">
+                                    <div>
+                                        <label class="block text-[11px] text-slate-500">フォント</label>
+                                        <select data-compare-row-a-font-size="${index}" class="mt-1 w-full px-2 py-1.5 border border-slate-300 rounded-lg text-xs bg-white h-8">
+                                            <option value="14px" ${row.aFontSize === "14px" ? "selected" : ""}>14px</option>
+                                            <option value="16px" ${row.aFontSize === "16px" ? "selected" : ""}>16px</option>
+                                            <option value="18px" ${row.aFontSize === "18px" ? "selected" : ""}>18px</option>
+                                            <option value="20px" ${row.aFontSize === "20px" ? "selected" : ""}>20px</option>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label class="block text-[11px] text-slate-500">文字色</label>
+                                        <input type="color" data-compare-row-a-text-color="${index}" class="mt-1 w-full h-8 rounded border border-slate-300" value="${escapeAttribute(row.aTextColor)}" />
+                                    </div>
+                                    <div>
+                                        <label class="block text-[11px] text-slate-500">背景色</label>
+                                        <input type="color" data-compare-row-a-bg-color="${index}" class="mt-1 w-full h-8 rounded border border-slate-300" value="${escapeAttribute(row.aBgColor)}" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="rounded-lg border border-slate-200 bg-white p-2.5 space-y-1.5">
+                                <div class="text-xs font-bold text-slate-700">${escapeHtml(compareState.colBLabel || "プランB")}セル</div>
+                                <input type="text" data-compare-row-b="${index}" value="${escapeAttribute(row.b)}" class="w-full px-2.5 py-2 border border-slate-300 rounded-lg text-sm" placeholder="${escapeAttribute(compareState.colBLabel)}" />
+                                <div class="grid grid-cols-3 gap-2">
+                                    <div>
+                                        <label class="block text-[11px] text-slate-500">フォント</label>
+                                        <select data-compare-row-b-font-size="${index}" class="mt-1 w-full px-2 py-1.5 border border-slate-300 rounded-lg text-xs bg-white h-8">
+                                            <option value="14px" ${row.bFontSize === "14px" ? "selected" : ""}>14px</option>
+                                            <option value="16px" ${row.bFontSize === "16px" ? "selected" : ""}>16px</option>
+                                            <option value="18px" ${row.bFontSize === "18px" ? "selected" : ""}>18px</option>
+                                            <option value="20px" ${row.bFontSize === "20px" ? "selected" : ""}>20px</option>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label class="block text-[11px] text-slate-500">文字色</label>
+                                        <input type="color" data-compare-row-b-text-color="${index}" class="mt-1 w-full h-8 rounded border border-slate-300" value="${escapeAttribute(row.bTextColor)}" />
+                                    </div>
+                                    <div>
+                                        <label class="block text-[11px] text-slate-500">背景色</label>
+                                        <input type="color" data-compare-row-b-bg-color="${index}" class="mt-1 w-full h-8 rounded border border-slate-300" value="${escapeAttribute(row.bBgColor)}" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                compareRowsContainer.appendChild(wrapper);
+            });
+            compareState.focusedRowIndex = null;
+        }
+
+        function generateCompare() {
+            const prefix = getCompareClassPrefix();
+            const header = escapeHtml(compareState.headerLabel || "比較項目");
+            const colA = escapeHtml(compareState.colALabel || "項目A");
+            const colB = escapeHtml(compareState.colBLabel || "項目B");
+
+            const bodyRows = compareState.rows.map((row) => {
+                return `    <tr>
+      <td class="${prefix}__cell ${prefix}__cell--label" style="font-size: ${row.labelFontSize}; color: ${row.labelTextColor}; background-color: ${row.labelBgColor};">${escapeHtml(row.label)}</td>
+      <td class="${prefix}__cell" style="font-size: ${row.aFontSize}; color: ${row.aTextColor}; background-color: ${row.aBgColor};">${escapeHtml(row.a)}</td>
+      <td class="${prefix}__cell" style="font-size: ${row.bFontSize}; color: ${row.bTextColor}; background-color: ${row.bBgColor};">${escapeHtml(row.b)}</td>
+    </tr>`;
+            }).join("\n");
+
+            const compareHtml = `<div class="${prefix}__wrap">
+  <table class="${prefix}">
+    <colgroup>
+      <col class="${prefix}__col ${prefix}__col--label" />
+      <col class="${prefix}__col ${prefix}__col--a" />
+      <col class="${prefix}__col ${prefix}__col--b" />
+    </colgroup>
+    <thead>
+      <tr>
+        <th class="${prefix}__head ${prefix}__head--base">${header}</th>
+        <th class="${prefix}__head ${prefix}__head--a">${colA}</th>
+        <th class="${prefix}__head ${prefix}__head--b">${colB}</th>
+      </tr>
+    </thead>
+    <tbody>
+${bodyRows}
+    </tbody>
+  </table>
+</div>
+<style>
+  .${prefix}__wrap {
+    width: 100%;
+    overflow-x: hidden;
+  }
+  .${prefix} {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+    font-size: 14px;
+  }
+  .${prefix}__col--label {
+    width: 36%;
+  }
+  .${prefix}__col--a,
+  .${prefix}__col--b {
+    width: 32%;
+  }
+  .${prefix}__head,
+  .${prefix}__cell {
+    border: 1px solid #e2e8f0;
+    padding: 12px 12px;
+    text-align: left;
+    line-height: 1.5;
+    white-space: normal;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+  }
+  .${prefix}__head {
+    font-weight: 700;
+  }
+  .${prefix}__head--base {
+    font-size: ${compareState.baseHeaderFontSize};
+    background-color: ${compareState.baseHeaderBgColor};
+    color: ${compareState.baseHeaderTextColor};
+  }
+  .${prefix}__head--a {
+    font-size: ${compareState.colAHeaderFontSize};
+    background-color: ${compareState.colABgColor};
+    color: ${compareState.colATextColor};
+  }
+  .${prefix}__head--b {
+    font-size: ${compareState.colBHeaderFontSize};
+    background-color: ${compareState.colBBgColor};
+    color: ${compareState.colBTextColor};
+  }
+  .${prefix}__cell {
+    color: #334155;
+  }
+  .${prefix}__cell--label {
+    font-weight: 600;
+  }
+</style>`;
+
+            comparePreviewContent.innerHTML = compareHtml;
+            outputCompareHtmlCode.value = compareHtml;
         }
 
         function updateActionTypeUi() {
@@ -1032,6 +1425,40 @@
             generateFaq();
         }
 
+        function resetCompareToDefault() {
+            compareState.headerLabel = "比較項目";
+            compareState.colALabel = "プランA";
+            compareState.colBLabel = "プランB";
+            compareState.baseHeaderFontSize = "16px";
+            compareState.colAHeaderFontSize = "16px";
+            compareState.colBHeaderFontSize = "16px";
+            compareState.baseHeaderTextColor = "#334155";
+            compareState.baseHeaderBgColor = "#f8fafc";
+            compareState.colATextColor = "#0f766e";
+            compareState.colABgColor = "#e8f5f2";
+            compareState.colBTextColor = "#b91c1c";
+            compareState.colBBgColor = "#fef2f2";
+            compareState.rows = compareDefaultRows.map((row) => ({ ...row }));
+            compareState.focusedRowIndex = null;
+            compareState.blockId = generateRandomId(7);
+
+            compareHeaderLabel.value = compareState.headerLabel;
+            compareColALabel.value = compareState.colALabel;
+            compareColBLabel.value = compareState.colBLabel;
+            compareBaseHeaderFontSize.value = compareState.baseHeaderFontSize;
+            compareColAHeaderFontSize.value = compareState.colAHeaderFontSize;
+            compareColBHeaderFontSize.value = compareState.colBHeaderFontSize;
+            compareBaseHeaderTextColor.value = compareState.baseHeaderTextColor;
+            compareBaseHeaderBgColor.value = compareState.baseHeaderBgColor;
+            compareColATextColor.value = compareState.colATextColor;
+            compareColABgColor.value = compareState.colABgColor;
+            compareColBTextColor.value = compareState.colBTextColor;
+            compareColBBgColor.value = compareState.colBBgColor;
+
+            renderCompareRows();
+            generateCompare();
+        }
+
         // 枠線なしトグルの制御
         function updateBorderStyleUi() {
             state.noBorder = checkNoBorder.checked;
@@ -1161,6 +1588,156 @@
             faqState.answerSize = e.target.value;
             generateFaq();
         });
+        compareHeaderLabel.addEventListener('input', (e) => {
+            compareState.headerLabel = e.target.value;
+            generateCompare();
+        });
+        compareColALabel.addEventListener('input', (e) => {
+            compareState.colALabel = e.target.value;
+            renderCompareRows();
+            generateCompare();
+        });
+        compareColBLabel.addEventListener('input', (e) => {
+            compareState.colBLabel = e.target.value;
+            renderCompareRows();
+            generateCompare();
+        });
+        compareBaseHeaderFontSize.addEventListener('change', (e) => {
+            compareState.baseHeaderFontSize = e.target.value;
+            generateCompare();
+        });
+        compareColAHeaderFontSize.addEventListener('change', (e) => {
+            compareState.colAHeaderFontSize = e.target.value;
+            generateCompare();
+        });
+        compareColBHeaderFontSize.addEventListener('change', (e) => {
+            compareState.colBHeaderFontSize = e.target.value;
+            generateCompare();
+        });
+        compareBaseHeaderTextColor.addEventListener('input', (e) => {
+            compareState.baseHeaderTextColor = e.target.value;
+            generateCompare();
+        });
+        compareBaseHeaderBgColor.addEventListener('input', (e) => {
+            compareState.baseHeaderBgColor = e.target.value;
+            generateCompare();
+        });
+        compareColATextColor.addEventListener('input', (e) => {
+            compareState.colATextColor = e.target.value;
+            generateCompare();
+        });
+        compareColABgColor.addEventListener('input', (e) => {
+            compareState.colABgColor = e.target.value;
+            generateCompare();
+        });
+        compareColBTextColor.addEventListener('input', (e) => {
+            compareState.colBTextColor = e.target.value;
+            generateCompare();
+        });
+        compareColBBgColor.addEventListener('input', (e) => {
+            compareState.colBBgColor = e.target.value;
+            generateCompare();
+        });
+        compareRowsContainer.addEventListener('input', (e) => {
+            const labelIdx = e.target.dataset.compareRowLabel;
+            const colAIdx = e.target.dataset.compareRowA;
+            const colBIdx = e.target.dataset.compareRowB;
+            const labelTextColorIdx = e.target.dataset.compareRowLabelTextColor;
+            const labelBgColorIdx = e.target.dataset.compareRowLabelBgColor;
+            const aTextColorIdx = e.target.dataset.compareRowATextColor;
+            const aBgColorIdx = e.target.dataset.compareRowABgColor;
+            const bTextColorIdx = e.target.dataset.compareRowBTextColor;
+            const bBgColorIdx = e.target.dataset.compareRowBBgColor;
+
+            if (labelIdx !== undefined) {
+                const idx = Number(labelIdx);
+                compareState.rows[idx].label = e.target.value;
+                const title = compareRowsContainer.querySelector(`[data-compare-row-title="${idx}"]`);
+                if (title) {
+                    title.textContent = e.target.value || "比較項目を入力";
+                }
+                generateCompare();
+                return;
+            }
+            if (colAIdx !== undefined) {
+                compareState.rows[Number(colAIdx)].a = e.target.value;
+                generateCompare();
+                return;
+            }
+            if (colBIdx !== undefined) {
+                compareState.rows[Number(colBIdx)].b = e.target.value;
+                generateCompare();
+                return;
+            }
+            if (labelTextColorIdx !== undefined) {
+                compareState.rows[Number(labelTextColorIdx)].labelTextColor = e.target.value;
+                generateCompare();
+                return;
+            }
+            if (labelBgColorIdx !== undefined) {
+                compareState.rows[Number(labelBgColorIdx)].labelBgColor = e.target.value;
+                generateCompare();
+                return;
+            }
+            if (aTextColorIdx !== undefined) {
+                compareState.rows[Number(aTextColorIdx)].aTextColor = e.target.value;
+                generateCompare();
+                return;
+            }
+            if (aBgColorIdx !== undefined) {
+                compareState.rows[Number(aBgColorIdx)].aBgColor = e.target.value;
+                generateCompare();
+                return;
+            }
+            if (bTextColorIdx !== undefined) {
+                compareState.rows[Number(bTextColorIdx)].bTextColor = e.target.value;
+                generateCompare();
+                return;
+            }
+            if (bBgColorIdx !== undefined) {
+                compareState.rows[Number(bBgColorIdx)].bBgColor = e.target.value;
+                generateCompare();
+            }
+        });
+        compareRowsContainer.addEventListener('change', (e) => {
+            const labelFontSizeIdx = e.target.dataset.compareRowLabelFontSize;
+            const aFontSizeIdx = e.target.dataset.compareRowAFontSize;
+            const bFontSizeIdx = e.target.dataset.compareRowBFontSize;
+
+            if (labelFontSizeIdx !== undefined) {
+                compareState.rows[Number(labelFontSizeIdx)].labelFontSize = e.target.value;
+                generateCompare();
+                return;
+            }
+            if (aFontSizeIdx !== undefined) {
+                compareState.rows[Number(aFontSizeIdx)].aFontSize = e.target.value;
+                generateCompare();
+                return;
+            }
+            if (bFontSizeIdx !== undefined) {
+                compareState.rows[Number(bFontSizeIdx)].bFontSize = e.target.value;
+                generateCompare();
+            }
+        });
+        compareRowsContainer.addEventListener('click', (e) => {
+            const removeIdx = e.target.dataset.compareRemoveRow;
+            if (removeIdx === undefined) return;
+            if (compareState.rows.length <= 1) return;
+            compareState.rows.splice(Number(removeIdx), 1);
+            renderCompareRows();
+            generateCompare();
+        });
+        btnAddCompareRow.addEventListener('click', () => {
+            compareState.rows.push(createCompareRow({
+                label: `項目${compareState.rows.length + 1}`,
+                a: "",
+                b: ""
+            }));
+            compareState.focusedRowIndex = compareState.rows.length - 1;
+            renderCompareRows();
+            generateCompare();
+        });
+        btnCompareReset.addEventListener('click', resetCompareToDefault);
         selectBorderRadius.addEventListener('change', (e) => {
             state.borderRadius = e.target.value;
             generateCta();
@@ -1278,10 +1855,23 @@
                 console.error('ブラウザがコピー機能をサポートしていません: ', err);
             }
         });
+        btnCompareCopy.addEventListener('click', () => {
+            copyWorkspace.value = outputCompareHtmlCode.value;
+            copyWorkspace.select();
+            try {
+                const successful = document.execCommand('copy');
+                if (successful) {
+                    showToast();
+                }
+            } catch (err) {
+                console.error('ブラウザがコピー機能をサポートしていません: ', err);
+            }
+        });
         btnReset.addEventListener('click', resetToDefault);
         btnDarkToggle.addEventListener('click', toggleDarkMode);
         tabPageCta.addEventListener('click', () => updatePageTabUi("cta"));
         tabPageFaq.addEventListener('click', () => updatePageTabUi("faq"));
+        tabPageCompare.addEventListener('click', () => updatePageTabUi("compare"));
 
         // 初期ロード実行
         window.addEventListener('DOMContentLoaded', () => {
@@ -1290,6 +1880,7 @@
             updateBorderStyleUi();
             updateColorModeUi();
             resetFaqToDefault();
+            resetCompareToDefault();
             updatePageTabUi("cta");
         });
     </script>
