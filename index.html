@@ -45,6 +45,7 @@
                 <button id="tabPageFaq" class="px-4 py-2 rounded-lg font-bold transition-all">FAQアコーディオン</button>
                 <button id="tabPageCompare" class="px-4 py-2 rounded-lg font-bold transition-all">比較表</button>
                 <button id="tabPageProgress" class="px-4 py-2 rounded-lg font-bold transition-all">プログレスバー</button>
+                <button id="tabPageNotice" class="px-4 py-2 rounded-lg font-bold transition-all">インフォメーション</button>
             </div>
         </div>
 
@@ -677,6 +678,139 @@
                 </section>
             </div>
         </div>
+
+        <div id="noticePage" class="hidden">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+                <section class="lg:col-span-5 space-y-6">
+                    <div class="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm space-y-6">
+                        <div class="flex items-center justify-between border-b border-slate-100 pb-4">
+                            <h2 class="font-bold text-slate-900 flex items-center gap-2">
+                                <span class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-indigo-100 text-indigo-600 text-[11px] font-bold leading-none">i</span>
+                                インフォメーション設定
+                            </h2>
+                            <button id="btnNoticeReset" class="text-xs text-slate-500 hover:text-indigo-600 flex items-center gap-1 transition-colors">
+                                <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i>初期化
+                            </button>
+                        </div>
+
+                        <div class="space-y-3">
+                            <label class="block text-sm font-bold text-slate-700">基本設定</label>
+                            <div class="grid grid-cols-2 gap-3">
+                                <div>
+                                    <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider">アイコン</label>
+                                    <select id="noticeType" class="mt-1 w-full px-3 py-2 border border-slate-300 rounded-lg text-sm bg-white">
+                                        <option value="info">お知らせ</option>
+                                        <option value="caution">注意</option>
+                                        <option value="forbidden">禁止</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider">見た目の方向</label>
+                                    <select id="noticeTone" class="mt-1 w-full px-3 py-2 border border-slate-300 rounded-lg text-sm bg-white">
+                                        <option value="soft">やわらかい</option>
+                                        <option value="strong">強めの警告</option>
+                                        <option value="simple">シンプルな業務連絡</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div>
+                                <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider">タイトル</label>
+                                <input id="noticeTitle" type="text" value="作業前にご確認ください" class="mt-1 w-full px-3 py-2 border border-slate-300 rounded-lg text-sm" />
+                            </div>
+                            <div>
+                                <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider">本文</label>
+                                <textarea id="noticeBody" rows="5" class="mt-1 w-full px-3 py-2 border border-slate-300 rounded-lg text-sm">この操作を始める前に、必要な権限と設定状況をご確認ください。
+権限が不足している場合は管理者へご相談ください。</textarea>
+                            </div>
+                            <label class="inline-flex items-center gap-2 text-sm text-slate-700 font-medium">
+                                <input id="noticeShowIcon" type="checkbox" checked class="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500" />
+                                アイコンを表示する
+                            </label>
+                        </div>
+
+                        <details class="rounded-xl border border-slate-200 bg-slate-50 overflow-hidden" open>
+                            <summary class="list-none cursor-pointer px-3 py-2.5 flex items-center justify-between text-sm font-bold text-slate-700 border-b border-slate-200">
+                                <span>デザイン調整</span>
+                                <span class="text-slate-400 text-xs">開閉</span>
+                            </summary>
+                            <div class="p-3 grid grid-cols-2 gap-3">
+                                <div>
+                                    <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider">タイトル文字サイズ</label>
+                                    <select id="noticeTitleFontSize" class="mt-1 w-full px-2 py-2 border border-slate-300 rounded-lg text-xs bg-white">
+                                        <option value="11px">11px</option>
+                                        <option value="13px">13px</option>
+                                        <option value="15px" selected>15px</option>
+                                        <option value="17px">17px</option>
+                                        <option value="19px">19px</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider">本文文字サイズ</label>
+                                    <select id="noticeBodyFontSize" class="mt-1 w-full px-2 py-2 border border-slate-300 rounded-lg text-xs bg-white">
+                                        <option value="11px">11px</option>
+                                        <option value="12px">12px</option>
+                                        <option value="13px" selected>13px</option>
+                                        <option value="14px">14px</option>
+                                        <option value="15px">15px</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider">背景色</label>
+                                    <input id="noticeBgColor" type="color" class="mt-1 w-full h-9 rounded border border-slate-300" value="#fff7ed" />
+                                </div>
+                                <div>
+                                    <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider">枠線色</label>
+                                    <input id="noticeBorderColor" type="color" class="mt-1 w-full h-9 rounded border border-slate-300" value="#fdba74" />
+                                </div>
+                                <div>
+                                    <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider">タイトル色</label>
+                                    <input id="noticeTitleColor" type="color" class="mt-1 w-full h-9 rounded border border-slate-300" value="#c2410c" />
+                                </div>
+                                <div>
+                                    <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider">本文色</label>
+                                    <input id="noticeBodyColor" type="color" class="mt-1 w-full h-9 rounded border border-slate-300" value="#7c2d12" />
+                                </div>
+                                <div>
+                                    <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider">角丸</label>
+                                    <select id="noticeRadius" class="mt-1 w-full px-2 py-2 border border-slate-300 rounded-lg text-xs bg-white">
+                                        <option value="6px">6px</option>
+                                        <option value="10px" selected>10px</option>
+                                        <option value="14px">14px</option>
+                                        <option value="18px">18px</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </details>
+                    </div>
+                </section>
+
+                <section class="lg:col-span-7 space-y-6">
+                    <div class="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden">
+                        <div class="border-b border-slate-200 px-6 py-4 bg-slate-50">
+                            <span class="text-xs font-bold text-slate-500">プレビュー表示</span>
+                        </div>
+                        <div id="noticePreviewCanvas" class="p-6 bg-white min-h-[240px]">
+                            <div id="noticePreviewContent"></div>
+                        </div>
+                    </div>
+
+                    <div class="bg-slate-900 text-slate-300 rounded-2xl p-6 shadow-sm space-y-4">
+                        <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+                            <div class="flex items-center space-x-2">
+                                <i data-lucide="code" class="w-5 h-5 text-indigo-400"></i>
+                                <span class="font-bold text-slate-100 text-sm">HTMLコードコピー</span>
+                            </div>
+                            <span class="text-[10px] text-slate-500">Onboarding の HTML ブロックへ貼り付け対応</span>
+                        </div>
+                        <textarea id="outputNoticeHtmlCode" readonly rows="12" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 font-mono text-xs text-indigo-300 focus:outline-none resize-none select-all"></textarea>
+                        <button id="btnNoticeCopy" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white py-3 px-4 rounded-xl font-bold text-sm flex items-center justify-center gap-2 transition-all shadow-md active:scale-[0.98]">
+                            <i data-lucide="copy" class="w-4 h-4"></i>
+                            <span>HTMLコードをコピーする</span>
+                        </button>
+                    </div>
+                </section>
+            </div>
+        </div>
     </main>
 
     <!-- フッター -->
@@ -832,10 +966,12 @@
         const tabPageFaq = document.getElementById('tabPageFaq');
         const tabPageCompare = document.getElementById('tabPageCompare');
         const tabPageProgress = document.getElementById('tabPageProgress');
+        const tabPageNotice = document.getElementById('tabPageNotice');
         const ctaPage = document.getElementById('ctaPage');
         const faqPage = document.getElementById('faqPage');
         const comparePage = document.getElementById('comparePage');
         const progressPage = document.getElementById('progressPage');
+        const noticePage = document.getElementById('noticePage');
         const faqListContainer = document.getElementById('faqListContainer');
         const btnAddFaqItem = document.getElementById('btnAddFaqItem');
         const btnFaqReset = document.getElementById('btnFaqReset');
@@ -885,6 +1021,22 @@
         const progressPreviewContent = document.getElementById('progressPreviewContent');
         const progressCodeBlocks = document.getElementById('progressCodeBlocks');
         const btnProgressCopyAll = document.getElementById('btnProgressCopyAll');
+        const btnNoticeReset = document.getElementById('btnNoticeReset');
+        const noticeType = document.getElementById('noticeType');
+        const noticeTone = document.getElementById('noticeTone');
+        const noticeTitle = document.getElementById('noticeTitle');
+        const noticeBody = document.getElementById('noticeBody');
+        const noticeShowIcon = document.getElementById('noticeShowIcon');
+        const noticeBgColor = document.getElementById('noticeBgColor');
+        const noticeBorderColor = document.getElementById('noticeBorderColor');
+        const noticeTitleColor = document.getElementById('noticeTitleColor');
+        const noticeBodyColor = document.getElementById('noticeBodyColor');
+        const noticeTitleFontSize = document.getElementById('noticeTitleFontSize');
+        const noticeBodyFontSize = document.getElementById('noticeBodyFontSize');
+        const noticeRadius = document.getElementById('noticeRadius');
+        const noticePreviewContent = document.getElementById('noticePreviewContent');
+        const outputNoticeHtmlCode = document.getElementById('outputNoticeHtmlCode');
+        const btnNoticeCopy = document.getElementById('btnNoticeCopy');
 
         const faqDefaultItems = [
             { question: "Q1: 質問を記載します。", answer: "回答を記載します。\n改行する際にはbrを加えます。\n分かりやすく、端的に書きましょう。" },
@@ -963,6 +1115,22 @@
             generatedStepHtml: []
         };
 
+        const noticeState = {
+            type: "info",
+            tone: "soft",
+            title: "作業前にご確認ください",
+            body: "この操作を始める前に、必要な権限と設定状況をご確認ください。\n権限が不足している場合は管理者へご相談ください。",
+            showIcon: true,
+            bgColor: "#fff7ed",
+            borderColor: "#fdba74",
+            titleColor: "#c2410c",
+            bodyColor: "#7c2d12",
+            titleFontSize: "15px",
+            bodyFontSize: "13px",
+            radius: "10px",
+            blockId: generateRandomId(7)
+        };
+
         function getProjectTokenFromUrl(urlValue) {
             try {
                 const parsed = new URL(urlValue);
@@ -994,6 +1162,43 @@
             return `onb-progress-${projectToken}-${progressState.blockId}`;
         }
 
+        function getNoticeClassPrefix() {
+            const projectToken = getProjectTokenFromUrl(inputUrl.value || state.url);
+            return `onb-notice-${projectToken}-${noticeState.blockId}`;
+        }
+
+        function getNoticePreset(type, tone) {
+            const presets = {
+                info: {
+                    soft: { bg: "#eff6ff", border: "#93c5fd", title: "#1d4ed8", body: "#1e3a8a" },
+                    strong: { bg: "#dbeafe", border: "#2563eb", title: "#1d4ed8", body: "#1e40af" },
+                    simple: { bg: "#ffffff", border: "#60a5fa", title: "#1d4ed8", body: "#475569" }
+                },
+                caution: {
+                    soft: { bg: "#fff7ed", border: "#fdba74", title: "#c2410c", body: "#7c2d12" },
+                    strong: { bg: "#fff1e6", border: "#f97316", title: "#9a3412", body: "#7c2d12" },
+                    simple: { bg: "#ffffff", border: "#f59e0b", title: "#92400e", body: "#57534e" }
+                },
+                forbidden: {
+                    soft: { bg: "#fef2f2", border: "#fca5a5", title: "#b91c1c", body: "#7f1d1d" },
+                    strong: { bg: "#fee2e2", border: "#ef4444", title: "#991b1b", body: "#7f1d1d" },
+                    simple: { bg: "#ffffff", border: "#f87171", title: "#b91c1c", body: "#57534e" }
+                }
+            };
+
+            return presets[type]?.[tone] || presets.caution.soft;
+        }
+
+        function getNoticeIconConfig(type) {
+            if (type === "info") {
+                return { shape: "circle", label: "i" };
+            }
+            if (type === "forbidden") {
+                return { shape: "plain", label: "❌" };
+            }
+            return { shape: "triangle", label: "!" };
+        }
+
         function escapeMultilineTextToHtml(value) {
             return escapeHtml(value).replace(/\r?\n/g, "<br />");
         }
@@ -1003,10 +1208,12 @@
             const isFaq = page === "faq";
             const isCompare = page === "compare";
             const isProgress = page === "progress";
+            const isNotice = page === "notice";
             ctaPage.classList.toggle("hidden", !isCta);
             faqPage.classList.toggle("hidden", !isFaq);
             comparePage.classList.toggle("hidden", !isCompare);
             progressPage.classList.toggle("hidden", !isProgress);
+            noticePage.classList.toggle("hidden", !isNotice);
 
             tabPageCta.className = isCta
                 ? "px-4 py-2 rounded-lg font-bold transition-all bg-white text-slate-900 shadow-sm"
@@ -1018,6 +1225,9 @@
                 ? "px-4 py-2 rounded-lg font-bold transition-all bg-white text-slate-900 shadow-sm"
                 : "px-4 py-2 rounded-lg font-bold transition-all text-slate-600 hover:text-slate-900";
             tabPageProgress.className = isProgress
+                ? "px-4 py-2 rounded-lg font-bold transition-all bg-white text-slate-900 shadow-sm"
+                : "px-4 py-2 rounded-lg font-bold transition-all text-slate-600 hover:text-slate-900";
+            tabPageNotice.className = isNotice
                 ? "px-4 py-2 rounded-lg font-bold transition-all bg-white text-slate-900 shadow-sm"
                 : "px-4 py-2 rounded-lg font-bold transition-all text-slate-600 hover:text-slate-900";
         }
@@ -1457,6 +1667,114 @@ ${headerBlock}  <div class="${prefix}__track" aria-label="進捗 ${current} / ${
             lucide.createIcons();
         }
 
+        function syncNoticePresetControls() {
+            noticeType.value = noticeState.type;
+            noticeTone.value = noticeState.tone;
+            noticeBgColor.value = noticeState.bgColor;
+            noticeBorderColor.value = noticeState.borderColor;
+            noticeTitleColor.value = noticeState.titleColor;
+            noticeBodyColor.value = noticeState.bodyColor;
+        }
+
+        function applyNoticePreset(type, tone) {
+            const preset = getNoticePreset(type, tone);
+            noticeState.type = type;
+            noticeState.tone = tone;
+            noticeState.bgColor = preset.bg;
+            noticeState.borderColor = preset.border;
+            noticeState.titleColor = preset.title;
+            noticeState.bodyColor = preset.body;
+            syncNoticePresetControls();
+        }
+
+        function generateNotice() {
+            const prefix = getNoticeClassPrefix();
+            const iconConfig = getNoticeIconConfig(noticeState.type);
+            const iconBlock = noticeState.showIcon
+                ? `  <div class="${prefix}__icon ${prefix}__icon--${iconConfig.shape}" aria-hidden="true"><span class="${prefix}__icon-label">${escapeHtml(iconConfig.label)}</span></div>\n`
+                : "";
+
+            const noticeHtml = `<div class="${prefix}">
+${iconBlock}  <div class="${prefix}__content">
+    <p class="${prefix}__title">${escapeHtml(noticeState.title)}</p>
+    <p class="${prefix}__body">${escapeMultilineTextToHtml(noticeState.body)}</p>
+  </div>
+</div>
+<style>
+  .${prefix} {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    width: 100%;
+    box-sizing: border-box;
+    margin: 16px 0;
+    padding: 14px 16px;
+    border: 1px solid ${noticeState.borderColor};
+    border-radius: ${noticeState.radius};
+    background-color: ${noticeState.bgColor};
+  }
+  .${prefix}__icon {
+    position: relative;
+    width: 24px;
+    height: 24px;
+    flex: 0 0 24px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: #ffffff;
+    font-size: 13px;
+    font-weight: 700;
+    line-height: 1;
+  }
+  .${prefix}__icon--plain {
+    width: auto;
+    height: auto;
+    flex: 0 0 auto;
+    display: inline-block;
+    font-size: 18px;
+    line-height: 1;
+  }
+  .${prefix}__icon--circle {
+    border-radius: 999px;
+    background-color: ${noticeState.borderColor};
+  }
+  .${prefix}__icon--triangle {
+    background-color: ${noticeState.borderColor};
+    clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+  }
+  .${prefix}__icon-label {
+    position: relative;
+    z-index: 1;
+  }
+  .${prefix}__icon--plain .${prefix}__icon-label {
+    position: static;
+  }
+  .${prefix}__icon--triangle .${prefix}__icon-label {
+    top: 3px;
+  }
+  .${prefix}__content {
+    min-width: 0;
+    flex: 1;
+  }
+  .${prefix}__title {
+    margin: 0 0 6px;
+    color: ${noticeState.titleColor};
+    font-size: ${noticeState.titleFontSize};
+    font-weight: 700;
+    line-height: 1.5;
+  }
+  .${prefix}__body {
+    margin: 0;
+    color: ${noticeState.bodyColor};
+    font-size: ${noticeState.bodyFontSize};
+    line-height: 1.7;
+  }
+</style>`;
+
+            noticePreviewContent.innerHTML = noticeHtml;
+            outputNoticeHtmlCode.value = noticeHtml;
+        }
+
         function updateActionTypeUi() {
             state.actionType = selectActionType.value;
             if (state.actionType === 'popup') {
@@ -1798,6 +2116,28 @@ ${headerBlock}  <div class="${prefix}__track" aria-label="進捗 ${current} / ${
             generateProgress();
         }
 
+        function resetNoticeToDefault() {
+            noticeState.type = "info";
+            noticeState.tone = "soft";
+            noticeState.title = "作業前にご確認ください";
+            noticeState.body = "この操作を始める前に、必要な権限と設定状況をご確認ください。\n権限が不足している場合は管理者へご相談ください。";
+            noticeState.showIcon = true;
+            noticeState.titleFontSize = "15px";
+            noticeState.bodyFontSize = "13px";
+            noticeState.radius = "10px";
+            noticeState.blockId = generateRandomId(7);
+            applyNoticePreset(noticeState.type, noticeState.tone);
+
+            noticeTitle.value = noticeState.title;
+            noticeBody.value = noticeState.body;
+            noticeShowIcon.checked = noticeState.showIcon;
+            noticeTitleFontSize.value = noticeState.titleFontSize;
+            noticeBodyFontSize.value = noticeState.bodyFontSize;
+            noticeRadius.value = noticeState.radius;
+
+            generateNotice();
+        }
+
         // 枠線なしトグルの制御
         function updateBorderStyleUi() {
             state.noBorder = checkNoBorder.checked;
@@ -2078,6 +2418,7 @@ ${headerBlock}  <div class="${prefix}__track" aria-label="進捗 ${current} / ${
         });
         btnCompareReset.addEventListener('click', resetCompareToDefault);
         btnProgressReset.addEventListener('click', resetProgressToDefault);
+        btnNoticeReset.addEventListener('click', resetNoticeToDefault);
         progressTotalSteps.addEventListener('input', (e) => {
             progressState.totalSteps = Number(e.target.value) || 4;
             if (progressState.currentStep > progressState.totalSteps) {
@@ -2132,6 +2473,54 @@ ${headerBlock}  <div class="${prefix}__track" aria-label="進捗 ${current} / ${
         progressRadius.addEventListener('change', (e) => {
             progressState.radius = e.target.value;
             generateProgress();
+        });
+        noticeType.addEventListener('change', (e) => {
+            applyNoticePreset(e.target.value, noticeState.tone);
+            generateNotice();
+        });
+        noticeTone.addEventListener('change', (e) => {
+            applyNoticePreset(noticeState.type, e.target.value);
+            generateNotice();
+        });
+        noticeTitle.addEventListener('input', (e) => {
+            noticeState.title = e.target.value;
+            generateNotice();
+        });
+        noticeBody.addEventListener('input', (e) => {
+            noticeState.body = e.target.value;
+            generateNotice();
+        });
+        noticeShowIcon.addEventListener('change', (e) => {
+            noticeState.showIcon = e.target.checked;
+            generateNotice();
+        });
+        noticeBgColor.addEventListener('input', (e) => {
+            noticeState.bgColor = e.target.value;
+            generateNotice();
+        });
+        noticeBorderColor.addEventListener('input', (e) => {
+            noticeState.borderColor = e.target.value;
+            generateNotice();
+        });
+        noticeTitleColor.addEventListener('input', (e) => {
+            noticeState.titleColor = e.target.value;
+            generateNotice();
+        });
+        noticeBodyColor.addEventListener('input', (e) => {
+            noticeState.bodyColor = e.target.value;
+            generateNotice();
+        });
+        noticeTitleFontSize.addEventListener('change', (e) => {
+            noticeState.titleFontSize = e.target.value;
+            generateNotice();
+        });
+        noticeBodyFontSize.addEventListener('change', (e) => {
+            noticeState.bodyFontSize = e.target.value;
+            generateNotice();
+        });
+        noticeRadius.addEventListener('change', (e) => {
+            noticeState.radius = e.target.value;
+            generateNotice();
         });
         selectBorderRadius.addEventListener('change', (e) => {
             state.borderRadius = e.target.value;
@@ -2290,12 +2679,25 @@ ${headerBlock}  <div class="${prefix}__track" aria-label="進捗 ${current} / ${
                 console.error('ブラウザがコピー機能をサポートしていません: ', err);
             }
         });
+        btnNoticeCopy.addEventListener('click', () => {
+            copyWorkspace.value = outputNoticeHtmlCode.value;
+            copyWorkspace.select();
+            try {
+                const successful = document.execCommand('copy');
+                if (successful) {
+                    showToast();
+                }
+            } catch (err) {
+                console.error('ブラウザがコピー機能をサポートしていません: ', err);
+            }
+        });
         btnReset.addEventListener('click', resetToDefault);
         btnDarkToggle.addEventListener('click', toggleDarkMode);
         tabPageCta.addEventListener('click', () => updatePageTabUi("cta"));
         tabPageFaq.addEventListener('click', () => updatePageTabUi("faq"));
         tabPageCompare.addEventListener('click', () => updatePageTabUi("compare"));
         tabPageProgress.addEventListener('click', () => updatePageTabUi("progress"));
+        tabPageNotice.addEventListener('click', () => updatePageTabUi("notice"));
 
         // 初期ロード実行
         window.addEventListener('DOMContentLoaded', () => {
@@ -2306,6 +2708,7 @@ ${headerBlock}  <div class="${prefix}__track" aria-label="進捗 ${current} / ${
             resetFaqToDefault();
             resetCompareToDefault();
             resetProgressToDefault();
+            resetNoticeToDefault();
             updatePageTabUi("cta");
         });
     </script>
