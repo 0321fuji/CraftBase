@@ -44,6 +44,7 @@
                 <button id="tabPageCta" class="px-4 py-2 rounded-lg font-bold transition-all">CTAボタン</button>
                 <button id="tabPageFaq" class="px-4 py-2 rounded-lg font-bold transition-all">FAQアコーディオン</button>
                 <button id="tabPageCompare" class="px-4 py-2 rounded-lg font-bold transition-all">比較表</button>
+                <button id="tabPageProgress" class="px-4 py-2 rounded-lg font-bold transition-all">プログレスバー</button>
             </div>
         </div>
 
@@ -536,6 +537,146 @@
                 </section>
             </div>
         </div>
+
+        <div id="progressPage" class="hidden">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+                <section class="lg:col-span-5 space-y-6">
+                    <div class="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm space-y-6">
+                        <div class="flex items-center justify-between border-b border-slate-100 pb-4">
+                            <h2 class="font-bold text-slate-900 flex items-center gap-2">
+                                <i data-lucide="gauge" class="w-5 h-5 text-indigo-600"></i>
+                                プログレスバー設定
+                            </h2>
+                            <button id="btnProgressReset" class="text-xs text-slate-500 hover:text-indigo-600 flex items-center gap-1 transition-colors">
+                                <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i>初期化
+                            </button>
+                        </div>
+
+                        <div class="space-y-3">
+                            <label class="block text-sm font-bold text-slate-700">基本設定</label>
+                            <div class="grid grid-cols-2 gap-3">
+                                <div>
+                                    <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider">総ステップ数</label>
+                                    <input id="progressTotalSteps" type="number" min="2" max="8" value="4" class="mt-1 w-full px-3 py-2 border border-slate-300 rounded-lg text-sm" />
+                                </div>
+                                <div>
+                                    <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider">プレビュー中のステップ</label>
+                                    <select id="progressCurrentStep" class="mt-1 w-full px-3 py-2 border border-slate-300 rounded-lg text-sm bg-white"></select>
+                                </div>
+                            </div>
+                            <div class="grid grid-cols-2 gap-3">
+                                <div>
+                                    <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider">ラベルの接頭語</label>
+                                    <input id="progressLabelPrefix" type="text" value="STEP" class="mt-1 w-full px-3 py-2 border border-slate-300 rounded-lg text-sm" placeholder="例: STEP" />
+                                </div>
+                                <div class="flex items-end">
+                                    <label class="inline-flex items-center gap-2 text-sm text-slate-700 font-medium">
+                                        <input id="progressShowCounter" type="checkbox" checked class="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500" />
+                                        数字表示を出す
+                                    </label>
+                                </div>
+                            </div>
+                            <p class="text-[11px] text-slate-500">出力欄には、各ステップへそのまま貼れるコードを全ステップ分まとめて生成します。</p>
+                        </div>
+
+                        <details class="rounded-xl border border-slate-200 bg-slate-50 overflow-hidden" open>
+                            <summary class="list-none cursor-pointer px-3 py-2.5 flex items-center justify-between text-sm font-bold text-slate-700 border-b border-slate-200">
+                                <span>デザイン調整</span>
+                                <span class="text-slate-400 text-xs">開閉</span>
+                            </summary>
+                            <div class="p-3 grid grid-cols-2 gap-3">
+                                <div>
+                                    <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider">全体幅</label>
+                                    <select id="progressWidth" class="mt-1 w-full px-2 py-2 border border-slate-300 rounded-lg text-xs bg-white">
+                                        <option value="100%" selected>100%</option>
+                                        <option value="90%">90%</option>
+                                        <option value="80%">80%</option>
+                                        <option value="70%">70%</option>
+                                        <option value="60%">60%</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider">配置</label>
+                                    <select id="progressAlignment" class="mt-1 w-full px-2 py-2 border border-slate-300 rounded-lg text-xs bg-white">
+                                        <option value="left">左</option>
+                                        <option value="center" selected>中央</option>
+                                        <option value="right">右</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider">進捗バーの色</label>
+                                    <input id="progressActiveColor" type="color" class="mt-1 w-full h-9 rounded border border-slate-300" value="#4f46e5" />
+                                </div>
+                                <div>
+                                    <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider">未到達バーの色</label>
+                                    <input id="progressInactiveColor" type="color" class="mt-1 w-full h-9 rounded border border-slate-300" value="#e2e8f0" />
+                                </div>
+                                <div>
+                                    <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider">ラベル文字色</label>
+                                    <input id="progressLabelColor" type="color" class="mt-1 w-full h-9 rounded border border-slate-300" value="#334155" />
+                                </div>
+                                <div>
+                                    <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider">補助文字色</label>
+                                    <input id="progressMetaColor" type="color" class="mt-1 w-full h-9 rounded border border-slate-300" value="#64748b" />
+                                </div>
+                                <div>
+                                    <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider">ラベル文字サイズ</label>
+                                    <select id="progressLabelFontSize" class="mt-1 w-full px-2 py-2 border border-slate-300 rounded-lg text-xs bg-white">
+                                        <option value="10px">10px</option>
+                                        <option value="12px" selected>12px</option>
+                                        <option value="14px">14px</option>
+                                        <option value="16px">16px</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider">バーの高さ</label>
+                                    <select id="progressBarHeight" class="mt-1 w-full px-2 py-2 border border-slate-300 rounded-lg text-xs bg-white">
+                                        <option value="6px">6px</option>
+                                        <option value="8px" selected>8px</option>
+                                        <option value="10px">10px</option>
+                                        <option value="12px">12px</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider">角丸</label>
+                                    <select id="progressRadius" class="mt-1 w-full px-2 py-2 border border-slate-300 rounded-lg text-xs bg-white">
+                                        <option value="4px">4px</option>
+                                        <option value="999px" selected>丸める</option>
+                                        <option value="0px">直角</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </details>
+                    </div>
+                </section>
+
+                <section class="lg:col-span-7 space-y-6">
+                    <div class="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden">
+                        <div class="border-b border-slate-200 px-6 py-4 bg-slate-50">
+                            <span class="text-xs font-bold text-slate-500">プレビュー表示</span>
+                        </div>
+                        <div id="progressPreviewCanvas" class="p-6 bg-white min-h-[240px]">
+                            <div id="progressPreviewContent"></div>
+                        </div>
+                    </div>
+
+                    <div class="bg-slate-900 text-slate-300 rounded-2xl p-6 shadow-sm space-y-4">
+                        <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+                            <div class="flex items-center space-x-2">
+                                <i data-lucide="code" class="w-5 h-5 text-indigo-400"></i>
+                                <span class="font-bold text-slate-100 text-sm">ステップ別コード</span>
+                            </div>
+                            <span class="text-[10px] text-slate-500">ステップごとに分けて出力</span>
+                        </div>
+                        <div id="progressCodeBlocks" class="space-y-3"></div>
+                        <button id="btnProgressCopyAll" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white py-3 px-4 rounded-xl font-bold text-sm flex items-center justify-center gap-2 transition-all shadow-md active:scale-[0.98]">
+                            <i data-lucide="copy" class="w-4 h-4"></i>
+                            <span>全ステップ分コードをまとめてコピーする</span>
+                        </button>
+                    </div>
+                </section>
+            </div>
+        </div>
     </main>
 
     <!-- フッター -->
@@ -690,9 +831,11 @@
         const tabPageCta = document.getElementById('tabPageCta');
         const tabPageFaq = document.getElementById('tabPageFaq');
         const tabPageCompare = document.getElementById('tabPageCompare');
+        const tabPageProgress = document.getElementById('tabPageProgress');
         const ctaPage = document.getElementById('ctaPage');
         const faqPage = document.getElementById('faqPage');
         const comparePage = document.getElementById('comparePage');
+        const progressPage = document.getElementById('progressPage');
         const faqListContainer = document.getElementById('faqListContainer');
         const btnAddFaqItem = document.getElementById('btnAddFaqItem');
         const btnFaqReset = document.getElementById('btnFaqReset');
@@ -725,6 +868,23 @@
         const comparePreviewContent = document.getElementById('comparePreviewContent');
         const outputCompareHtmlCode = document.getElementById('outputCompareHtmlCode');
         const btnCompareCopy = document.getElementById('btnCompareCopy');
+        const btnProgressReset = document.getElementById('btnProgressReset');
+        const progressTotalSteps = document.getElementById('progressTotalSteps');
+        const progressCurrentStep = document.getElementById('progressCurrentStep');
+        const progressLabelPrefix = document.getElementById('progressLabelPrefix');
+        const progressShowCounter = document.getElementById('progressShowCounter');
+        const progressActiveColor = document.getElementById('progressActiveColor');
+        const progressInactiveColor = document.getElementById('progressInactiveColor');
+        const progressLabelColor = document.getElementById('progressLabelColor');
+        const progressMetaColor = document.getElementById('progressMetaColor');
+        const progressLabelFontSize = document.getElementById('progressLabelFontSize');
+        const progressBarHeight = document.getElementById('progressBarHeight');
+        const progressWidth = document.getElementById('progressWidth');
+        const progressAlignment = document.getElementById('progressAlignment');
+        const progressRadius = document.getElementById('progressRadius');
+        const progressPreviewContent = document.getElementById('progressPreviewContent');
+        const progressCodeBlocks = document.getElementById('progressCodeBlocks');
+        const btnProgressCopyAll = document.getElementById('btnProgressCopyAll');
 
         const faqDefaultItems = [
             { question: "Q1: 質問を記載します。", answer: "回答を記載します。\n改行する際にはbrを加えます。\n分かりやすく、端的に書きましょう。" },
@@ -785,6 +945,24 @@
             blockId: generateRandomId(7)
         };
 
+        const progressState = {
+            totalSteps: 4,
+            currentStep: 1,
+            labelPrefix: "STEP",
+            showCounter: true,
+            activeColor: "#4f46e5",
+            inactiveColor: "#e2e8f0",
+            labelColor: "#334155",
+            metaColor: "#64748b",
+            labelFontSize: "12px",
+            barHeight: "8px",
+            width: "100%",
+            alignment: "center",
+            radius: "999px",
+            blockId: generateRandomId(7),
+            generatedStepHtml: []
+        };
+
         function getProjectTokenFromUrl(urlValue) {
             try {
                 const parsed = new URL(urlValue);
@@ -811,6 +989,11 @@
             return `onb-compare-${projectToken}-${compareState.blockId}`;
         }
 
+        function getProgressClassPrefix() {
+            const projectToken = getProjectTokenFromUrl(inputUrl.value || state.url);
+            return `onb-progress-${projectToken}-${progressState.blockId}`;
+        }
+
         function escapeMultilineTextToHtml(value) {
             return escapeHtml(value).replace(/\r?\n/g, "<br />");
         }
@@ -819,9 +1002,11 @@
             const isCta = page === "cta";
             const isFaq = page === "faq";
             const isCompare = page === "compare";
+            const isProgress = page === "progress";
             ctaPage.classList.toggle("hidden", !isCta);
             faqPage.classList.toggle("hidden", !isFaq);
             comparePage.classList.toggle("hidden", !isCompare);
+            progressPage.classList.toggle("hidden", !isProgress);
 
             tabPageCta.className = isCta
                 ? "px-4 py-2 rounded-lg font-bold transition-all bg-white text-slate-900 shadow-sm"
@@ -830,6 +1015,9 @@
                 ? "px-4 py-2 rounded-lg font-bold transition-all bg-white text-slate-900 shadow-sm"
                 : "px-4 py-2 rounded-lg font-bold transition-all text-slate-600 hover:text-slate-900";
             tabPageCompare.className = isCompare
+                ? "px-4 py-2 rounded-lg font-bold transition-all bg-white text-slate-900 shadow-sm"
+                : "px-4 py-2 rounded-lg font-bold transition-all text-slate-600 hover:text-slate-900";
+            tabPageProgress.className = isProgress
                 ? "px-4 py-2 rounded-lg font-bold transition-all bg-white text-slate-900 shadow-sm"
                 : "px-4 py-2 rounded-lg font-bold transition-all text-slate-600 hover:text-slate-900";
         }
@@ -1150,6 +1338,125 @@ ${bodyRows}
             outputCompareHtmlCode.value = compareHtml;
         }
 
+        function syncProgressCurrentStepOptions() {
+            const total = Math.min(8, Math.max(2, Number(progressState.totalSteps) || 4));
+            progressState.totalSteps = total;
+
+            if (progressState.currentStep > total) {
+                progressState.currentStep = total;
+            }
+            if (progressState.currentStep < 1) {
+                progressState.currentStep = 1;
+            }
+
+            progressTotalSteps.value = String(total);
+            progressCurrentStep.innerHTML = "";
+            for (let step = 1; step <= total; step += 1) {
+                const option = document.createElement("option");
+                option.value = String(step);
+                option.textContent = `${step} / ${total}`;
+                if (step === progressState.currentStep) {
+                    option.selected = true;
+                }
+                progressCurrentStep.appendChild(option);
+            }
+        }
+
+        function buildProgressHtml(stepNumber) {
+            const prefix = getProgressClassPrefix();
+            const total = progressState.totalSteps;
+            const current = Math.min(total, Math.max(1, stepNumber));
+            const progressPercent = `${(current / total) * 100}%`;
+            const prefixText = progressState.labelPrefix.trim();
+            const marginValue = progressState.alignment === "left"
+                ? "16px 0"
+                : progressState.alignment === "right"
+                    ? "16px 0 16px auto"
+                    : "16px auto";
+            const headerBlock = progressState.showCounter
+                ? `  <div class="${prefix}__meta">${prefixText ? `<span class="${prefix}__label">${escapeHtml(prefixText)}</span>` : `<span class="${prefix}__label">${current === total ? "COMPLETE" : "PROGRESS"}</span>`}<span class="${prefix}__count">${current} / ${total}</span></div>\n`
+                : "";
+
+            return `<!-- PROGRESS BAR STEP ${current}/${total} START -->
+<div class="${prefix}">
+${headerBlock}  <div class="${prefix}__track" aria-label="進捗 ${current} / ${total}">
+    <div class="${prefix}__fill" style="width: ${progressPercent};"></div>
+  </div>
+</div>
+<style>
+  .${prefix} {
+    width: ${progressState.width};
+    margin: ${marginValue};
+    box-sizing: border-box;
+  }
+  .${prefix}__meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 8px;
+    gap: 12px;
+  }
+  .${prefix}__label {
+    color: ${progressState.labelColor};
+    font-size: ${progressState.labelFontSize};
+    font-weight: 700;
+    letter-spacing: 0.08em;
+  }
+  .${prefix}__count {
+    color: ${progressState.metaColor};
+    font-size: ${progressState.labelFontSize};
+    font-weight: 700;
+  }
+  .${prefix}__track {
+    width: 100%;
+    background-color: ${progressState.inactiveColor};
+    border-radius: ${progressState.radius};
+    overflow: hidden;
+    height: ${progressState.barHeight};
+  }
+  .${prefix}__fill {
+    height: 100%;
+    background-color: ${progressState.activeColor};
+    border-radius: ${progressState.radius};
+    transition: width 0.2s ease;
+  }
+</style>
+<!-- PROGRESS BAR STEP ${current}/${total} END -->`;
+        }
+
+        function generateProgress() {
+            syncProgressCurrentStepOptions();
+            progressPreviewContent.innerHTML = buildProgressHtml(progressState.currentStep);
+
+            progressState.generatedStepHtml = Array.from({ length: progressState.totalSteps }, (_, index) => {
+                return buildProgressHtml(index + 1);
+            });
+
+            progressCodeBlocks.innerHTML = progressState.generatedStepHtml.map((html, index) => {
+                const stepNumber = index + 1;
+                const isOpen = stepNumber === progressState.currentStep ? "open" : "";
+                return `
+                    <details class="rounded-xl border border-slate-800 bg-slate-950/70 overflow-hidden" ${isOpen}>
+                        <summary class="list-none cursor-pointer px-4 py-3 flex items-center justify-between gap-3 border-b border-slate-800">
+                            <span class="text-xs font-bold text-slate-200">ステップ ${stepNumber} 用コード</span>
+                            <div class="flex items-center gap-2">
+                                <button type="button" data-progress-copy-step="${index}" class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-100 text-[11px] font-bold transition-colors">
+                                    <i data-lucide="copy" class="w-3.5 h-3.5"></i>
+                                    コピー
+                                </button>
+                                <span class="text-[11px] font-bold text-slate-500">開閉</span>
+                            </div>
+                        </summary>
+                        <div class="p-4">
+                            <textarea readonly rows="8" class="w-full bg-transparent font-mono text-xs text-indigo-300 focus:outline-none resize-none select-all">${escapeHtml(html)}</textarea>
+                        </div>
+                    </details>
+                `;
+            }).join("");
+
+            lucide.createIcons();
+        }
+
         function updateActionTypeUi() {
             state.actionType = selectActionType.value;
             if (state.actionType === 'popup') {
@@ -1459,6 +1766,38 @@ ${bodyRows}
             generateCompare();
         }
 
+        function resetProgressToDefault() {
+            progressState.totalSteps = 4;
+            progressState.currentStep = 1;
+            progressState.labelPrefix = "STEP";
+            progressState.showCounter = true;
+            progressState.activeColor = "#4f46e5";
+            progressState.inactiveColor = "#e2e8f0";
+            progressState.labelColor = "#334155";
+            progressState.metaColor = "#64748b";
+            progressState.labelFontSize = "12px";
+            progressState.barHeight = "8px";
+            progressState.width = "100%";
+            progressState.alignment = "center";
+            progressState.radius = "999px";
+            progressState.blockId = generateRandomId(7);
+
+            progressLabelPrefix.value = progressState.labelPrefix;
+            progressShowCounter.checked = progressState.showCounter;
+            progressActiveColor.value = progressState.activeColor;
+            progressInactiveColor.value = progressState.inactiveColor;
+            progressLabelColor.value = progressState.labelColor;
+            progressMetaColor.value = progressState.metaColor;
+            progressLabelFontSize.value = progressState.labelFontSize;
+            progressBarHeight.value = progressState.barHeight;
+            progressWidth.value = progressState.width;
+            progressAlignment.value = progressState.alignment;
+            progressRadius.value = progressState.radius;
+
+            syncProgressCurrentStepOptions();
+            generateProgress();
+        }
+
         // 枠線なしトグルの制御
         function updateBorderStyleUi() {
             state.noBorder = checkNoBorder.checked;
@@ -1738,6 +2077,62 @@ ${bodyRows}
             generateCompare();
         });
         btnCompareReset.addEventListener('click', resetCompareToDefault);
+        btnProgressReset.addEventListener('click', resetProgressToDefault);
+        progressTotalSteps.addEventListener('input', (e) => {
+            progressState.totalSteps = Number(e.target.value) || 4;
+            if (progressState.currentStep > progressState.totalSteps) {
+                progressState.currentStep = progressState.totalSteps;
+            }
+            generateProgress();
+        });
+        progressCurrentStep.addEventListener('change', (e) => {
+            progressState.currentStep = Number(e.target.value) || 1;
+            generateProgress();
+        });
+        progressLabelPrefix.addEventListener('input', (e) => {
+            progressState.labelPrefix = e.target.value;
+            generateProgress();
+        });
+        progressShowCounter.addEventListener('change', (e) => {
+            progressState.showCounter = e.target.checked;
+            generateProgress();
+        });
+        progressActiveColor.addEventListener('input', (e) => {
+            progressState.activeColor = e.target.value;
+            generateProgress();
+        });
+        progressInactiveColor.addEventListener('input', (e) => {
+            progressState.inactiveColor = e.target.value;
+            generateProgress();
+        });
+        progressLabelColor.addEventListener('input', (e) => {
+            progressState.labelColor = e.target.value;
+            generateProgress();
+        });
+        progressMetaColor.addEventListener('input', (e) => {
+            progressState.metaColor = e.target.value;
+            generateProgress();
+        });
+        progressLabelFontSize.addEventListener('change', (e) => {
+            progressState.labelFontSize = e.target.value;
+            generateProgress();
+        });
+        progressBarHeight.addEventListener('change', (e) => {
+            progressState.barHeight = e.target.value;
+            generateProgress();
+        });
+        progressWidth.addEventListener('change', (e) => {
+            progressState.width = e.target.value;
+            generateProgress();
+        });
+        progressAlignment.addEventListener('change', (e) => {
+            progressState.alignment = e.target.value;
+            generateProgress();
+        });
+        progressRadius.addEventListener('change', (e) => {
+            progressState.radius = e.target.value;
+            generateProgress();
+        });
         selectBorderRadius.addEventListener('change', (e) => {
             state.borderRadius = e.target.value;
             generateCta();
@@ -1867,11 +2262,40 @@ ${bodyRows}
                 console.error('ブラウザがコピー機能をサポートしていません: ', err);
             }
         });
+        progressCodeBlocks.addEventListener('click', (e) => {
+            const copyIndex = e.target.closest('[data-progress-copy-step]')?.dataset.progressCopyStep;
+            if (copyIndex === undefined) return;
+            e.preventDefault();
+            e.stopPropagation();
+            copyWorkspace.value = progressState.generatedStepHtml[Number(copyIndex)] || "";
+            copyWorkspace.select();
+            try {
+                const successful = document.execCommand('copy');
+                if (successful) {
+                    showToast();
+                }
+            } catch (err) {
+                console.error('ブラウザがコピー機能をサポートしていません: ', err);
+            }
+        });
+        btnProgressCopyAll.addEventListener('click', () => {
+            copyWorkspace.value = progressState.generatedStepHtml.join("\n\n");
+            copyWorkspace.select();
+            try {
+                const successful = document.execCommand('copy');
+                if (successful) {
+                    showToast();
+                }
+            } catch (err) {
+                console.error('ブラウザがコピー機能をサポートしていません: ', err);
+            }
+        });
         btnReset.addEventListener('click', resetToDefault);
         btnDarkToggle.addEventListener('click', toggleDarkMode);
         tabPageCta.addEventListener('click', () => updatePageTabUi("cta"));
         tabPageFaq.addEventListener('click', () => updatePageTabUi("faq"));
         tabPageCompare.addEventListener('click', () => updatePageTabUi("compare"));
+        tabPageProgress.addEventListener('click', () => updatePageTabUi("progress"));
 
         // 初期ロード実行
         window.addEventListener('DOMContentLoaded', () => {
@@ -1881,6 +2305,7 @@ ${bodyRows}
             updateColorModeUi();
             resetFaqToDefault();
             resetCompareToDefault();
+            resetProgressToDefault();
             updatePageTabUi("cta");
         });
     </script>
