@@ -46,6 +46,7 @@
                 <button id="tabPageCompare" class="px-4 py-2 rounded-lg font-bold transition-all">比較表</button>
                 <button id="tabPageProgress" class="px-4 py-2 rounded-lg font-bold transition-all">プログレスバー</button>
                 <button id="tabPageNotice" class="px-4 py-2 rounded-lg font-bold transition-all">インフォメーション</button>
+                <button id="tabPageChecklist" class="px-4 py-2 rounded-lg font-bold transition-all">チェックリスト</button>
             </div>
         </div>
 
@@ -811,6 +812,106 @@
                 </section>
             </div>
         </div>
+
+        <div id="checklistPage" class="hidden">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+                <section class="lg:col-span-5 space-y-6">
+                    <div class="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm space-y-6">
+                        <div class="flex items-center justify-between border-b border-slate-100 pb-4">
+                            <h2 class="font-bold text-slate-900 flex items-center gap-2">
+                                <i data-lucide="list-checks" class="w-5 h-5 text-indigo-600"></i>
+                                チェックリスト設定
+                            </h2>
+                            <button id="btnChecklistReset" class="text-xs text-slate-500 hover:text-indigo-600 flex items-center gap-1 transition-colors">
+                                <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i>初期化
+                            </button>
+                        </div>
+
+                        <div class="space-y-3">
+                            <div class="flex items-center justify-between">
+                                <label class="block text-sm font-bold text-slate-700">チェック項目</label>
+                                <button id="btnAddChecklistItem" type="button" class="px-2.5 py-1.5 rounded-lg bg-indigo-50 text-indigo-700 text-xs font-bold hover:bg-indigo-100 transition-colors">項目を追加</button>
+                            </div>
+                            <div id="checklistItemsContainer" class="space-y-3"></div>
+                        </div>
+
+                        <details class="rounded-xl border border-slate-200 bg-slate-50 overflow-hidden" open>
+                            <summary class="list-none cursor-pointer px-3 py-2.5 flex items-center justify-between text-sm font-bold text-slate-700 border-b border-slate-200">
+                                <span>デザイン調整</span>
+                                <span class="text-slate-400 text-xs">開閉</span>
+                            </summary>
+                            <div class="p-3 grid grid-cols-2 gap-3">
+                                <div>
+                                    <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider">テキストカラー</label>
+                                    <input id="checklistTextColor" type="color" class="mt-1 w-full h-9 rounded border border-slate-300" value="#334155" />
+                                </div>
+                                <div>
+                                    <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider">チェック後のテキストカラー</label>
+                                    <input id="checklistCheckedTextColor" type="color" class="mt-1 w-full h-9 rounded border border-slate-300" value="#64748b" />
+                                </div>
+                                <div>
+                                    <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider">チェックアイコン</label>
+                                    <input id="checklistCheckmarkColor" type="color" class="mt-1 w-full h-9 rounded border border-slate-300" value="#ffffff" />
+                                </div>
+                                <div>
+                                    <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider">ボックス色</label>
+                                    <input id="checklistCheckColor" type="color" class="mt-1 w-full h-9 rounded border border-slate-300" value="#2563eb" />
+                                </div>
+                                <div>
+                                    <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider">文字サイズ</label>
+                                    <select id="checklistFontSize" class="mt-1 w-full px-2 py-2 border border-slate-300 rounded-lg text-xs bg-white">
+                                        <option value="12px">12px</option>
+                                        <option value="13px">13px</option>
+                                        <option value="14px" selected>14px</option>
+                                        <option value="16px">16px</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider">項目間の余白</label>
+                                    <select id="checklistItemGap" class="mt-1 w-full px-2 py-2 border border-slate-300 rounded-lg text-xs bg-white">
+                                        <option value="6px">狭め</option>
+                                        <option value="10px" selected>標準</option>
+                                        <option value="14px">広め</option>
+                                    </select>
+                                </div>
+                                <div class="flex items-end">
+                                    <label class="inline-flex items-center gap-2 text-sm text-slate-700 font-medium">
+                                        <input id="checklistStrikeChecked" type="checkbox" checked class="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500" />
+                                        チェック済みに打ち消し線
+                                    </label>
+                                </div>
+                            </div>
+                        </details>
+                    </div>
+                </section>
+
+                <section class="lg:col-span-7 space-y-6">
+                    <div class="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden">
+                        <div class="border-b border-slate-200 px-6 py-4 bg-slate-50">
+                            <span class="text-xs font-bold text-slate-500">プレビュー表示</span>
+                        </div>
+                        <div id="checklistPreviewCanvas" class="p-6 bg-white min-h-[240px]">
+                            <div id="checklistPreviewContent"></div>
+                        </div>
+                    </div>
+
+                    <div class="bg-slate-900 text-slate-300 rounded-2xl p-6 shadow-sm space-y-4">
+                        <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+                            <div class="flex items-center space-x-2">
+                                <i data-lucide="code" class="w-5 h-5 text-indigo-400"></i>
+                                <span class="font-bold text-slate-100 text-sm">HTMLコードコピー</span>
+                            </div>
+                            <span class="text-[10px] text-slate-500">Onboarding の HTML ブロックへ貼り付け対応</span>
+                        </div>
+                        <textarea id="outputChecklistHtmlCode" readonly rows="12" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 font-mono text-xs text-indigo-300 focus:outline-none resize-none select-all"></textarea>
+                        <button id="btnChecklistCopy" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white py-3 px-4 rounded-xl font-bold text-sm flex items-center justify-center gap-2 transition-all shadow-md active:scale-[0.98]">
+                            <i data-lucide="copy" class="w-4 h-4"></i>
+                            <span>HTMLコードをコピーする</span>
+                        </button>
+                    </div>
+                </section>
+            </div>
+        </div>
     </main>
 
     <!-- フッター -->
@@ -967,11 +1068,13 @@
         const tabPageCompare = document.getElementById('tabPageCompare');
         const tabPageProgress = document.getElementById('tabPageProgress');
         const tabPageNotice = document.getElementById('tabPageNotice');
+        const tabPageChecklist = document.getElementById('tabPageChecklist');
         const ctaPage = document.getElementById('ctaPage');
         const faqPage = document.getElementById('faqPage');
         const comparePage = document.getElementById('comparePage');
         const progressPage = document.getElementById('progressPage');
         const noticePage = document.getElementById('noticePage');
+        const checklistPage = document.getElementById('checklistPage');
         const faqListContainer = document.getElementById('faqListContainer');
         const btnAddFaqItem = document.getElementById('btnAddFaqItem');
         const btnFaqReset = document.getElementById('btnFaqReset');
@@ -1037,6 +1140,19 @@
         const noticePreviewContent = document.getElementById('noticePreviewContent');
         const outputNoticeHtmlCode = document.getElementById('outputNoticeHtmlCode');
         const btnNoticeCopy = document.getElementById('btnNoticeCopy');
+        const btnChecklistReset = document.getElementById('btnChecklistReset');
+        const btnAddChecklistItem = document.getElementById('btnAddChecklistItem');
+        const checklistItemsContainer = document.getElementById('checklistItemsContainer');
+        const checklistTextColor = document.getElementById('checklistTextColor');
+        const checklistCheckColor = document.getElementById('checklistCheckColor');
+        const checklistCheckmarkColor = document.getElementById('checklistCheckmarkColor');
+        const checklistCheckedTextColor = document.getElementById('checklistCheckedTextColor');
+        const checklistFontSize = document.getElementById('checklistFontSize');
+        const checklistItemGap = document.getElementById('checklistItemGap');
+        const checklistStrikeChecked = document.getElementById('checklistStrikeChecked');
+        const checklistPreviewContent = document.getElementById('checklistPreviewContent');
+        const outputChecklistHtmlCode = document.getElementById('outputChecklistHtmlCode');
+        const btnChecklistCopy = document.getElementById('btnChecklistCopy');
 
         const faqDefaultItems = [
             { question: "Q1: 質問を記載します。", answer: "回答を記載します。\n改行する際にはbrを加えます。\n分かりやすく、端的に書きましょう。" },
@@ -1131,6 +1247,25 @@
             blockId: generateRandomId(7)
         };
 
+        const checklistDefaultItems = [
+            { text: "対象画面を開く", checked: true },
+            { text: "必要な権限を確認する", checked: false },
+            { text: "設定内容を保存する", checked: false }
+        ];
+
+        const checklistState = {
+            items: checklistDefaultItems.map((item) => ({ ...item })),
+            textColor: "#334155",
+            checkColor: "#2563eb",
+            checkmarkColor: "#ffffff",
+            checkedTextColor: "#64748b",
+            fontSize: "14px",
+            itemGap: "10px",
+            strikeChecked: true,
+            focusedItemIndex: null,
+            blockId: generateRandomId(7)
+        };
+
         function getProjectTokenFromUrl(urlValue) {
             try {
                 const parsed = new URL(urlValue);
@@ -1165,6 +1300,11 @@
         function getNoticeClassPrefix() {
             const projectToken = getProjectTokenFromUrl(inputUrl.value || state.url);
             return `onb-notice-${projectToken}-${noticeState.blockId}`;
+        }
+
+        function getChecklistClassPrefix() {
+            const projectToken = getProjectTokenFromUrl(inputUrl.value || state.url);
+            return `onb-checklist-${projectToken}-${checklistState.blockId}`;
         }
 
         function getNoticePreset(type, tone) {
@@ -1209,11 +1349,13 @@
             const isCompare = page === "compare";
             const isProgress = page === "progress";
             const isNotice = page === "notice";
+            const isChecklist = page === "checklist";
             ctaPage.classList.toggle("hidden", !isCta);
             faqPage.classList.toggle("hidden", !isFaq);
             comparePage.classList.toggle("hidden", !isCompare);
             progressPage.classList.toggle("hidden", !isProgress);
             noticePage.classList.toggle("hidden", !isNotice);
+            checklistPage.classList.toggle("hidden", !isChecklist);
 
             tabPageCta.className = isCta
                 ? "px-4 py-2 rounded-lg font-bold transition-all bg-white text-slate-900 shadow-sm"
@@ -1228,6 +1370,9 @@
                 ? "px-4 py-2 rounded-lg font-bold transition-all bg-white text-slate-900 shadow-sm"
                 : "px-4 py-2 rounded-lg font-bold transition-all text-slate-600 hover:text-slate-900";
             tabPageNotice.className = isNotice
+                ? "px-4 py-2 rounded-lg font-bold transition-all bg-white text-slate-900 shadow-sm"
+                : "px-4 py-2 rounded-lg font-bold transition-all text-slate-600 hover:text-slate-900";
+            tabPageChecklist.className = isChecklist
                 ? "px-4 py-2 rounded-lg font-bold transition-all bg-white text-slate-900 shadow-sm"
                 : "px-4 py-2 rounded-lg font-bold transition-all text-slate-600 hover:text-slate-900";
         }
@@ -1775,6 +1920,134 @@ ${iconBlock}  <div class="${prefix}__content">
             outputNoticeHtmlCode.value = noticeHtml;
         }
 
+        function renderChecklistEditor() {
+            const openIndexes = new Set(
+                Array.from(checklistItemsContainer.querySelectorAll("details[data-checklist-editor-item][open]"))
+                    .map((detail) => Number(detail.dataset.checklistEditorItem))
+                    .filter((index) => !Number.isNaN(index))
+            );
+
+            checklistItemsContainer.innerHTML = "";
+            checklistState.items.forEach((item, index) => {
+                const details = document.createElement("details");
+                details.dataset.checklistEditorItem = String(index);
+                details.className = "rounded-xl border border-slate-200 bg-slate-50 overflow-hidden";
+
+                const isFocused = checklistState.focusedItemIndex === index;
+                if (isFocused || openIndexes.has(index) || (openIndexes.size === 0 && index === 0)) {
+                    details.open = true;
+                }
+
+                details.innerHTML = `
+                    <summary class="list-none cursor-pointer px-3 py-2.5 flex items-center justify-between text-sm font-bold text-slate-700 border-b border-slate-200">
+                        <span class="truncate pr-3" data-checklist-summary-title="${index}">${escapeHtml(item.text) || "項目を入力"}</span>
+                        <span class="text-slate-400 text-xs">開閉</span>
+                    </summary>
+                    <div class="p-3 space-y-3">
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs font-bold text-slate-500 uppercase tracking-wider">項目 ${index + 1}</span>
+                            <button type="button" data-checklist-remove="${index}" class="text-[11px] font-bold text-rose-600 hover:text-rose-700 ${checklistState.items.length <= 1 ? "opacity-40 pointer-events-none" : ""}">削除</button>
+                        </div>
+                        <div>
+                            <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider">テキスト</label>
+                            <input type="text" data-checklist-text="${index}" value="${escapeAttribute(item.text)}" class="mt-1 w-full px-2.5 py-2 border border-slate-300 rounded-lg text-sm" />
+                        </div>
+                        <label class="inline-flex items-center gap-2 text-sm text-slate-700 font-medium">
+                            <input type="checkbox" data-checklist-checked="${index}" ${item.checked ? "checked" : ""} class="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500" />
+                            初期状態でチェック済みにする
+                        </label>
+                    </div>
+                `;
+                checklistItemsContainer.appendChild(details);
+            });
+
+            checklistState.focusedItemIndex = null;
+        }
+
+        function generateChecklist() {
+            const prefix = getChecklistClassPrefix();
+            const itemGap = checklistState.itemGap;
+            const strikeStyle = checklistState.strikeChecked ? "line-through" : "none";
+            const checklistItemsHtml = checklistState.items.map((item, index) => {
+                const inputId = `${prefix}-item-${index + 1}`;
+                return `  <label class="${prefix}__item" for="${inputId}">
+    <input id="${inputId}" class="${prefix}__checkbox" type="checkbox"${item.checked ? " checked" : ""} />
+    <span class="${prefix}__box" aria-hidden="true"><span class="${prefix}__checkmark">✔</span></span>
+    <span class="${prefix}__text">${escapeHtml(item.text)}</span>
+  </label>`;
+            }).join("\n");
+
+            const checklistHtml = `<div class="${prefix}">
+${checklistItemsHtml}
+</div>
+<style>
+  .${prefix} {
+    width: 100%;
+    margin: 16px 0;
+    box-sizing: border-box;
+  }
+  .${prefix}__item {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    margin-bottom: ${itemGap};
+    cursor: pointer;
+  }
+  .${prefix}__item:last-child {
+    margin-bottom: 0;
+  }
+  .${prefix}__checkbox {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+  }
+  .${prefix}__box {
+    margin-top: 2px;
+    width: 16px;
+    height: 16px;
+    flex: 0 0 16px;
+    box-sizing: border-box;
+    border: 1.5px solid ${checklistState.checkColor};
+    border-radius: 4px;
+    background-color: #ffffff;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.2s ease, border-color 0.2s ease;
+  }
+  .${prefix}__checkmark {
+    color: ${checklistState.checkmarkColor};
+    font-size: 12px;
+    line-height: 1;
+    opacity: 0;
+    transform: scale(0.75);
+    transition: opacity 0.2s ease, transform 0.2s ease;
+  }
+  .${prefix}__text {
+    color: ${checklistState.textColor};
+    font-size: ${checklistState.fontSize};
+    line-height: 1.6;
+    transition: color 0.2s ease, text-decoration-color 0.2s ease;
+  }
+  .${prefix}__checkbox:checked + .${prefix}__box {
+    background-color: ${checklistState.checkColor};
+    border-color: ${checklistState.checkColor};
+  }
+  .${prefix}__checkbox:checked + .${prefix}__box .${prefix}__checkmark {
+    opacity: 1;
+    transform: scale(1);
+  }
+  .${prefix}__checkbox:checked + .${prefix}__box + .${prefix}__text {
+    color: ${checklistState.checkedTextColor};
+    text-decoration: ${strikeStyle};
+    text-decoration-thickness: 1px;
+  }
+</style>`;
+
+            checklistPreviewContent.innerHTML = checklistHtml;
+            outputChecklistHtmlCode.value = checklistHtml;
+        }
+
         function updateActionTypeUi() {
             state.actionType = selectActionType.value;
             if (state.actionType === 'popup') {
@@ -2138,6 +2411,30 @@ ${iconBlock}  <div class="${prefix}__content">
             generateNotice();
         }
 
+        function resetChecklistToDefault() {
+            checklistState.items = checklistDefaultItems.map((item) => ({ ...item }));
+            checklistState.textColor = "#334155";
+            checklistState.checkColor = "#2563eb";
+            checklistState.checkmarkColor = "#ffffff";
+            checklistState.checkedTextColor = "#64748b";
+            checklistState.fontSize = "14px";
+            checklistState.itemGap = "10px";
+            checklistState.strikeChecked = true;
+            checklistState.focusedItemIndex = null;
+            checklistState.blockId = generateRandomId(7);
+
+            checklistTextColor.value = checklistState.textColor;
+            checklistCheckColor.value = checklistState.checkColor;
+            checklistCheckmarkColor.value = checklistState.checkmarkColor;
+            checklistCheckedTextColor.value = checklistState.checkedTextColor;
+            checklistFontSize.value = checklistState.fontSize;
+            checklistItemGap.value = checklistState.itemGap;
+            checklistStrikeChecked.checked = checklistState.strikeChecked;
+
+            renderChecklistEditor();
+            generateChecklist();
+        }
+
         // 枠線なしトグルの制御
         function updateBorderStyleUi() {
             state.noBorder = checkNoBorder.checked;
@@ -2419,6 +2716,16 @@ ${iconBlock}  <div class="${prefix}__content">
         btnCompareReset.addEventListener('click', resetCompareToDefault);
         btnProgressReset.addEventListener('click', resetProgressToDefault);
         btnNoticeReset.addEventListener('click', resetNoticeToDefault);
+        btnChecklistReset.addEventListener('click', resetChecklistToDefault);
+        btnAddChecklistItem.addEventListener('click', () => {
+            checklistState.items.push({
+                text: `確認項目 ${checklistState.items.length + 1}`,
+                checked: false
+            });
+            checklistState.focusedItemIndex = checklistState.items.length - 1;
+            renderChecklistEditor();
+            generateChecklist();
+        });
         progressTotalSteps.addEventListener('input', (e) => {
             progressState.totalSteps = Number(e.target.value) || 4;
             if (progressState.currentStep > progressState.totalSteps) {
@@ -2521,6 +2828,59 @@ ${iconBlock}  <div class="${prefix}__content">
         noticeRadius.addEventListener('change', (e) => {
             noticeState.radius = e.target.value;
             generateNotice();
+        });
+        checklistItemsContainer.addEventListener('input', (e) => {
+            const textIndex = e.target.dataset.checklistText;
+            if (textIndex === undefined) return;
+            const idx = Number(textIndex);
+            checklistState.items[idx].text = e.target.value;
+            const title = checklistItemsContainer.querySelector(`[data-checklist-summary-title="${idx}"]`);
+            if (title) {
+                title.textContent = e.target.value || "項目を入力";
+            }
+            generateChecklist();
+        });
+        checklistItemsContainer.addEventListener('change', (e) => {
+            const checkedIndex = e.target.dataset.checklistChecked;
+            if (checkedIndex === undefined) return;
+            checklistState.items[Number(checkedIndex)].checked = e.target.checked;
+            generateChecklist();
+        });
+        checklistItemsContainer.addEventListener('click', (e) => {
+            const removeIndex = e.target.dataset.checklistRemove;
+            if (removeIndex === undefined) return;
+            if (checklistState.items.length <= 1) return;
+            checklistState.items.splice(Number(removeIndex), 1);
+            renderChecklistEditor();
+            generateChecklist();
+        });
+        checklistTextColor.addEventListener('input', (e) => {
+            checklistState.textColor = e.target.value;
+            generateChecklist();
+        });
+        checklistCheckColor.addEventListener('input', (e) => {
+            checklistState.checkColor = e.target.value;
+            generateChecklist();
+        });
+        checklistCheckmarkColor.addEventListener('input', (e) => {
+            checklistState.checkmarkColor = e.target.value;
+            generateChecklist();
+        });
+        checklistCheckedTextColor.addEventListener('input', (e) => {
+            checklistState.checkedTextColor = e.target.value;
+            generateChecklist();
+        });
+        checklistFontSize.addEventListener('change', (e) => {
+            checklistState.fontSize = e.target.value;
+            generateChecklist();
+        });
+        checklistItemGap.addEventListener('change', (e) => {
+            checklistState.itemGap = e.target.value;
+            generateChecklist();
+        });
+        checklistStrikeChecked.addEventListener('change', (e) => {
+            checklistState.strikeChecked = e.target.checked;
+            generateChecklist();
         });
         selectBorderRadius.addEventListener('change', (e) => {
             state.borderRadius = e.target.value;
@@ -2691,6 +3051,18 @@ ${iconBlock}  <div class="${prefix}__content">
                 console.error('ブラウザがコピー機能をサポートしていません: ', err);
             }
         });
+        btnChecklistCopy.addEventListener('click', () => {
+            copyWorkspace.value = outputChecklistHtmlCode.value;
+            copyWorkspace.select();
+            try {
+                const successful = document.execCommand('copy');
+                if (successful) {
+                    showToast();
+                }
+            } catch (err) {
+                console.error('ブラウザがコピー機能をサポートしていません: ', err);
+            }
+        });
         btnReset.addEventListener('click', resetToDefault);
         btnDarkToggle.addEventListener('click', toggleDarkMode);
         tabPageCta.addEventListener('click', () => updatePageTabUi("cta"));
@@ -2698,6 +3070,7 @@ ${iconBlock}  <div class="${prefix}__content">
         tabPageCompare.addEventListener('click', () => updatePageTabUi("compare"));
         tabPageProgress.addEventListener('click', () => updatePageTabUi("progress"));
         tabPageNotice.addEventListener('click', () => updatePageTabUi("notice"));
+        tabPageChecklist.addEventListener('click', () => updatePageTabUi("checklist"));
 
         // 初期ロード実行
         window.addEventListener('DOMContentLoaded', () => {
@@ -2709,6 +3082,7 @@ ${iconBlock}  <div class="${prefix}__content">
             resetCompareToDefault();
             resetProgressToDefault();
             resetNoticeToDefault();
+            resetChecklistToDefault();
             updatePageTabUi("cta");
         });
     </script>
