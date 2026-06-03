@@ -7,6 +7,8 @@ import { useInformationGenerator } from './features/information/InformationGener
 import { useChecklistGenerator } from './features/checklist/ChecklistGenerator.js';
 import { useProgressGenerator } from './features/progress/ProgressGenerator.js';
 import { useCompareGenerator } from './features/compare/CompareGenerator.js';
+import { useVideoGuideGenerator } from './features/video/VideoGuideGenerator.js';
+import { useVideoSwitcherGenerator } from './features/video-switcher/VideoSwitcherGenerator.js';
 import { SectionCard } from './components/ui/SectionCard.js';
 
 const tabs = [
@@ -15,7 +17,9 @@ const tabs = [
   { id: 'compare', label: '比較表' },
   { id: 'progress', label: 'プログレスバー' },
   { id: 'information', label: 'インフォメーション' },
-  { id: 'checklist', label: 'チェックリスト' }
+  { id: 'checklist', label: 'チェックリスト' },
+  { id: 'video', label: '動画ガイド' },
+  { id: 'video-switcher', label: '動画切り替え' }
 ];
 
 function PlaceholderGenerator({ label }) {
@@ -50,6 +54,8 @@ export function App() {
   const checklistGenerator = useChecklistGenerator();
   const progressGenerator = useProgressGenerator();
   const compareGenerator = useCompareGenerator();
+  const videoGuideGenerator = useVideoGuideGenerator();
+  const videoSwitcherGenerator = useVideoSwitcherGenerator();
   const placeholderGenerator = PlaceholderGenerator({ label: tabs.find((tab) => tab.id === activeTab)?.label || '未選択' });
   const generators = {
     cta: ctaGenerator,
@@ -57,7 +63,9 @@ export function App() {
     compare: compareGenerator,
     progress: progressGenerator,
     information: informationGenerator,
-    checklist: checklistGenerator
+    checklist: checklistGenerator,
+    video: videoGuideGenerator,
+    'video-switcher': videoSwitcherGenerator
   };
   const generator = generators[activeTab] || placeholderGenerator;
 

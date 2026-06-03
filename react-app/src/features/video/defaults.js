@@ -1,0 +1,21 @@
+export const VIDEO_GUIDE_DEFAULTS = {
+  format: 'button-bottom',
+  youtubeUrl: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
+  title: '新機能の使い方を動画で解説',
+  body: '短いチュートリアル動画を用意しました。再生ボタンを押して、全体の流れを確認してみましょう。',
+  showTitle: true,
+  showBody: true,
+  showActionButton: true,
+  actionButtonText: '詳細を見る',
+  actionUrl: 'https://example.com',
+  cardWidth: '100%',
+  cardPadding: '0px',
+  cardRadius: '0px',
+  videoRadius: '8px',
+  titleColor: '#1f2937',
+  bodyColor: '#64748b',
+  buttonBgColor: '#e2e8f0',
+  buttonTextColor: '#334155',
+  titleFontSize: '15px',
+  bodyFontSize: '12px'
+};
