@@ -1,0 +1,34 @@
+:root {
+  color-scheme: light;
+  font-family: 'Noto Sans JP', sans-serif;
+  background-color: #f8fafc;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+.code-scrollbar::-webkit-scrollbar,
+.preview-scrollbar::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+.code-scrollbar::-webkit-scrollbar-thumb,
+.preview-scrollbar::-webkit-scrollbar-thumb {
+  background: #475569;
+  border-radius: 999px;
+}
+
+.code-scrollbar::-webkit-scrollbar-track,
+.preview-scrollbar::-webkit-scrollbar-track {
+  background: #0f172a;
+}
