@@ -18,6 +18,17 @@ function updateChannelAt(channels, index, patch) {
   return channels.map((channel, channelIndex) => (channelIndex === index ? { ...channel, ...patch } : channel));
 }
 
+function createAdditionalChannel() {
+  return {
+    label: '早見表',
+    youtubeUrl: '',
+    title: '要点をすばやく確認',
+    body: 'このチャンネルは動画の代わりに、補足案内や短い要点整理の枠としても使えます。',
+    actionButtonText: '詳細を見る',
+    actionUrl: 'https://example.com'
+  };
+}
+
 export function useVideoSwitcherGenerator() {
   const [form, setForm] = useState(cloneDefaults);
   const [copied, setCopied] = useState(false);
@@ -31,6 +42,22 @@ export function useVideoSwitcherGenerator() {
 
   function updateChannel(index, patch) {
     setForm((current) => ({ ...current, channels: updateChannelAt(current.channels, index, patch) }));
+  }
+
+  function addChannel() {
+    setForm((current) => {
+      if (current.channels.length >= 3) return current;
+      return { ...current, channels: [...current.channels, createAdditionalChannel()] };
+    });
+    setOpenIndexes((current) => (current.includes(2) ? current : [...current, 2]));
+  }
+
+  function removeChannel(index) {
+    setForm((current) => {
+      if (current.channels.length <= 2) return current;
+      return { ...current, channels: current.channels.filter((_, channelIndex) => channelIndex !== index) };
+    });
+    setOpenIndexes((current) => current.filter((itemIndex) => itemIndex !== index).map((itemIndex) => (itemIndex > index ? itemIndex - 1 : itemIndex)));
   }
 
   function resetAll() {
@@ -53,7 +80,9 @@ export function useVideoSwitcherGenerator() {
         <div className="space-y-3">
           <div className="flex items-center justify-between">
             <label className="block text-sm font-bold text-slate-700">切り替え項目</label>
-            <span className="text-xs font-medium text-slate-400">3つ固定</span>
+            ${form.channels.length < 3
+              ? html`<button type="button" onClick=${addChannel} className="rounded-lg bg-indigo-50 px-2.5 py-1.5 text-xs font-bold text-indigo-700 transition-colors hover:bg-indigo-100">ボタンを追加</button>`
+              : html`<span className="text-xs font-medium text-slate-400">最大3つ</span>`}
           </div>
           <div className="space-y-3">
             ${form.channels.map(
@@ -75,8 +104,14 @@ export function useVideoSwitcherGenerator() {
                     <span className="text-xs text-slate-400">開閉</span>
                   </summary>
                   <div className="space-y-3 p-3">
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs font-bold uppercase tracking-wider text-slate-500">ボタン ${index + 1}</span>
+                      ${form.channels.length > 2
+                        ? html`<button type="button" onClick=${() => removeChannel(index)} className="text-[11px] font-bold text-rose-600 transition-colors hover:text-rose-700">削除</button>`
+                        : null}
+                    </div>
                     <div>
-                      <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-500">ボタン文言</label>
+                      <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-500">切り替えボタン文言</label>
                       <input
                         type="text"
                         value=${channel.label}
@@ -95,12 +130,40 @@ export function useVideoSwitcherGenerator() {
                       />
                     </div>
                     <div>
-                      <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-500">URL未入力時の案内文</label>
-                      <textarea
-                        rows="2"
-                        value=${channel.emptyText}
-                        onChange=${(event) => updateChannel(index, { emptyText: event.target.value })}
+                      <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-500">タイトル</label>
+                      <input
+                        type="text"
+                        value=${channel.title || ''}
+                        onChange=${(event) => updateChannel(index, { title: event.target.value })}
                         className="mt-1 w-full rounded-lg border border-slate-300 px-2.5 py-2 text-sm"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-500">本文</label>
+                      <textarea
+                        rows="3"
+                        value=${channel.body || ''}
+                        onChange=${(event) => updateChannel(index, { body: event.target.value })}
+                        className="mt-1 w-full rounded-lg border border-slate-300 px-2.5 py-2 text-sm"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-500">詳細ボタン文言</label>
+                      <input
+                        type="text"
+                        value=${channel.actionButtonText || ''}
+                        onChange=${(event) => updateChannel(index, { actionButtonText: event.target.value })}
+                        className="mt-1 w-full rounded-lg border border-slate-300 px-2.5 py-2 text-sm"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-500">詳細ボタンのリンク先URL</label>
+                      <input
+                        type="url"
+                        value=${channel.actionUrl || ''}
+                        onChange=${(event) => updateChannel(index, { actionUrl: event.target.value })}
+                        className="mt-1 w-full rounded-lg border border-slate-300 px-2.5 py-2 text-sm"
+                        placeholder="https://example.com"
                       />
                     </div>
                   </div>
@@ -143,7 +206,7 @@ export function useVideoSwitcherGenerator() {
               </select>
             </div>
             <div>
-              <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-500">ボタン角丸</label>
+              <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-500">切り替えボタン角丸</label>
               <select value=${form.buttonRadius} onChange=${(event) => updateField('buttonRadius', event.target.value)} className="mt-1 w-full rounded-lg border border-slate-300 bg-white px-2 py-2 text-xs">
                 <option value="8px">8px</option>
                 <option value="10px">10px</option>

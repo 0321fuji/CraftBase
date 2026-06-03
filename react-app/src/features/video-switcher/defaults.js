@@ -12,17 +12,18 @@ export const VIDEO_SWITCHER_DEFAULTS = {
     {
       label: '概要を見る',
       youtubeUrl: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
-      emptyText: 'チャンネル1の動画URLを入れてください。'
+      title: '新機能の使い方を動画で解説',
+      body: '短いチュートリアル動画を用意しました。再生ボタンを押して、全体の流れを確認してみましょう。',
+      actionButtonText: '詳細を見る',
+      actionUrl: 'https://example.com'
     },
     {
       label: '応用編',
       youtubeUrl: 'https://www.youtube.com/watch?v=ysz5S6PUM-U',
-      emptyText: 'チャンネル2の動画URLを入れてください。'
-    },
-    {
-      label: '早見表',
-      youtubeUrl: '',
-      emptyText: 'この枠は動画の代わりに案内テキストとしても使えます。'
+      title: '応用編を動画で確認',
+      body: '少し慣れてきた方向けに、応用操作の流れをまとめています。必要な場面だけ確認したいときにも便利です。',
+      actionButtonText: '詳細を見る',
+      actionUrl: 'https://example.com'
     }
   ]
 };
