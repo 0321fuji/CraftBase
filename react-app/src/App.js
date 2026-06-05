@@ -9,11 +9,13 @@ import { useProgressGenerator } from './features/progress/ProgressGenerator.js';
 import { useCompareGenerator } from './features/compare/CompareGenerator.js';
 import { useVideoGuideGenerator } from './features/video/VideoGuideGenerator.js';
 import { useVideoSwitcherGenerator } from './features/video-switcher/VideoSwitcherGenerator.js';
+import { usePulldownGenerator } from './features/pulldown/PulldownGenerator.js';
 import { SectionCard } from './components/ui/SectionCard.js';
 
 const tabs = [
   { id: 'cta', label: 'CTAボタン' },
   { id: 'faq', label: 'FAQアコーディオン' },
+  { id: 'pulldown', label: 'プルダウン' },
   { id: 'compare', label: '比較表' },
   { id: 'progress', label: 'プログレスバー' },
   { id: 'information', label: 'インフォメーション' },
@@ -56,6 +58,7 @@ export function App() {
   const compareGenerator = useCompareGenerator();
   const videoGuideGenerator = useVideoGuideGenerator();
   const videoSwitcherGenerator = useVideoSwitcherGenerator();
+  const pulldownGenerator = usePulldownGenerator();
   const placeholderGenerator = PlaceholderGenerator({ label: tabs.find((tab) => tab.id === activeTab)?.label || '未選択' });
   const generators = {
     cta: ctaGenerator,
@@ -65,14 +68,15 @@ export function App() {
     information: informationGenerator,
     checklist: checklistGenerator,
     video: videoGuideGenerator,
-    'video-switcher': videoSwitcherGenerator
+    'video-switcher': videoSwitcherGenerator,
+    pulldown: pulldownGenerator
   };
   const generator = generators[activeTab] || placeholderGenerator;
 
   return html`
     <${GeneratorLayout}
       title="ジェネレーター"
-      badge="React移行プロトタイプ"
+      badge="プロトタイプ"
       TabComponent=${TabNavigation}
       tabItems=${tabs}
       activeTab=${activeTab}
