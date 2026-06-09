@@ -1,14 +1,17 @@
 import { html } from '../../lib/react.js';
 
-export function PreviewPanel({ darkMode, onToggleDarkMode, children }) {
+export function PreviewPanel({ darkMode, onToggleDarkMode, headerNote = '', children }) {
   return html`
     <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
       <div className="flex items-center justify-between border-b border-slate-200 bg-slate-50 px-6 py-4">
-        <div className="flex items-center space-x-2">
-          <div className="h-3 w-3 rounded-full bg-red-400"></div>
-          <div className="h-3 w-3 rounded-full bg-yellow-400"></div>
-          <div className="h-3 w-3 rounded-full bg-green-400"></div>
-          <span className="ml-2 text-xs font-bold text-slate-500">プレビュー表示</span>
+        <div className="flex items-center gap-3">
+          <div className="flex items-center space-x-2">
+            <div className="h-3 w-3 rounded-full bg-red-400"></div>
+            <div className="h-3 w-3 rounded-full bg-yellow-400"></div>
+            <div className="h-3 w-3 rounded-full bg-green-400"></div>
+            <span className="ml-2 text-xs font-bold text-slate-500">プレビュー表示</span>
+          </div>
+          ${headerNote ? html`<span className="text-[10px] leading-5 text-slate-400">${headerNote}</span>` : null}
         </div>
         ${onToggleDarkMode
           ? html`
