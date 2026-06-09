@@ -77,7 +77,7 @@ export function useFaqGenerator() {
   return {
     controls: html`
       <${SectionCard}
-        title="React移行: FAQアコーディオン"
+        title="FAQアコーディオン"
         action=${html`
           <button
             type="button"

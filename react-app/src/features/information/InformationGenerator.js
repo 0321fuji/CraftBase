@@ -51,7 +51,7 @@ export function useInformationGenerator() {
   return {
     controls: html`
       <${SectionCard}
-        title="React移行: インフォメーション"
+        title="インフォメーション"
         action=${html`
           <button type="button" onClick=${resetAll} className="text-xs text-slate-500 transition-colors hover:text-indigo-600">
             初期化

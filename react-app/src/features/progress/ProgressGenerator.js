@@ -53,7 +53,7 @@ export function useProgressGenerator() {
   return {
     controls: html`
       <${SectionCard}
-        title="React移行: プログレスバー"
+        title="プログレスバー"
         action=${html`<button type="button" onClick=${resetAll} className="text-xs text-slate-500 transition-colors hover:text-indigo-600">初期化</button>`}
       >
         <div className="grid grid-cols-2 gap-3">

@@ -29,20 +29,20 @@ function PlaceholderGenerator({ label }) {
     controls: html`
       <${SectionCard} title=${`${label} - 準備中`}>
         <div className="space-y-3 text-sm leading-7 text-slate-600">
-          <p>このタブはまだ移植前です。</p>
+          <p>このタブはまだ準備中です。</p>
           <p>既存の <code>index.html</code> 側はそのまま使えます。</p>
-          <p>React版では共通部品を使って、順番に置き換えていく想定です。</p>
+          <p>共通部品を使って、順番に追加していく想定です。</p>
         </div>
       </${SectionCard}>
     `,
     preview: html`
       <div className="rounded-2xl border border-dashed border-slate-300 bg-white p-8 text-center text-sm text-slate-500 shadow-sm">
-        ${label} のプレビューは、このタブの移植時に追加します。
+        ${label} のプレビューは、準備ができ次第ここに追加します。
       </div>
     `,
     code: html`
       <div className="rounded-2xl border border-dashed border-slate-300 bg-slate-950/95 p-8 text-center text-sm text-slate-400 shadow-sm">
-        コード出力もこのタブの移植タイミングで追加します。
+        コード出力も、準備ができ次第ここに追加します。
       </div>
     `
   };
@@ -75,7 +75,7 @@ export function App() {
 
   return html`
     <${GeneratorLayout}
-      title="ジェネレーター"
+      title="craftmake"
       badge="プロトタイプ"
       TabComponent=${TabNavigation}
       tabItems=${tabs}

@@ -74,7 +74,7 @@ export function useCtaGenerator() {
   return {
     controls: html`
       <${SectionCard}
-        title="React移行: CTAボタン"
+        title="CTAボタン"
         action=${html`
           <button
             type="button"
@@ -382,7 +382,7 @@ export function useCtaGenerator() {
           <div className="py-1" dangerouslySetInnerHTML=${{ __html: outputHtml }} />
         </${PreviewPanel}>
         <p className="text-xs text-slate-500">
-          React版の最初の移植として、既存のCTA機能を同じ出力思想で載せ替えています。
+          既存のCTA機能を、同じ出力思想のままこの画面で調整できるようにしています。
         </p>
       </div>
     `,

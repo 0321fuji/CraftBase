@@ -115,7 +115,7 @@ export function useCompareGenerator() {
   return {
     controls: html`
       <${SectionCard}
-        title="React移行: 比較表"
+        title="比較表"
         action=${html`<button type="button" onClick=${resetAll} className="text-xs text-slate-500 transition-colors hover:text-indigo-600">初期化</button>`}
       >
         <details className="overflow-hidden rounded-xl border border-slate-200 bg-slate-50" open>
