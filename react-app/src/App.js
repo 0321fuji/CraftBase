@@ -12,6 +12,7 @@ import { useVideoSwitcherGenerator } from './features/video-switcher/VideoSwitch
 import { usePulldownGenerator } from './features/pulldown/PulldownGenerator.js';
 import { useVariableInsertGenerator } from './features/variable-insert/VariableInsertGenerator.js';
 import { useConfettiGenerator } from './features/confetti/ConfettiGenerator.js';
+import { SnippetSection } from './features/snippets/SnippetSection.js';
 import { SectionCard } from './components/ui/SectionCard.js';
 
 const tabs = [
@@ -23,6 +24,7 @@ const tabs = [
   { id: 'information', label: 'インフォメーション' },
   { id: 'variable-insert', label: '変数差し込み' },
   { id: 'confetti', label: '紙吹雪演出' },
+  { id: 'snippets', label: 'よく使うコード' },
   { id: 'checklist', label: 'チェックリスト' },
   { id: 'video', label: '動画ガイド' },
   { id: 'video-switcher', label: '動画切り替え' }
@@ -52,6 +54,18 @@ function PlaceholderGenerator({ label }) {
   };
 }
 
+function createSnippetLibraryGenerator() {
+  return {
+    controls: html`
+      <div className="space-y-5">
+        <${SnippetSection} />
+      </div>
+    `,
+    preview: null,
+    code: null
+  };
+}
+
 export function App() {
   const [activeTab, setActiveTab] = useState('cta');
   const ctaGenerator = useCtaGenerator();
@@ -65,6 +79,7 @@ export function App() {
   const pulldownGenerator = usePulldownGenerator();
   const variableInsertGenerator = useVariableInsertGenerator();
   const confettiGenerator = useConfettiGenerator();
+  const snippetLibraryGenerator = createSnippetLibraryGenerator();
   const placeholderGenerator = PlaceholderGenerator({ label: tabs.find((tab) => tab.id === activeTab)?.label || '未選択' });
   const generators = {
     cta: ctaGenerator,
@@ -74,6 +89,7 @@ export function App() {
     information: informationGenerator,
     'variable-insert': variableInsertGenerator,
     confetti: confettiGenerator,
+    snippets: snippetLibraryGenerator,
     checklist: checklistGenerator,
     video: videoGuideGenerator,
     'video-switcher': videoSwitcherGenerator,
