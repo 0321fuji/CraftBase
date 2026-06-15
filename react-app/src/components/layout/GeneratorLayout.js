@@ -2,6 +2,7 @@ import { html } from '../../lib/react.js';
 
 export function GeneratorLayout({ title, badge, headerNav, TabComponent, tabItems, activeTab, onTabChange, controls, preview, code, layoutMode = 'template' }) {
   const isAiMode = layoutMode === 'ai';
+  const isBalancedMode = layoutMode === 'balanced';
   const isSinglePanelMode = !preview && !code;
   return html`
     <div className="min-h-screen bg-slate-50 text-slate-800">
@@ -20,11 +21,11 @@ export function GeneratorLayout({ title, badge, headerNav, TabComponent, tabItem
       <main className="mx-auto flex w-full max-w-7xl flex-1 flex-col gap-5 px-4 py-8 sm:px-6 lg:px-8">
         ${tabItems && tabItems.length ? html`<div><${TabComponent} tabs=${tabItems} activeTab=${activeTab} onChange=${onTabChange} /></div>` : null}
         <div className="grid grid-cols-1 gap-8 lg:grid-cols-12 lg:items-start">
-          <section className=${`space-y-6 ${isSinglePanelMode ? 'lg:col-span-12' : 'lg:col-span-5'} ${isAiMode ? 'lg:sticky lg:top-24 lg:h-[calc(100vh-8.5rem)]' : ''}`.trim()}>${controls}</section>
+          <section className=${`space-y-6 ${isSinglePanelMode ? 'lg:col-span-12' : isBalancedMode ? 'lg:col-span-6' : 'lg:col-span-5'} ${isAiMode ? 'lg:sticky lg:top-24 lg:h-[calc(100vh-8.5rem)]' : ''}`.trim()}>${controls}</section>
           ${isSinglePanelMode
             ? null
             : html`
-                <section className=${`space-y-6 lg:col-span-7 ${isAiMode ? 'lg:sticky lg:top-24 lg:h-[calc(100vh-8.5rem)] lg:overflow-y-auto lg:pr-1' : ''}`.trim()}>${preview}${code}</section>
+                <section className=${`space-y-6 ${isBalancedMode ? 'lg:col-span-6' : 'lg:col-span-7'} ${isAiMode ? 'lg:sticky lg:top-24 lg:h-[calc(100vh-8.5rem)] lg:overflow-y-auto lg:pr-1' : ''}`.trim()}>${preview}${code}</section>
               `}
         </div>
       </main>

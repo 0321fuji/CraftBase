@@ -13,9 +13,16 @@ import { usePulldownGenerator } from './features/pulldown/PulldownGenerator.js';
 import { useVariableInsertGenerator } from './features/variable-insert/VariableInsertGenerator.js';
 import { useConfettiGenerator } from './features/confetti/ConfettiGenerator.js';
 import { SnippetSection } from './features/snippets/SnippetSection.js';
+import { useSyncAiGenerator } from './features/sync-ai/SyncAiGenerator.js';
+import { useSyncAiPulldownGenerator } from './features/sync-ai/SyncAiPulldownGenerator.js';
 import { SectionCard } from './components/ui/SectionCard.js';
 
-const tabs = [
+const sectionTabs = [
+  { id: 'parts', label: 'HTML/CSSパーツ' },
+  { id: 'sync-ai', label: 'Sync-AI' }
+];
+
+const partTabs = [
   { id: 'snippets', label: '固定コード' },
   { id: 'cta', label: 'CTAボタン' },
   { id: 'faq', label: 'FAQアコーディオン' },
@@ -28,6 +35,12 @@ const tabs = [
   { id: 'checklist', label: 'チェックリスト' },
   { id: 'video', label: '動画ガイド' },
   { id: 'video-switcher', label: '動画切り替え' }
+];
+
+const syncAiTabs = [
+  { id: 'sync-ai-basic', label: '基本フォーム' },
+  { id: 'sync-ai-pulldown', label: 'プルダウン' },
+  { id: 'sync-ai-extract', label: '抽出生成' }
 ];
 
 function PlaceholderGenerator({ label }) {
@@ -54,6 +67,22 @@ function PlaceholderGenerator({ label }) {
   };
 }
 
+function SyncAiPlaceholderGenerator({ label }) {
+  return {
+    controls: html`
+      <${SectionCard} title=${label}>
+        <div className="space-y-3 text-sm leading-7 text-slate-600">
+          <p>このパーツは次に追加予定です。</p>
+          <p>まずはタブ構成だけ先に用意しています。</p>
+          <p>要件が固まったら、この場所に専用フォームとコード出力を追加します。</p>
+        </div>
+      </${SectionCard}>
+    `,
+    preview: null,
+    code: null
+  };
+}
+
 function createSnippetLibraryGenerator() {
   return {
     controls: html`
@@ -67,7 +96,9 @@ function createSnippetLibraryGenerator() {
 }
 
 export function App() {
+  const [activeSection, setActiveSection] = useState('parts');
   const [activeTab, setActiveTab] = useState('cta');
+  const [activeSyncAiTab, setActiveSyncAiTab] = useState('sync-ai-basic');
   const ctaGenerator = useCtaGenerator();
   const faqGenerator = useFaqGenerator();
   const informationGenerator = useInformationGenerator();
@@ -79,8 +110,11 @@ export function App() {
   const pulldownGenerator = usePulldownGenerator();
   const variableInsertGenerator = useVariableInsertGenerator();
   const confettiGenerator = useConfettiGenerator();
+  const syncAiGenerator = useSyncAiGenerator();
+  const syncAiPulldownGenerator = useSyncAiPulldownGenerator();
   const snippetLibraryGenerator = createSnippetLibraryGenerator();
-  const placeholderGenerator = PlaceholderGenerator({ label: tabs.find((tab) => tab.id === activeTab)?.label || '未選択' });
+  const placeholderGenerator = PlaceholderGenerator({ label: partTabs.find((tab) => tab.id === activeTab)?.label || '未選択' });
+  const syncAiPlaceholderGenerator = SyncAiPlaceholderGenerator({ label: syncAiTabs.find((tab) => tab.id === activeSyncAiTab)?.label || '未選択' });
   const generators = {
     cta: ctaGenerator,
     faq: faqGenerator,
@@ -95,19 +129,48 @@ export function App() {
     'video-switcher': videoSwitcherGenerator,
     pulldown: pulldownGenerator
   };
-  const generator = generators[activeTab] || placeholderGenerator;
+  const syncAiGenerators = {
+    'sync-ai-basic': syncAiGenerator,
+    'sync-ai-pulldown': syncAiPulldownGenerator,
+    'sync-ai-extract': syncAiPlaceholderGenerator
+  };
+  const generator = activeSection === 'sync-ai'
+    ? syncAiGenerators[activeSyncAiTab] || syncAiPlaceholderGenerator
+    : generators[activeTab] || placeholderGenerator;
+  const headerNav = html`
+    <div className="max-w-full overflow-x-auto">
+      <${TabNavigation}
+        tabs=${sectionTabs}
+        activeTab=${activeSection}
+        onChange=${(sectionId) => {
+          setActiveSection(sectionId);
+          if (sectionId === 'parts') {
+            setActiveTab((current) => (partTabs.some((tab) => tab.id === current) ? current : 'cta'));
+          }
+          if (sectionId === 'sync-ai') {
+            setActiveSyncAiTab((current) => (syncAiTabs.some((tab) => tab.id === current) ? current : 'sync-ai-basic'));
+          }
+        }}
+      />
+    </div>
+  `;
+  const currentTabs = activeSection === 'parts' ? partTabs : syncAiTabs;
+  const currentActiveTab = activeSection === 'parts' ? activeTab : activeSyncAiTab;
+  const handleTabChange = activeSection === 'parts' ? setActiveTab : setActiveSyncAiTab;
 
   return html`
     <${GeneratorLayout}
       title="craftmake"
       badge="プロトタイプ"
+      headerNav=${headerNav}
       TabComponent=${TabNavigation}
-      tabItems=${tabs}
-      activeTab=${activeTab}
-      onTabChange=${setActiveTab}
+      tabItems=${currentTabs}
+      activeTab=${currentActiveTab}
+      onTabChange=${handleTabChange}
       controls=${generator.controls}
       preview=${generator.preview}
       code=${generator.code}
+      layoutMode=${generator.layoutMode}
     />
   `;
 }
