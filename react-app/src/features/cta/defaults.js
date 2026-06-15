@@ -12,6 +12,7 @@ export const CTA_DEFAULTS = {
   borderRadius: '8px',
   shadowType: 'medium',
   paddingY: '12px 32px',
+  fontSize: '16px',
   borderWidth: '1px',
   lastBorderWidth: '1px',
   borderColor: '#FF6B00',
@@ -58,4 +59,14 @@ export const FONT_FAMILY_OPTIONS = [
     label: '丸ゴシック体',
     value: "'Hiragino Maru Gothic ProN', sans-serif"
   }
+];
+
+export const FONT_SIZE_OPTIONS = [
+  { label: 'かなり小さめ (12px)', value: '12px' },
+  { label: '小さめ (14px)', value: '14px' },
+  { label: 'やや小さめ (15px)', value: '15px' },
+  { label: '標準 (16px)', value: '16px' },
+  { label: 'やや大きめ (18px)', value: '18px' },
+  { label: '大きめ (20px)', value: '20px' },
+  { label: 'かなり大きめ (22px)', value: '22px' }
 ];

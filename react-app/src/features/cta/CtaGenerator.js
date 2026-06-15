@@ -2,6 +2,7 @@ import { html, useMemo, useState } from '../../lib/react.js';
 import {
   CTA_DEFAULTS,
   FONT_FAMILY_OPTIONS,
+  FONT_SIZE_OPTIONS,
   GRADIENT_PRESETS,
   SOLID_PRESETS
 } from './defaults.js';
@@ -374,12 +375,29 @@ export function useCtaGenerator() {
               </select>
             </div>
             <div className="space-y-2">
+              <label className="block text-xs font-bold uppercase tracking-wider text-slate-500">フォントサイズ</label>
+              <select value=${form.fontSize} onChange=${(event) => updateField('fontSize', event.target.value)} className="w-full rounded-lg border border-slate-300 bg-white px-2 py-1.5 text-xs">
+                ${FONT_SIZE_OPTIONS.map(
+                  (option) => html`<option key=${option.value} value=${option.value}>${option.label}</option>`
+                )}
+              </select>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-2">
               <label className="block text-xs font-bold uppercase tracking-wider text-slate-500">配置位置</label>
               <select value=${form.alignment} onChange=${(event) => updateField('alignment', event.target.value)} className="w-full rounded-lg border border-slate-300 bg-white px-2 py-1.5 text-xs">
                 <option value="left">左寄せ (Left)</option>
                 <option value="center">中央揃え (Center)</option>
                 <option value="right">右寄せ (Right)</option>
               </select>
+            </div>
+            <div className="space-y-2">
+              <label className="block text-xs font-bold uppercase tracking-wider text-slate-500">フォントサイズの目安</label>
+              <div className="rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-xs leading-5 text-slate-500">
+                ボタン文言を少し強く見せたいときは <span className="font-mono text-slate-700">18px</span> 以上、コンパクトにしたいときは <span className="font-mono text-slate-700">14px</span> 〜 <span className="font-mono text-slate-700">15px</span> が使いやすいです。
+              </div>
             </div>
           </div>
         </div>
