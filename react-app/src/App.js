@@ -16,6 +16,7 @@ import { SnippetSection } from './features/snippets/SnippetSection.js';
 import { SectionCard } from './components/ui/SectionCard.js';
 
 const tabs = [
+  { id: 'snippets', label: '固定コード' },
   { id: 'cta', label: 'CTAボタン' },
   { id: 'faq', label: 'FAQアコーディオン' },
   { id: 'pulldown', label: 'プルダウン' },
@@ -24,7 +25,6 @@ const tabs = [
   { id: 'information', label: 'インフォメーション' },
   { id: 'variable-insert', label: '変数差し込み' },
   { id: 'confetti', label: '紙吹雪演出' },
-  { id: 'snippets', label: 'よく使うコード' },
   { id: 'checklist', label: 'チェックリスト' },
   { id: 'video', label: '動画ガイド' },
   { id: 'video-switcher', label: '動画切り替え' }
