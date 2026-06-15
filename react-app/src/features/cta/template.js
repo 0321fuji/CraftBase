@@ -25,6 +25,10 @@ function getClassPrefix(urlValue, blockId) {
   return `onb-custom-${projectToken}-button-${blockId}-cta`;
 }
 
+export function getCtaCustomEventSelector(urlValue, blockId) {
+  return `.${getClassPrefix(urlValue, blockId)}`;
+}
+
 function getShadowStyle(shadowType) {
   if (shadowType === 'light') {
     return 'box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);';
