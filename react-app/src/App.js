@@ -2,6 +2,7 @@ import { html, useState } from './lib/react.js';
 import { GeneratorLayout } from './components/layout/GeneratorLayout.js';
 import { TabNavigation } from './components/layout/TabNavigation.js';
 import { useCtaGenerator } from './features/cta/CtaGenerator.js';
+import { useBranchCardGenerator } from './features/branch-card/BranchCardGenerator.js';
 import { useFaqGenerator } from './features/faq/FaqGenerator.js';
 import { useInformationGenerator } from './features/information/InformationGenerator.js';
 import { useChecklistGenerator } from './features/checklist/ChecklistGenerator.js';
@@ -25,6 +26,7 @@ const sectionTabs = [
 const partTabs = [
   { id: 'snippets', label: '固定コード' },
   { id: 'cta', label: 'CTAボタン' },
+  { id: 'branch-card', label: '分岐カード' },
   { id: 'faq', label: 'FAQアコーディオン' },
   { id: 'pulldown', label: 'プルダウン' },
   { id: 'compare', label: '比較表' },
@@ -100,6 +102,7 @@ export function App() {
   const [activeTab, setActiveTab] = useState('cta');
   const [activeSyncAiTab, setActiveSyncAiTab] = useState('sync-ai-basic');
   const ctaGenerator = useCtaGenerator();
+  const branchCardGenerator = useBranchCardGenerator();
   const faqGenerator = useFaqGenerator();
   const informationGenerator = useInformationGenerator();
   const checklistGenerator = useChecklistGenerator();
@@ -117,6 +120,7 @@ export function App() {
   const syncAiPlaceholderGenerator = SyncAiPlaceholderGenerator({ label: syncAiTabs.find((tab) => tab.id === activeSyncAiTab)?.label || '未選択' });
   const generators = {
     cta: ctaGenerator,
+    'branch-card': branchCardGenerator,
     faq: faqGenerator,
     compare: compareGenerator,
     progress: progressGenerator,

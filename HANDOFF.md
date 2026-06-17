@@ -1,6 +1,6 @@
 # Craftmake 引き継ぎメモ
 
-更新日: 2026-06-16
+更新日: 2026-06-17
 
 ## リポジトリ / 実行前提
 - リポジトリ: `0321fuji/CraftBase`
@@ -11,9 +11,62 @@
 - 現在の主ブランチ: `main`
 
 ## 現在の公開状態
-- GitHub に push 済みの最新機能コミットは `bdd52e1 Add Sync-AI builders`
-- このコミット時点で、`Sync-AI` の導線分離と `基本フォーム` / `プルダウン` の実装が入っている
-- 今回の `HANDOFF.md` 更新もこのあと GitHub に push する想定
+- GitHub に push 済みの最新コミットは `8c8d175 Update Claude handoff notes`
+- 機能としての直近コミットは `bdd52e1 Add Sync-AI builders`
+- `main` には、`Sync-AI` の導線分離と `基本フォーム` / `プルダウン` の実装が入っている
+- `分岐カード` は **まだ未push のローカル差分**
+
+## 別チャンネルの Codex / Claude Code へ引き継ぐときの情報格納ルール
+
+### 1. 最優先の格納場所
+- **引き継ぎの一次ソースは `HANDOFF.md`**
+- 別チャンネルに移る前に、少なくとも以下は `HANDOFF.md` に残す
+  - 現在の目的
+  - 完了済み
+  - 未完了
+  - 次に触るファイル
+  - 注意点
+  - push 済みか未pushか
+
+### 2. コードの正本
+- **コードの正本は GitHub の `main`**
+- 別チャンネルでは、まず `HANDOFF.md` と最新 push 済みコミットを見る前提
+- 「どこまで GitHub にあるか」は、`HANDOFF.md` の「現在の公開状態」に必ず書く
+
+### 3. 未push の作業がある場合の残し方
+- 未push の変更を別チャンネルへ渡したいときは、チャット履歴だけに頼らない
+- `HANDOFF.md` に以下を明記する
+  - 未push の有無
+  - 対象ファイルのパス
+  - 何を変えたか
+  - ビルド確認の有無
+  - その変更を commit / push してよいか
+
+記載例:
+- `未push ローカル差分あり`
+- `対象: react-app/src/features/sync-ai/SyncAiPulldownGenerator.js`
+- `内容: 追加ボタン位置をカード外へ移動`
+- `build: 実行済み`
+
+### 4. 仕様メモの置き場所
+- 実装仕様・画面仕様・運用ルールは、基本的に **`HANDOFF.md` に要約して残す**
+- 長文の一時メモを別ファイルに置くなら、`HANDOFF.md` に **そのファイルパスを必ず書く**
+- 「ブラウザコメントで言われたこと」「ユーザー口頭で言ったこと」も、次チャンネルで必要なら要約して `HANDOFF.md` に転記する
+
+### 5. 参照すべきファイルの書き方
+- 別チャンネルの Codex がすぐ追えるよう、ファイルパスは具体的に書く
+- 例:
+  - `react-app/src/App.js`
+  - `react-app/src/features/sync-ai/SyncAiPulldownGenerator.js`
+  - `react-app/src/features/sync-ai/template.js`
+  - `react-app/src/components/layout/GeneratorLayout.js`
+
+### 6. 次チャンネル開始時のおすすめ手順
+- 1. `HANDOFF.md` を読む
+- 2. `git log --oneline -5` で最新コミット確認
+- 3. `git status --short` でローカル差分確認
+- 4. `HANDOFF.md` に書かれた対象ファイルだけ開く
+- 5. その後に作業開始
 
 ## まず最初に把握してほしいこと
 - このリポジトリは未整理のローカル差分が他にもある
@@ -35,6 +88,7 @@
 - 現在の並び:
   - `固定コード`
   - `CTAボタン`
+  - `分岐カード`
   - `FAQアコーディオン`
   - `プルダウン`
   - `比較表`
@@ -127,6 +181,21 @@
 
 この仕様は `react-app/src/features/sync-ai/template.js` の `buildPromptInstruction()` に寄っている。
 
+### D. HTML/CSSパーツ「分岐カード」
+対象:
+- `react-app/src/App.js`
+- `react-app/src/features/branch-card/BranchCardGenerator.js`
+- `react-app/src/features/branch-card/defaults.js`
+- `react-app/src/features/branch-card/template.js`
+
+内容:
+- `CTAボタン` の次に `分岐カード` タブを追加
+- Onboarding ステップの外枠を前提に、親カードの外枠なしで出力
+- 見出し + 補足文 + 複数の選択肢カードを生成できるようにした
+- 各選択肢カードは `STANDSMotion.changeGoal()` でポップアップ起動
+- カードにホバー時の浮き上がり、背景変化、枠色変化を追加
+- 初期版は **ポップアップ起動専用** に絞っている
+
 ## 現在のファイル構成（Sync-AI）
 - `react-app/src/features/sync-ai/defaults.js`
   - `SYNC_AI_DEFAULTS`
@@ -140,6 +209,14 @@
   - `プルダウン`
 
 ## 次にやる候補
+
+### 優先0: 分岐カードの微調整
+- 並び順は `CTAボタン` の次に追加済み
+- 必要なら次に検討:
+  - 横並びレイアウト対応
+  - カード内アイコン
+  - `リンク` / `チャット` 起動対応
+  - ホバー演出の強さ調整
 
 ### 優先1: Sync-AI「抽出生成」
 - タブだけ存在し、まだ中身は未実装
@@ -182,6 +259,23 @@
 - `react-app/src/features/ai-consultation/`
 
 次回も **対象ファイルだけ個別に add** すること。
+
+## 未push ローカル差分
+- あり
+- 対象:
+  - `react-app/src/App.js`
+  - `react-app/src/features/branch-card/BranchCardGenerator.js`
+  - `react-app/src/features/branch-card/defaults.js`
+  - `react-app/src/features/branch-card/template.js`
+  - `HANDOFF.md`
+- 内容:
+  - HTML/CSSパーツに `分岐カード` タブを追加
+  - 見出し + 補足文 + 複数カードでポップアップ起動する分岐UIを追加
+  - ホバー時に押せると気づきやすいカード演出を追加
+- build:
+  - 実行済み
+- commit / push:
+  - まだ未実施
 
 ## 参考コマンド
 - 開発起動:
