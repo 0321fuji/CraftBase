@@ -1,4 +1,5 @@
 import { escapeAttribute, escapeHtml } from '../../utils/escape.js';
+import { normalizeFontSize } from '../../utils/size.js';
 
 function sanitizeToken(value, fallback = 'variable') {
   return String(value || '')
@@ -33,6 +34,7 @@ export function buildVariableInsertHtml(state, blockId) {
   const prefix = `onb-variable-${sanitizeToken(blockId, 'block')}`;
   const variableKey = String(state.variableKey || '').trim();
   const initialText = buildInitialText(state);
+  const fontSize = normalizeFontSize(state.fontSize, '18px');
 
   return `
 <div class="${prefix}" data-onb-variable-key="${escapeAttribute(variableKey)}" data-onb-variable-prefix="${escapeAttribute(state.prefixText || '')}" data-onb-variable-suffix="${escapeAttribute(state.suffixText || '')}" data-onb-variable-use-suffix="${state.useSuffix ? '1' : '0'}" data-onb-variable-fallback="${escapeAttribute(state.fallbackText || '')}">
@@ -48,7 +50,7 @@ export function buildVariableInsertHtml(state, blockId) {
 
   .${prefix}__text {
     display: inline-block;
-    font-size: ${state.fontSize};
+    font-size: ${fontSize};
     font-weight: ${state.fontWeight};
     color: ${state.textColor};
     font-family: ${state.fontFamily};

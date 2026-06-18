@@ -1,16 +1,23 @@
 import { escapeHtml } from '../../utils/escape.js';
+import { normalizeFontSize } from '../../utils/size.js';
 
 export function buildCompareHtml(state, blockId) {
   const prefix = `onb-compare-project-${blockId}`;
   const header = escapeHtml(state.headerLabel || '比較項目');
   const colA = escapeHtml(state.colALabel || '項目A');
   const colB = escapeHtml(state.colBLabel || '項目B');
+  const baseHeaderFontSize = normalizeFontSize(state.baseHeaderFontSize, '16px');
+  const colAHeaderFontSize = normalizeFontSize(state.colAHeaderFontSize, '16px');
+  const colBHeaderFontSize = normalizeFontSize(state.colBHeaderFontSize, '16px');
   const bodyRows = state.rows
     .map((row) => {
+      const labelFontSize = normalizeFontSize(row.labelFontSize, '16px');
+      const aFontSize = normalizeFontSize(row.aFontSize, '16px');
+      const bFontSize = normalizeFontSize(row.bFontSize, '16px');
       return `    <tr>
-      <td class="${prefix}__cell ${prefix}__cell--label" style="font-size: ${row.labelFontSize}; color: ${row.labelTextColor}; background-color: ${row.labelBgColor};">${escapeHtml(row.label)}</td>
-      <td class="${prefix}__cell" style="font-size: ${row.aFontSize}; color: ${row.aTextColor}; background-color: ${row.aBgColor};">${escapeHtml(row.a)}</td>
-      <td class="${prefix}__cell" style="font-size: ${row.bFontSize}; color: ${row.bTextColor}; background-color: ${row.bBgColor};">${escapeHtml(row.b)}</td>
+      <td class="${prefix}__cell ${prefix}__cell--label" style="font-size: ${labelFontSize}; color: ${row.labelTextColor}; background-color: ${row.labelBgColor};">${escapeHtml(row.label)}</td>
+      <td class="${prefix}__cell" style="font-size: ${aFontSize}; color: ${row.aTextColor}; background-color: ${row.aBgColor};">${escapeHtml(row.a)}</td>
+      <td class="${prefix}__cell" style="font-size: ${bFontSize}; color: ${row.bTextColor}; background-color: ${row.bBgColor};">${escapeHtml(row.b)}</td>
     </tr>`;
     })
     .join('\n');
@@ -66,17 +73,17 @@ ${bodyRows}
     font-weight: 700;
   }
   .${prefix}__head--base {
-    font-size: ${state.baseHeaderFontSize};
+    font-size: ${baseHeaderFontSize};
     background-color: ${state.baseHeaderBgColor};
     color: ${state.baseHeaderTextColor};
   }
   .${prefix}__head--a {
-    font-size: ${state.colAHeaderFontSize};
+    font-size: ${colAHeaderFontSize};
     background-color: ${state.colABgColor};
     color: ${state.colATextColor};
   }
   .${prefix}__head--b {
-    font-size: ${state.colBHeaderFontSize};
+    font-size: ${colBHeaderFontSize};
     background-color: ${state.colBBgColor};
     color: ${state.colBTextColor};
   }
@@ -88,4 +95,3 @@ ${bodyRows}
   }
 </style>`;
 }
-

@@ -1,4 +1,5 @@
 import { escapeHtml, escapeMultilineTextToHtml } from '../../utils/escape.js';
+import { normalizeFontSize } from '../../utils/size.js';
 
 function buildPanelContent(prefix, item) {
   const bodyBlock = item.body ? `      <p class="${prefix}__text">${escapeMultilineTextToHtml(item.body)}</p>\n` : '';
@@ -11,6 +12,7 @@ export function buildPulldownHtml(state, blockId) {
   const prefix = `onb-pulldown-${blockId}`;
   const radioName = `${prefix}-group`;
   const items = state.items || [];
+  const bodyFontSize = normalizeFontSize(state.bodyFontSize, '12px');
 
   const radios = items
     .map((item, index) => `  <input type="radio" id="${prefix}-opt${index + 1}" name="${radioName}" class="${prefix}__radio" ${index === 0 ? 'checked' : ''}>`)
@@ -151,7 +153,7 @@ ${panels}
   .${prefix}__text {
     margin: 0 0 14px;
     color: ${state.bodyColor};
-    font-size: ${state.bodyFontSize};
+    font-size: ${bodyFontSize};
     line-height: 1.7;
   }
 ${activeRules}

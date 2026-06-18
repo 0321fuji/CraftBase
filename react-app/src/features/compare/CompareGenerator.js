@@ -2,6 +2,7 @@ import { html, useMemo, useState } from '../../lib/react.js';
 import { CodeOutputPanel } from '../../components/ui/CodeOutputPanel.js';
 import { PreviewPanel } from '../../components/ui/PreviewPanel.js';
 import { SectionCard } from '../../components/ui/SectionCard.js';
+import { FontSizeField } from '../../components/ui/FontSizeField.js';
 import { copyText } from '../../utils/clipboard.js';
 import { generateRandomId } from '../../utils/randomId.js';
 import { COMPARE_DEFAULTS, createCompareRow } from './defaults.js';
@@ -18,20 +19,19 @@ function updateRowAt(rows, index, patch) {
   return rows.map((row, rowIndex) => (rowIndex === index ? { ...row, ...patch } : row));
 }
 
-const fontSizeOptions = ['14px', '16px', '18px', '20px'];
-
 function HeaderColumnEditor({ title, labelValue, labelKey, fontValue, fontKey, textColorValue, textColorKey, bgColorValue, bgColorKey, onChange }) {
   return html`
     <div className="space-y-1.5 rounded-lg border border-slate-200 bg-slate-50 p-2.5">
       <div className="text-xs font-bold text-slate-700">${title}</div>
       <input type="text" value=${labelValue} onChange=${(event) => onChange(labelKey, event.target.value)} className="w-full rounded-lg border border-slate-300 px-2.5 py-2 text-sm" />
       <div className="grid grid-cols-3 gap-2">
-        <div>
-          <label className="block text-[11px] text-slate-500">フォント</label>
-          <select value=${fontValue} onChange=${(event) => onChange(fontKey, event.target.value)} className="mt-1 h-8 w-full rounded-lg border border-slate-300 bg-white px-2 py-1.5 text-xs">
-            ${fontSizeOptions.map((size) => html`<option key=${size} value=${size}>${size}</option>`)}
-          </select>
-        </div>
+        <${FontSizeField}
+          label="フォント"
+          value=${fontValue}
+          onChange=${(value) => onChange(fontKey, value)}
+          labelClassName="block text-[11px] text-slate-500"
+          inputClassName="mt-1 h-8 w-full rounded-lg border border-slate-300 px-2 py-1.5 text-xs font-mono"
+        />
         <div>
           <label className="block text-[11px] text-slate-500">文字色</label>
           <input type="color" value=${textColorValue} onChange=${(event) => onChange(textColorKey, event.target.value)} className="mt-1 h-8 w-full rounded border border-slate-300" />
@@ -51,12 +51,13 @@ function RowCellEditor({ title, value, valueKey, fontValue, fontKey, textColorVa
       <div className="text-xs font-bold text-slate-700">${title}</div>
       <input type="text" value=${value} placeholder=${placeholder} onChange=${(event) => onChange({ [valueKey]: event.target.value })} className="w-full rounded-lg border border-slate-300 px-2.5 py-2 text-sm" />
       <div className="grid grid-cols-3 gap-2">
-        <div>
-          <label className="block text-[11px] text-slate-500">フォント</label>
-          <select value=${fontValue} onChange=${(event) => onChange({ [fontKey]: event.target.value })} className="mt-1 h-8 w-full rounded-lg border border-slate-300 bg-white px-2 py-1.5 text-xs">
-            ${fontSizeOptions.map((size) => html`<option key=${size} value=${size}>${size}</option>`)}
-          </select>
-        </div>
+        <${FontSizeField}
+          label="フォント"
+          value=${fontValue}
+          onChange=${(value) => onChange({ [fontKey]: value })}
+          labelClassName="block text-[11px] text-slate-500"
+          inputClassName="mt-1 h-8 w-full rounded-lg border border-slate-300 px-2 py-1.5 text-xs font-mono"
+        />
         <div>
           <label className="block text-[11px] text-slate-500">文字色</label>
           <input type="color" value=${textColorValue} onChange=${(event) => onChange({ [textColorKey]: event.target.value })} className="mt-1 h-8 w-full rounded border border-slate-300" />

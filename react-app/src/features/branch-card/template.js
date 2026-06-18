@@ -1,24 +1,7 @@
 import { escapeAttribute, escapeHtml, escapeMultilineTextToHtml, escapeSingleQuotedJsString } from '../../utils/escape.js';
+import { normalizeFontSize } from '../../utils/size.js';
 
 const CLOSE_VISIBLE_HINTS_SCRIPT = "document.querySelectorAll('.stands-hint-content').forEach(hint=>{if(window.getComputedStyle(hint).display!=='none'){const closeBtn=hint.querySelector('.stands-hint-close');if(closeBtn)closeBtn.click();}});";
-
-function normalizePx(value, fallback) {
-  const trimmed = String(value || '').trim();
-
-  if (!trimmed) {
-    return fallback;
-  }
-
-  if (/^\d+(\.\d+)?px$/.test(trimmed)) {
-    return trimmed;
-  }
-
-  if (/^\d+(\.\d+)?$/.test(trimmed)) {
-    return `${trimmed}px`;
-  }
-
-  return fallback;
-}
 
 function buildDescriptionBlock(prefix, description) {
   const trimmed = String(description || '').trim();
@@ -30,17 +13,43 @@ function buildDescriptionBlock(prefix, description) {
   return `  <p class="${prefix}__lead">${escapeMultilineTextToHtml(trimmed)}</p>\n`;
 }
 
+function buildItemAction(item) {
+  const actionType = item.actionType || 'popup';
+
+  if (actionType === 'chat') {
+    const chatId = escapeSingleQuotedJsString(String(item.chatId || '').trim());
+    return {
+      tagName: 'button',
+      attributes: `type="button" onclick="STANDSMotion.mountAiChat('${chatId}');${CLOSE_VISIBLE_HINTS_SCRIPT}"`
+    };
+  }
+
+  if (actionType === 'link') {
+    const url = escapeAttribute(String(item.url || '').trim() || '#');
+    return {
+      tagName: 'a',
+      attributes: `href="${url}" target="_blank" rel="noopener noreferrer"`
+    };
+  }
+
+  const popupId = escapeSingleQuotedJsString(String(item.popupId || '').trim());
+  return {
+    tagName: 'button',
+    attributes: `type="button" onclick="STANDSMotion.changeGoal('${popupId}');${CLOSE_VISIBLE_HINTS_SCRIPT}"`
+  };
+}
+
 function buildItem(prefix, item, index) {
+  const { tagName, attributes } = buildItemAction(item);
   const title = escapeHtml(item.title || `選択肢 ${index + 1}`);
   const description = String(item.description || '').trim();
-  const popupId = escapeSingleQuotedJsString(String(item.popupId || '').trim());
   const bodyBlock = description
     ? `      <div class="${prefix}__item-body">${escapeMultilineTextToHtml(description)}</div>\n`
     : '';
 
-  return `    <button type="button" class="${prefix}__item" onclick="STANDSMotion.changeGoal('${popupId}');${CLOSE_VISIBLE_HINTS_SCRIPT}">
+  return `    <${tagName} class="${prefix}__item" ${attributes}>
       <div class="${prefix}__item-title">${title}</div>
-${bodyBlock}    </button>`;
+${bodyBlock}    </${tagName}>`;
 }
 
 export function buildBranchCardHtml(state, blockId) {
@@ -50,10 +59,10 @@ export function buildBranchCardHtml(state, blockId) {
   const descriptionBlock = buildDescriptionBlock(prefix, state.description);
   const itemBlocks = items.map((item, index) => buildItem(prefix, item, index)).join('\n');
   const fontFamily = state.fontFamily || "'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', Meiryo, sans-serif";
-  const headingFontSize = normalizePx(state.headingFontSize, '20px');
-  const descriptionFontSize = normalizePx(state.descriptionFontSize, '14px');
-  const itemTitleFontSize = normalizePx(state.itemTitleFontSize, '16px');
-  const itemBodyFontSize = normalizePx(state.itemBodyFontSize, '13px');
+  const headingFontSize = normalizeFontSize(state.headingFontSize, '20px');
+  const descriptionFontSize = normalizeFontSize(state.descriptionFontSize, '14px');
+  const itemTitleFontSize = normalizeFontSize(state.itemTitleFontSize, '16px');
+  const itemBodyFontSize = normalizeFontSize(state.itemBodyFontSize, '13px');
 
   return `<div class="${prefix}">
   <div class="${prefix}__header">
@@ -91,6 +100,7 @@ ${itemBlocks}
     gap: 12px;
   }
   .${prefix}__item {
+    display: block;
     width: 100%;
     box-sizing: border-box;
     padding: 16px 18px;
@@ -98,7 +108,10 @@ ${itemBlocks}
     border-radius: ${escapeAttribute(state.radius || '14px')};
     background: ${escapeAttribute(state.backgroundColor || '#f8fafc')};
     text-align: left;
+    text-decoration: none;
+    color: inherit;
     cursor: pointer;
+    appearance: none;
     transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease, background-color 0.18s ease;
   }
   .${prefix}__item:hover {

@@ -2,6 +2,7 @@ import { html, useMemo, useState } from '../../lib/react.js';
 import { CodeOutputPanel } from '../../components/ui/CodeOutputPanel.js';
 import { PreviewPanel } from '../../components/ui/PreviewPanel.js';
 import { SectionCard } from '../../components/ui/SectionCard.js';
+import { FontSizeField } from '../../components/ui/FontSizeField.js';
 import { copyText } from '../../utils/clipboard.js';
 import { generateRandomId } from '../../utils/randomId.js';
 import { CHECKLIST_DEFAULTS } from './defaults.js';
@@ -136,15 +137,7 @@ export function useChecklistGenerator() {
               <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-500">ボックス色</label>
               <input type="color" value=${form.checkColor} onChange=${(event) => updateField('checkColor', event.target.value)} className="mt-1 h-9 w-full rounded border border-slate-300" />
             </div>
-            <div>
-              <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-500">文字サイズ</label>
-              <select value=${form.fontSize} onChange=${(event) => updateField('fontSize', event.target.value)} className="mt-1 w-full rounded-lg border border-slate-300 bg-white px-2 py-2 text-xs">
-                <option value="12px">12px</option>
-                <option value="13px">13px</option>
-                <option value="14px">14px</option>
-                <option value="16px">16px</option>
-              </select>
-            </div>
+            <${FontSizeField} label="文字サイズ" value=${form.fontSize} onChange=${(value) => updateField('fontSize', value)} inputClassName="mt-1 w-full rounded-lg border border-slate-300 px-2 py-2 text-xs font-mono" />
             <div>
               <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-500">項目間の余白</label>
               <select value=${form.itemGap} onChange=${(event) => updateField('itemGap', event.target.value)} className="mt-1 w-full rounded-lg border border-slate-300 bg-white px-2 py-2 text-xs">
@@ -174,4 +167,3 @@ export function useChecklistGenerator() {
     `
   };
 }
-

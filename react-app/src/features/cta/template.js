@@ -1,4 +1,5 @@
 import { escapeAttribute, escapeHtml, escapeSingleQuotedJsString } from '../../utils/escape.js';
+import { normalizeFontSize } from '../../utils/size.js';
 
 function sanitizeToken(value, fallback = 'project') {
   const normalized = String(value || '')
@@ -49,7 +50,7 @@ export function buildCtaHtml(state, blockId) {
   const chatId = escapeSingleQuotedJsString(state.chatId.trim());
   const classPrefix = getClassPrefix(state.url, blockId);
   const [padTopBottom = '12px', padLeftRight = '32px'] = state.paddingY.split(' ');
-  const fontSize = state.fontSize || '16px';
+  const fontSize = normalizeFontSize(state.fontSize, '16px');
   const startColor = state.colorMode === 'solid' ? state.solidColor : state.gradientStart;
   const endColor = state.gradientEnd;
   const shadowStyle = getShadowStyle(state.shadowType);

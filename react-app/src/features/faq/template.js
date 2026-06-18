@@ -1,4 +1,5 @@
 import { escapeHtml, escapeMultilineTextToHtml } from '../../utils/escape.js';
+import { normalizeFontSize } from '../../utils/size.js';
 
 function sanitizeToken(value, fallback = 'project') {
   const normalized = String(value || '')
@@ -27,6 +28,9 @@ function getFaqClassPrefix(sourceUrl, blockId) {
 
 export function buildFaqHtml(state, blockId) {
   const faqPrefix = getFaqClassPrefix(state.sourceUrl, blockId);
+  const questionSize = normalizeFontSize(state.questionSize, '16px');
+  const answerSize = normalizeFontSize(state.answerSize, '16px');
+  const iconSize = normalizeFontSize(state.iconSize, '16px');
   const faqBlocks = state.items
     .map((item) => {
       return `<details class="${faqPrefix}">
@@ -55,7 +59,7 @@ export function buildFaqHtml(state, blockId) {
     border-radius: ${state.radius};
     background-color: ${state.questionBgColor};
     color: ${state.questionColor};
-    font-size: ${state.questionSize};
+    font-size: ${questionSize};
     font-weight: bold;
     cursor: pointer;
   }
@@ -70,7 +74,7 @@ export function buildFaqHtml(state, blockId) {
     right: 0.55em;
     top: 50%;
     transform: translateY(-50%);
-    font-size: ${state.iconSize};
+    font-size: ${iconSize};
     font-weight: 400;
     line-height: 1;
     color: ${state.iconColor};
@@ -96,7 +100,7 @@ export function buildFaqHtml(state, blockId) {
     opacity: 0;
     margin: 0 0 0 10px;
     color: ${state.answerColor};
-    font-size: ${state.answerSize};
+    font-size: ${answerSize};
     transition: transform 0.5s, opacity 0.5s;
   }
 

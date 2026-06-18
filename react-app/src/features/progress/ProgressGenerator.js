@@ -1,6 +1,7 @@
 import { html, useMemo, useState } from '../../lib/react.js';
 import { PreviewPanel } from '../../components/ui/PreviewPanel.js';
 import { SectionCard } from '../../components/ui/SectionCard.js';
+import { FontSizeField } from '../../components/ui/FontSizeField.js';
 import { copyText } from '../../utils/clipboard.js';
 import { generateRandomId } from '../../utils/randomId.js';
 import { PROGRESS_DEFAULTS } from './defaults.js';
@@ -98,15 +99,7 @@ export function useProgressGenerator() {
             <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-500">数字色</label>
             <input type="color" value=${form.metaColor} onChange=${(event) => updateField('metaColor', event.target.value)} className="mt-1 h-9 w-full rounded border border-slate-300" />
           </div>
-          <div>
-            <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-500">ラベル文字サイズ</label>
-            <select value=${form.labelFontSize} onChange=${(event) => updateField('labelFontSize', event.target.value)} className="mt-1 w-full rounded-lg border border-slate-300 bg-white px-2 py-2 text-xs">
-              <option value="10px">10px</option>
-              <option value="12px">12px</option>
-              <option value="14px">14px</option>
-              <option value="16px">16px</option>
-            </select>
-          </div>
+          <${FontSizeField} label="ラベル文字サイズ" value=${form.labelFontSize} onChange=${(value) => updateField('labelFontSize', value)} inputClassName="mt-1 w-full rounded-lg border border-slate-300 px-2 py-2 text-xs font-mono" />
           <div>
             <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-500">バーの高さ</label>
             <select value=${form.barHeight} onChange=${(event) => updateField('barHeight', event.target.value)} className="mt-1 w-full rounded-lg border border-slate-300 bg-white px-2 py-2 text-xs">
@@ -179,4 +172,3 @@ export function useProgressGenerator() {
     `
   };
 }
-

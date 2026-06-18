@@ -2,13 +2,13 @@ import { html, useMemo, useState } from '../../lib/react.js';
 import { CodeOutputPanel } from '../../components/ui/CodeOutputPanel.js';
 import { PreviewPanel } from '../../components/ui/PreviewPanel.js';
 import { SectionCard } from '../../components/ui/SectionCard.js';
+import { FontSizeField } from '../../components/ui/FontSizeField.js';
 import { copyText } from '../../utils/clipboard.js';
 import { generateRandomId } from '../../utils/randomId.js';
 import {
   ALIGNMENT_OPTIONS,
   COMMON_VARIABLE_PRESETS,
   FONT_FAMILY_OPTIONS,
-  FONT_SIZE_OPTIONS,
   FONT_WEIGHT_OPTIONS,
   LABEL_BORDER_RADIUS_OPTIONS,
   LABEL_PADDING_X_OPTIONS,
@@ -18,6 +18,7 @@ import {
   VARIABLE_INSERT_DEFAULTS
 } from './defaults.js';
 import { buildVariableInsertHtml } from './template.js';
+import { normalizeFontSize } from '../../utils/size.js';
 
 function cloneDefaults() {
   return { ...VARIABLE_INSERT_DEFAULTS };
@@ -52,7 +53,7 @@ function PreviewText({ form }) {
         <span
           style=${{
             display: 'inline-block',
-            fontSize: form.fontSize,
+            fontSize: normalizeFontSize(form.fontSize, '18px'),
             fontWeight: form.fontWeight,
             color: form.textColor,
             fontFamily: form.fontFamily,
@@ -206,12 +207,7 @@ export function useVariableInsertGenerator() {
               <div className="rounded-2xl border border-slate-200 p-4">
                 <div className="mb-3 text-xs font-bold tracking-wider text-slate-500">文字の調整</div>
                 <div className="grid grid-cols-2 gap-3">
-                  <div>
-                    <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-500">文字サイズ</label>
-                    <select value=${form.fontSize} onChange=${(event) => updateField('fontSize', event.target.value)} className="mt-1 w-full rounded-lg border border-slate-300 bg-white px-2 py-2 text-xs">
-                      ${FONT_SIZE_OPTIONS.map((option) => html`<option key=${option} value=${option}>${option}</option>`)}
-                    </select>
-                  </div>
+                  <${FontSizeField} label="文字サイズ" value=${form.fontSize} onChange=${(value) => updateField('fontSize', value)} inputClassName="mt-1 w-full rounded-lg border border-slate-300 px-2 py-2 text-xs font-mono" />
                   <div>
                     <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-500">文字の太さ</label>
                     <select value=${form.fontWeight} onChange=${(event) => updateField('fontWeight', event.target.value)} className="mt-1 w-full rounded-lg border border-slate-300 bg-white px-2 py-2 text-xs">

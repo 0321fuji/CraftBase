@@ -2,7 +2,6 @@ import { html, useMemo, useState } from '../../lib/react.js';
 import {
   CTA_DEFAULTS,
   FONT_FAMILY_OPTIONS,
-  FONT_SIZE_OPTIONS,
   GRADIENT_PRESETS,
   SOLID_PRESETS
 } from './defaults.js';
@@ -12,6 +11,7 @@ import { generateRandomId } from '../../utils/randomId.js';
 import { SectionCard } from '../../components/ui/SectionCard.js';
 import { PreviewPanel } from '../../components/ui/PreviewPanel.js';
 import { CodeOutputPanel } from '../../components/ui/CodeOutputPanel.js';
+import { FontSizeField } from '../../components/ui/FontSizeField.js';
 import { getCtaCustomEventSelector } from './template.js';
 
 function cloneDefaults() {
@@ -374,14 +374,13 @@ export function useCtaGenerator() {
                 )}
               </select>
             </div>
-            <div className="space-y-2">
-              <label className="block text-xs font-bold uppercase tracking-wider text-slate-500">フォントサイズ</label>
-              <select value=${form.fontSize} onChange=${(event) => updateField('fontSize', event.target.value)} className="w-full rounded-lg border border-slate-300 bg-white px-2 py-1.5 text-xs">
-                ${FONT_SIZE_OPTIONS.map(
-                  (option) => html`<option key=${option.value} value=${option.value}>${option.label}</option>`
-                )}
-              </select>
-            </div>
+            <${FontSizeField}
+              label="フォントサイズ"
+              value=${form.fontSize}
+              onChange=${(value) => updateField('fontSize', value)}
+              labelClassName="block text-xs font-bold uppercase tracking-wider text-slate-500"
+              inputClassName="w-full rounded-lg border border-slate-300 px-2 py-1.5 text-xs font-mono"
+            />
           </div>
 
           <div className="grid grid-cols-2 gap-4">

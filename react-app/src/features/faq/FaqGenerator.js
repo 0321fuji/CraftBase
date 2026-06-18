@@ -2,6 +2,7 @@ import { html, useMemo, useState } from '../../lib/react.js';
 import { CodeOutputPanel } from '../../components/ui/CodeOutputPanel.js';
 import { PreviewPanel } from '../../components/ui/PreviewPanel.js';
 import { SectionCard } from '../../components/ui/SectionCard.js';
+import { FontSizeField } from '../../components/ui/FontSizeField.js';
 import { copyText } from '../../utils/clipboard.js';
 import { generateRandomId } from '../../utils/randomId.js';
 import { FAQ_DEFAULTS } from './defaults.js';
@@ -195,43 +196,9 @@ export function useFaqGenerator() {
                 className="mt-1 h-9 w-full rounded border border-slate-300"
               />
             </div>
-            <div>
-              <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-500">質問文字サイズ</label>
-              <select
-                value=${form.questionSize}
-                onChange=${(event) => updateField('questionSize', event.target.value)}
-                className="mt-1 w-full rounded-lg border border-slate-300 bg-white px-2 py-2 text-xs"
-              >
-                <option value="14px">14px</option>
-                <option value="16px">16px</option>
-                <option value="18px">18px</option>
-              </select>
-            </div>
-            <div>
-              <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-500">回答文字サイズ</label>
-              <select
-                value=${form.answerSize}
-                onChange=${(event) => updateField('answerSize', event.target.value)}
-                className="mt-1 w-full rounded-lg border border-slate-300 bg-white px-2 py-2 text-xs"
-              >
-                <option value="14px">14px</option>
-                <option value="16px">16px</option>
-                <option value="18px">18px</option>
-              </select>
-            </div>
-            <div>
-              <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-500">アイコンサイズ</label>
-              <select
-                value=${form.iconSize}
-                onChange=${(event) => updateField('iconSize', event.target.value)}
-                className="mt-1 w-full rounded-lg border border-slate-300 bg-white px-2 py-2 text-xs"
-              >
-                <option value="14px">14px</option>
-                <option value="16px">16px</option>
-                <option value="18px">18px</option>
-                <option value="20px">20px</option>
-              </select>
-            </div>
+            <${FontSizeField} label="質問文字サイズ" value=${form.questionSize} onChange=${(value) => updateField('questionSize', value)} inputClassName="mt-1 w-full rounded-lg border border-slate-300 px-2 py-2 text-xs font-mono" />
+            <${FontSizeField} label="回答文字サイズ" value=${form.answerSize} onChange=${(value) => updateField('answerSize', value)} inputClassName="mt-1 w-full rounded-lg border border-slate-300 px-2 py-2 text-xs font-mono" />
+            <${FontSizeField} label="アイコンサイズ" value=${form.iconSize} onChange=${(value) => updateField('iconSize', value)} inputClassName="mt-1 w-full rounded-lg border border-slate-300 px-2 py-2 text-xs font-mono" />
             <div>
               <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-500">質問背景色の角丸</label>
               <select

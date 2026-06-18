@@ -2,11 +2,18 @@ import { html, useMemo, useState } from '../../lib/react.js';
 import { CodeOutputPanel } from '../../components/ui/CodeOutputPanel.js';
 import { PreviewPanel } from '../../components/ui/PreviewPanel.js';
 import { SectionCard } from '../../components/ui/SectionCard.js';
+import { FontSizeField } from '../../components/ui/FontSizeField.js';
 import { copyText } from '../../utils/clipboard.js';
 import { generateRandomId } from '../../utils/randomId.js';
 import { FONT_FAMILY_OPTIONS } from '../cta/defaults.js';
 import { BRANCH_CARD_DEFAULTS } from './defaults.js';
 import { buildBranchCardHtml } from './template.js';
+
+const ACTION_OPTIONS = [
+  { value: 'popup', label: 'ポップアップ起動' },
+  { value: 'chat', label: 'チャット起動' },
+  { value: 'link', label: 'リンク先URLへ遷移' }
+];
 
 function cloneDefaults() {
   return {
@@ -21,10 +28,75 @@ function updateItemAt(items, index, patch) {
 
 function createAdditionalItem(index) {
   return {
+    actionType: 'popup',
     title: `追加の案内 ${index + 1}`,
     description: 'この選択肢向けに出したいガイド内容を短く補足できます。',
-    popupId: ''
+    popupId: '',
+    chatId: '',
+    url: ''
   };
+}
+
+function getActionValueKey(actionType) {
+  if (actionType === 'chat') {
+    return 'chatId';
+  }
+
+  if (actionType === 'link') {
+    return 'url';
+  }
+
+  return 'popupId';
+}
+
+function getActionFieldLabel(actionType) {
+  if (actionType === 'chat') {
+    return 'チャットID';
+  }
+
+  if (actionType === 'link') {
+    return 'リンク先URL';
+  }
+
+  return 'ポップアップID';
+}
+
+function getActionPlaceholder(actionType) {
+  if (actionType === 'chat') {
+    return '例: 805c6fc516cc5a5c044d73661c56af6f';
+  }
+
+  if (actionType === 'link') {
+    return 'https://example.com';
+  }
+
+  return '例: 4c5a4c5ed3bf50335dcba25e38006116';
+}
+
+function getActionHelperText(actionType) {
+  if (actionType === 'chat') {
+    return '押したときに起動したいチャットIDを入れます。';
+  }
+
+  if (actionType === 'link') {
+    return '押したときに開きたいリンク先URLを入れます。';
+  }
+
+  return '押したときに起動したいポップアップIDを入れます。';
+}
+
+function getActionSummary(item) {
+  const actionType = item.actionType || 'popup';
+
+  if (actionType === 'chat') {
+    return item.chatId ? `チャット: ${item.chatId}` : 'チャットID未入力';
+  }
+
+  if (actionType === 'link') {
+    return item.url ? `リンク: ${item.url}` : 'リンク先URL未入力';
+  }
+
+  return item.popupId ? `ポップアップ: ${item.popupId}` : 'ポップアップID未入力';
 }
 
 export function useBranchCardGenerator() {
@@ -46,17 +118,22 @@ export function useBranchCardGenerator() {
   }
 
   function addItem() {
+    let nextIndex = form.items.length;
+
     setForm((current) => {
       if (current.items.length >= 5) {
+        nextIndex = current.items.length - 1;
         return current;
       }
+
+      nextIndex = current.items.length;
 
       return {
         ...current,
         items: [...current.items, createAdditionalItem(current.items.length)]
       };
     });
-    setOpenIndexes((current) => [...current, form.items.length]);
+    setOpenIndexes((current) => (current.includes(nextIndex) ? current : [...current, nextIndex]));
   }
 
   function removeItem(index) {
@@ -126,26 +203,18 @@ export function useBranchCardGenerator() {
                 </select>
               </div>
               <div className="grid gap-4 md:grid-cols-2">
-                <div className="space-y-2">
-                  <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-500">見出しサイズ</label>
-                  <input
-                    type="text"
-                    value=${form.headingFontSize}
-                    onChange=${(event) => updateField('headingFontSize', event.target.value)}
-                    className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
-                    placeholder="例: 20px"
-                  />
-                </div>
-                <div className="space-y-2">
-                  <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-500">補足文サイズ</label>
-                  <input
-                    type="text"
-                    value=${form.descriptionFontSize}
-                    onChange=${(event) => updateField('descriptionFontSize', event.target.value)}
-                    className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
-                    placeholder="例: 14px"
-                  />
-                </div>
+                <${FontSizeField}
+                  label="見出しサイズ"
+                  value=${form.headingFontSize}
+                  onChange=${(value) => updateField('headingFontSize', value)}
+                  inputClassName="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm font-mono"
+                />
+                <${FontSizeField}
+                  label="補足文サイズ"
+                  value=${form.descriptionFontSize}
+                  onChange=${(value) => updateField('descriptionFontSize', value)}
+                  inputClassName="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm font-mono"
+                />
               </div>
             </div>
             <p className="text-[11px] leading-5 text-slate-500">サイズは px で入力します。数字だけ入れた場合も、出力時に px として扱います。</p>
@@ -160,26 +229,18 @@ export function useBranchCardGenerator() {
         >
           <div className="space-y-4">
             <div className="grid gap-4 md:grid-cols-2">
-              <div className="space-y-2">
-                <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-500">選択肢見出しサイズ</label>
-                <input
-                  type="text"
-                  value=${form.itemTitleFontSize}
-                  onChange=${(event) => updateField('itemTitleFontSize', event.target.value)}
-                  className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
-                  placeholder="例: 16px"
-                />
-              </div>
-              <div className="space-y-2">
-                <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-500">選択肢補足文サイズ</label>
-                <input
-                  type="text"
-                  value=${form.itemBodyFontSize}
-                  onChange=${(event) => updateField('itemBodyFontSize', event.target.value)}
-                  className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
-                  placeholder="例: 13px"
-                />
-              </div>
+              <${FontSizeField}
+                label="選択肢見出しサイズ"
+                value=${form.itemTitleFontSize}
+                onChange=${(value) => updateField('itemTitleFontSize', value)}
+                inputClassName="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm font-mono"
+              />
+              <${FontSizeField}
+                label="選択肢補足文サイズ"
+                value=${form.itemBodyFontSize}
+                onChange=${(value) => updateField('itemBodyFontSize', value)}
+                inputClassName="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm font-mono"
+              />
             </div>
 
             <div className="space-y-3">
@@ -196,9 +257,21 @@ export function useBranchCardGenerator() {
                 }}
                 className="overflow-hidden rounded-xl border border-slate-200 bg-slate-50"
               >
-                <summary className="flex cursor-pointer list-none items-center justify-between border-b border-slate-200 px-3 py-2.5 text-sm font-bold text-slate-700">
-                  <span className="truncate pr-3">${item.title || `選択肢 ${index + 1}`}</span>
-                  <span className="text-xs text-slate-400">開閉</span>
+                <summary className="flex cursor-pointer list-none items-start justify-between gap-3 border-b border-slate-200 px-3 py-3 text-sm text-slate-700">
+                  <div className="min-w-0 flex-1">
+                    <div className="flex items-center gap-2">
+                      <span className="inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-white px-1.5 text-[10px] font-bold text-slate-500 ring-1 ring-slate-200">${index + 1}</span>
+                      <span className="truncate text-sm font-bold text-slate-800">${item.title || `選択肢 ${index + 1}`}</span>
+                    </div>
+                    <p className="mt-1 max-h-10 overflow-hidden text-xs leading-5 text-slate-500">${item.description || '補足文は未入力です。'}</p>
+                    <div className="mt-2 flex flex-wrap items-center gap-2">
+                      <span className="inline-flex items-center rounded-full bg-white px-2 py-1 text-[10px] font-bold text-slate-600 ring-1 ring-slate-200">
+                        ${ACTION_OPTIONS.find((option) => option.value === (item.actionType || 'popup'))?.label || 'ポップアップ起動'}
+                      </span>
+                      <span className="min-w-0 break-all text-[10px] font-medium text-slate-400">${getActionSummary(item)}</span>
+                    </div>
+                  </div>
+                  <span className="shrink-0 text-xs text-slate-400">${openIndexes.includes(index) ? 'たたむ' : '開く'}</span>
                 </summary>
                 <div className="space-y-3 p-3">
                   <div className="flex items-center justify-between">
@@ -228,15 +301,25 @@ export function useBranchCardGenerator() {
                     />
                   </div>
                   <div>
-                    <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-500">ポップアップID</label>
+                    <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-500">クリック時の動作</label>
+                    <select
+                      value=${item.actionType || 'popup'}
+                      onChange=${(event) => updateItem(index, { actionType: event.target.value })}
+                      className="mt-1 w-full rounded-lg border border-slate-300 bg-white px-2.5 py-2 text-sm"
+                    >
+                      ${ACTION_OPTIONS.map((option) => html`<option key=${option.value} value=${option.value}>${option.label}</option>`)}
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-500">${getActionFieldLabel(item.actionType || 'popup')}</label>
                     <input
-                      type="text"
-                      value=${item.popupId}
-                      onChange=${(event) => updateItem(index, { popupId: event.target.value })}
+                      type=${(item.actionType || 'popup') === 'link' ? 'url' : 'text'}
+                      value=${item[getActionValueKey(item.actionType || 'popup')] || ''}
+                      onChange=${(event) => updateItem(index, { [getActionValueKey(item.actionType || 'popup')]: event.target.value })}
                       className="mt-1 w-full rounded-lg border border-slate-300 px-2.5 py-2 text-sm font-mono"
-                      placeholder="例: 4c5a4c5ed3bf50335dcba25e38006116"
+                      placeholder=${getActionPlaceholder(item.actionType || 'popup')}
                     />
-                    <p className="mt-1 text-[11px] leading-5 text-slate-500">押したときに起動したいポップアップIDを入れます。</p>
+                    <p className="mt-1 text-[11px] leading-5 text-slate-500">${getActionHelperText(item.actionType || 'popup')}</p>
                   </div>
                 </div>
               </details>
@@ -308,7 +391,7 @@ export function useBranchCardGenerator() {
       <div className="space-y-3">
         <${CodeOutputPanel} value=${outputHtml} onCopy=${handleCopy} />
         <div className="rounded-2xl border border-slate-200 bg-white p-4 text-sm leading-6 text-slate-600 shadow-sm">
-          分岐カードは、見出しの下に複数のポップアップ起動カードを並べる用途を想定しています。Onboarding のステップ枠を生かす前提なので、外側の囲みは出力していません。
+          分岐カードは、見出しの下に複数の導線カードを並べる用途を想定しています。各カードごとにポップアップ起動、チャット起動、リンク遷移を切り替えられます。Onboarding のステップ枠を生かす前提なので、外側の囲みは出力していません。
         </div>
         ${copied ? html`<div className="rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-medium text-emerald-700">HTMLコードをコピーしました。</div>` : null}
       </div>

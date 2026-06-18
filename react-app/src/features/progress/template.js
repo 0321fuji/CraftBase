@@ -1,4 +1,5 @@
 import { escapeHtml } from '../../utils/escape.js';
+import { normalizeFontSize } from '../../utils/size.js';
 
 function getMarginValue(alignment) {
   if (alignment === 'left') return '16px 0';
@@ -11,6 +12,7 @@ export function buildProgressHtml(state, blockId, stepNumber) {
   const total = Math.min(8, Math.max(2, Number(state.totalSteps) || 4));
   const current = Math.min(total, Math.max(1, Number(stepNumber) || 1));
   const progressPercent = `${(current / total) * 100}%`;
+  const labelFontSize = normalizeFontSize(state.labelFontSize, '12px');
   const prefixText = state.labelPrefix.trim();
   const headerBlock = state.showCounter
     ? `  <div class="${prefix}__meta">${prefixText ? `<span class="${prefix}__label">${escapeHtml(prefixText)}</span>` : `<span class="${prefix}__label">${current === total ? 'COMPLETE' : 'PROGRESS'}</span>`}<span class="${prefix}__count">${current} / ${total}</span></div>\n`
@@ -37,13 +39,13 @@ ${headerBlock}  <div class="${prefix}__track" aria-label="進捗 ${current} / ${
   }
   .${prefix}__label {
     color: ${state.labelColor};
-    font-size: ${state.labelFontSize};
+    font-size: ${labelFontSize};
     font-weight: 700;
     letter-spacing: 0.08em;
   }
   .${prefix}__count {
     color: ${state.metaColor};
-    font-size: ${state.labelFontSize};
+    font-size: ${labelFontSize};
     font-weight: 700;
   }
   .${prefix}__track {
@@ -67,4 +69,3 @@ export function buildAllProgressHtml(state, blockId) {
   const total = Math.min(8, Math.max(2, Number(state.totalSteps) || 4));
   return Array.from({ length: total }, (_, index) => buildProgressHtml(state, blockId, index + 1));
 }
-

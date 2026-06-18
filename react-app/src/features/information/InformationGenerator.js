@@ -2,6 +2,7 @@ import { html, useMemo, useState } from '../../lib/react.js';
 import { CodeOutputPanel } from '../../components/ui/CodeOutputPanel.js';
 import { PreviewPanel } from '../../components/ui/PreviewPanel.js';
 import { SectionCard } from '../../components/ui/SectionCard.js';
+import { FontSizeField } from '../../components/ui/FontSizeField.js';
 import { copyText } from '../../utils/clipboard.js';
 import { generateRandomId } from '../../utils/randomId.js';
 import { INFORMATION_DEFAULTS, INFORMATION_PRESETS } from './defaults.js';
@@ -118,24 +119,8 @@ export function useInformationGenerator() {
         <div className="space-y-3 border-t border-slate-100 pt-4">
           <label className="block text-sm font-bold text-slate-700">デザイン調整</label>
           <div className="grid grid-cols-2 gap-3">
-            <div>
-              <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-500">タイトル文字サイズ</label>
-              <select value=${form.titleFontSize} onChange=${(event) => updateField('titleFontSize', event.target.value)} className="mt-1 w-full rounded-lg border border-slate-300 bg-white px-2 py-2 text-xs">
-                <option value="11px">11px</option>
-                <option value="13px">13px</option>
-                <option value="15px">15px</option>
-                <option value="17px">17px</option>
-              </select>
-            </div>
-            <div>
-              <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-500">本文文字サイズ</label>
-              <select value=${form.bodyFontSize} onChange=${(event) => updateField('bodyFontSize', event.target.value)} className="mt-1 w-full rounded-lg border border-slate-300 bg-white px-2 py-2 text-xs">
-                <option value="11px">11px</option>
-                <option value="13px">13px</option>
-                <option value="15px">15px</option>
-                <option value="17px">17px</option>
-              </select>
-            </div>
+            <${FontSizeField} label="タイトル文字サイズ" value=${form.titleFontSize} onChange=${(value) => updateField('titleFontSize', value)} inputClassName="mt-1 w-full rounded-lg border border-slate-300 px-2 py-2 text-xs font-mono" />
+            <${FontSizeField} label="本文文字サイズ" value=${form.bodyFontSize} onChange=${(value) => updateField('bodyFontSize', value)} inputClassName="mt-1 w-full rounded-lg border border-slate-300 px-2 py-2 text-xs font-mono" />
             <div>
               <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-500">背景色</label>
               <input type="color" value=${form.bgColor} onChange=${(event) => updateField('bgColor', event.target.value)} className="mt-1 h-9 w-full rounded border border-slate-300" />
@@ -178,4 +163,3 @@ export function useInformationGenerator() {
     `
   };
 }
-

@@ -16,19 +16,28 @@ export const BRANCH_CARD_DEFAULTS = {
   itemBodyColor: '#64748b',
   items: [
     {
+      actionType: 'popup',
       title: '初期設定を進めたい',
       description: '最初に必要な設定手順をガイドで案内します。',
-      popupId: '4c5a4c5ed3bf50335dcba25e38006116'
+      popupId: '4c5a4c5ed3bf50335dcba25e38006116',
+      chatId: '',
+      url: ''
     },
     {
+      actionType: 'popup',
       title: '使い方を知りたい',
       description: '基本操作や活用方法をまとめたガイドを表示します。',
-      popupId: '7b2d8f1e9a3c4d5e6f708192ab3cd456'
+      popupId: '7b2d8f1e9a3c4d5e6f708192ab3cd456',
+      chatId: '',
+      url: ''
     },
     {
+      actionType: 'popup',
       title: '困りごとを解決したい',
       description: 'よくあるつまずきに応じた案内を表示します。',
-      popupId: '91ac52ef847f4d73b1f8028c2d8a9e10'
+      popupId: '91ac52ef847f4d73b1f8028c2d8a9e10',
+      chatId: '',
+      url: ''
     }
   ]
 };

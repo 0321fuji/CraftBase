@@ -1,8 +1,10 @@
 import { escapeHtml } from '../../utils/escape.js';
+import { normalizeFontSize } from '../../utils/size.js';
 
 export function buildChecklistHtml(state, blockId) {
   const prefix = `onb-checklist-project-${blockId}`;
   const strikeStyle = state.strikeChecked ? 'line-through' : 'none';
+  const fontSize = normalizeFontSize(state.fontSize, '14px');
   const checklistItemsHtml = state.items
     .map((item, index) => {
       const inputId = `${prefix}-item-${index + 1}`;
@@ -62,7 +64,7 @@ ${checklistItemsHtml}
   }
   .${prefix}__text {
     color: ${state.textColor};
-    font-size: ${state.fontSize};
+    font-size: ${fontSize};
     line-height: 1.6;
     transition: color 0.2s ease, text-decoration-color 0.2s ease;
   }
@@ -81,4 +83,3 @@ ${checklistItemsHtml}
   }
 </style>`;
 }
-

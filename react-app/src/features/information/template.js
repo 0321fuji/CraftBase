@@ -1,4 +1,5 @@
 import { escapeHtml, escapeMultilineTextToHtml } from '../../utils/escape.js';
+import { normalizeFontSize } from '../../utils/size.js';
 
 function getInformationIconConfig(type) {
   if (type === 'info') {
@@ -13,6 +14,8 @@ function getInformationIconConfig(type) {
 export function buildInformationHtml(state, blockId) {
   const prefix = `onb-notice-project-${blockId}`;
   const iconConfig = getInformationIconConfig(state.type);
+  const titleFontSize = normalizeFontSize(state.titleFontSize, '15px');
+  const bodyFontSize = normalizeFontSize(state.bodyFontSize, '13px');
   const iconBlock = state.showIcon
     ? `  <div class="${prefix}__icon ${prefix}__icon--${iconConfig.shape}" aria-hidden="true"><span class="${prefix}__icon-label">${escapeHtml(iconConfig.label)}</span></div>\n`
     : '';
@@ -82,16 +85,15 @@ ${iconBlock}  <div class="${prefix}__content">
   .${prefix}__title {
     margin: 0 0 6px;
     color: ${state.titleColor};
-    font-size: ${state.titleFontSize};
+    font-size: ${titleFontSize};
     font-weight: 700;
     line-height: 1.5;
   }
   .${prefix}__body {
     margin: 0;
     color: ${state.bodyColor};
-    font-size: ${state.bodyFontSize};
+    font-size: ${bodyFontSize};
     line-height: 1.7;
   }
 </style>`;
 }
-

@@ -1,4 +1,5 @@
 import { escapeAttribute, escapeHtml, escapeMultilineTextToHtml } from '../../utils/escape.js';
+import { normalizeFontSize } from '../../utils/size.js';
 
 export function extractYoutubeId(value) {
   const raw = String(value || '').trim();
@@ -30,6 +31,8 @@ export function buildVideoGuideHtml(state, blockId) {
   const prefix = `onb-yt-guide-${blockId}`;
   const embedUrl = buildYoutubeEmbedUrl(state.youtubeUrl);
   const format = state.format || 'button-bottom';
+  const titleFontSize = normalizeFontSize(state.titleFontSize, '15px');
+  const bodyFontSize = normalizeFontSize(state.bodyFontSize, '12px');
   const titleBlock = state.showTitle ? `    <h3 class="${prefix}__title">${escapeHtml(state.title)}</h3>\n` : '';
   const bodyBlock = state.showBody ? `    <p class="${prefix}__text">${escapeMultilineTextToHtml(state.body)}</p>\n` : '';
   const actionBlock = state.showActionButton
@@ -110,14 +113,14 @@ ${innerBlock}  </div>
   .${prefix}__title {
     margin: 0 0 6px;
     color: ${state.titleColor};
-    font-size: ${state.titleFontSize};
+    font-size: ${titleFontSize};
     font-weight: 700;
     line-height: 1.5;
   }
   .${prefix}__text {
     margin: 0 0 14px;
     color: ${state.bodyColor};
-    font-size: ${state.bodyFontSize};
+    font-size: ${bodyFontSize};
     line-height: 1.6;
   }
   .${prefix}__button {
