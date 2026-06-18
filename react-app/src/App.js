@@ -3,6 +3,7 @@ import { GeneratorLayout } from './components/layout/GeneratorLayout.js';
 import { TabNavigation } from './components/layout/TabNavigation.js';
 import { useCtaGenerator } from './features/cta/CtaGenerator.js';
 import { useBranchCardGenerator } from './features/branch-card/BranchCardGenerator.js';
+import { useGlowHighlightGenerator } from './features/glow-highlight/GlowHighlightGenerator.js';
 import { useFaqGenerator } from './features/faq/FaqGenerator.js';
 import { useInformationGenerator } from './features/information/InformationGenerator.js';
 import { useChecklistGenerator } from './features/checklist/ChecklistGenerator.js';
@@ -36,7 +37,8 @@ const partTabs = [
   { id: 'confetti', label: '紙吹雪演出' },
   { id: 'checklist', label: 'チェックリスト' },
   { id: 'video', label: '動画ガイド' },
-  { id: 'video-switcher', label: '動画切り替え' }
+  { id: 'video-switcher', label: '動画切り替え' },
+  { id: 'glow-highlight', label: 'グローハイライト' }
 ];
 
 const syncAiTabs = [
@@ -103,6 +105,7 @@ export function App() {
   const [activeSyncAiTab, setActiveSyncAiTab] = useState('sync-ai-basic');
   const ctaGenerator = useCtaGenerator();
   const branchCardGenerator = useBranchCardGenerator();
+  const glowHighlightGenerator = useGlowHighlightGenerator();
   const faqGenerator = useFaqGenerator();
   const informationGenerator = useInformationGenerator();
   const checklistGenerator = useChecklistGenerator();
@@ -121,6 +124,7 @@ export function App() {
   const generators = {
     cta: ctaGenerator,
     'branch-card': branchCardGenerator,
+    'glow-highlight': glowHighlightGenerator,
     faq: faqGenerator,
     compare: compareGenerator,
     progress: progressGenerator,

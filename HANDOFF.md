@@ -11,10 +11,9 @@
 - 現在の主ブランチ: `main`
 
 ## 現在の公開状態
-- GitHub に push 済みの最新コミットは `8c8d175 Update Claude handoff notes`
-- 機能としての直近コミットは `bdd52e1 Add Sync-AI builders`
-- `main` には、`Sync-AI` の導線分離と `基本フォーム` / `プルダウン` の実装が入っている
-- `分岐カード` は **まだ未push のローカル差分**
+- GitHub に push 済みの最新コミットは `a899f9c Add branch card generator`
+- `main` には、`Sync-AI` の導線分離と `基本フォーム` / `プルダウン`、`分岐カード` の実装が入っている
+- `グローハイライト` は **まだ未push のローカル差分**
 
 ## 別チャンネルの Codex / Claude Code へ引き継ぐときの情報格納ルール
 
@@ -89,6 +88,7 @@
   - `固定コード`
   - `CTAボタン`
   - `分岐カード`
+  - `グローハイライト`
   - `FAQアコーディオン`
   - `プルダウン`
   - `比較表`
@@ -196,6 +196,20 @@
 - カードにホバー時の浮き上がり、背景変化、枠色変化を追加
 - 初期版は **ポップアップ起動専用** に絞っている
 
+### E. HTML/CSSパーツ「グローハイライト」
+対象:
+- `react-app/src/App.js`
+- `react-app/src/features/glow-highlight/GlowHighlightGenerator.js`
+- `react-app/src/features/glow-highlight/defaults.js`
+- `react-app/src/features/glow-highlight/template.js`
+
+内容:
+- `分岐カード` の次に `グローハイライト` タブを追加
+- `ページURL` と `対象セレクタ` を指定して、対象要素へ常時発光クラスを付与するコードを生成
+- `発光色` `光の広がり` `光の強さ` をフォームで調整可能
+- プレビューは外部ページではなく、Craftmake内のサンプル要素を常時発光させる形
+- `prefers-reduced-motion` 時はアニメーションを止める実装を含む
+
 ## 現在のファイル構成（Sync-AI）
 - `react-app/src/features/sync-ai/defaults.js`
   - `SYNC_AI_DEFAULTS`
@@ -217,6 +231,10 @@
   - カード内アイコン
   - `リンク` / `チャット` 起動対応
   - ホバー演出の強さ調整
+
+### 優先0-2: グローハイライトの微調整
+- セレクタが長いケース向けに、`テキスト一致` や `アイコン名一致` を足すかは未判断
+- 発光周期、色プリセット、強度の既定値は今後調整余地あり
 
 ### 優先1: Sync-AI「抽出生成」
 - タブだけ存在し、まだ中身は未実装
@@ -264,14 +282,15 @@
 - あり
 - 対象:
   - `react-app/src/App.js`
-  - `react-app/src/features/branch-card/BranchCardGenerator.js`
-  - `react-app/src/features/branch-card/defaults.js`
-  - `react-app/src/features/branch-card/template.js`
+  - `react-app/src/features/glow-highlight/GlowHighlightGenerator.js`
+  - `react-app/src/features/glow-highlight/defaults.js`
+  - `react-app/src/features/glow-highlight/template.js`
   - `HANDOFF.md`
 - 内容:
-  - HTML/CSSパーツに `分岐カード` タブを追加
-  - 見出し + 補足文 + 複数カードでポップアップ起動する分岐UIを追加
-  - ホバー時に押せると気づきやすいカード演出を追加
+  - HTML/CSSパーツに `グローハイライト` タブを追加
+  - `ページURL` と `対象セレクタ` を指定して常時発光コードを生成できるようにした
+  - 発光色、広がり、強さをフォームから調整できるようにした
+  - プレビューは Craftmake 内のサンプル要素を常時発光させる形
 - build:
   - 実行済み
 - commit / push:
