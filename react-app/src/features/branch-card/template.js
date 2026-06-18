@@ -15,11 +15,13 @@ function buildDescriptionBlock(prefix, description) {
 
 function buildItemAction(item) {
   const actionType = item.actionType || 'popup';
+  const chatBehaviorClasses = 'button_solid019 g-modal-close';
 
   if (actionType === 'chat') {
     const chatId = escapeSingleQuotedJsString(String(item.chatId || '').trim());
     return {
       tagName: 'button',
+      className: `${chatBehaviorClasses}`,
       attributes: `type="button" onclick="STANDSMotion.mountAiChat('${chatId}');${CLOSE_VISIBLE_HINTS_SCRIPT}"`
     };
   }
@@ -35,19 +37,20 @@ function buildItemAction(item) {
   const popupId = escapeSingleQuotedJsString(String(item.popupId || '').trim());
   return {
     tagName: 'button',
+    className: '',
     attributes: `type="button" onclick="STANDSMotion.changeGoal('${popupId}');${CLOSE_VISIBLE_HINTS_SCRIPT}"`
   };
 }
 
 function buildItem(prefix, item, index) {
-  const { tagName, attributes } = buildItemAction(item);
+  const { tagName, className = '', attributes } = buildItemAction(item);
   const title = escapeHtml(item.title || `選択肢 ${index + 1}`);
   const description = String(item.description || '').trim();
   const bodyBlock = description
     ? `      <div class="${prefix}__item-body">${escapeMultilineTextToHtml(description)}</div>\n`
     : '';
 
-  return `    <${tagName} class="${prefix}__item" ${attributes}>
+  return `    <${tagName} class="${`${prefix}__item ${className}`.trim()}" ${attributes}>
       <div class="${prefix}__item-title">${title}</div>
 ${bodyBlock}    </${tagName}>`;
 }

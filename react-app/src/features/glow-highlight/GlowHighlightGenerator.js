@@ -4,7 +4,7 @@ import { PreviewPanel } from '../../components/ui/PreviewPanel.js';
 import { SectionCard } from '../../components/ui/SectionCard.js';
 import { copyText } from '../../utils/clipboard.js';
 import { generateRandomId } from '../../utils/randomId.js';
-import { GLOW_COLOR_PRESETS, GLOW_HIGHLIGHT_DEFAULTS } from './defaults.js';
+import { GLOW_COLOR_PRESETS, GLOW_EFFECT_OPTIONS, GLOW_HIGHLIGHT_DEFAULTS } from './defaults.js';
 import { buildGlowHighlightHtml, buildGlowHighlightPreviewHtml } from './template.js';
 
 function cloneDefaults() {
@@ -36,12 +36,17 @@ function clampNumber(value, min, max, fallback) {
   return Math.min(max, Math.max(min, number));
 }
 
+function normalizeEffectMode(value) {
+  return GLOW_EFFECT_OPTIONS.some((option) => option.value === value) ? value : GLOW_HIGHLIGHT_DEFAULTS.effectMode;
+}
+
 export function useGlowHighlightGenerator() {
   const [form, setForm] = useState(cloneDefaults);
   const [copied, setCopied] = useState(false);
   const blockId = useMemo(() => generateRandomId(7), [JSON.stringify(form)]);
   const sanitizedForm = useMemo(() => ({
     ...form,
+    effectMode: normalizeEffectMode(form.effectMode),
     glowColor: normalizeHexColor(form.glowColor, GLOW_HIGHLIGHT_DEFAULTS.glowColor),
     blur: clampNumber(form.blur, 12, 48, 28),
     opacity: clampNumber(form.opacity, 0.2, 1, 0.8)
@@ -98,6 +103,30 @@ export function useGlowHighlightGenerator() {
 
         <${SectionCard} title="光のパラメータ調整（検証用）">
           <div className="space-y-6">
+            <div className="space-y-3">
+              <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-500">演出モード</label>
+              <div className="grid gap-3 md:grid-cols-3">
+                ${GLOW_EFFECT_OPTIONS.map((option) => {
+                  const selected = option.value === sanitizedForm.effectMode;
+                  return html`
+                    <button
+                      key=${option.value}
+                      type="button"
+                      onClick=${() => updateField('effectMode', option.value)}
+                      className=${selected
+                        ? 'rounded-2xl border border-slate-900 bg-slate-900 px-4 py-3 text-left text-white shadow-sm'
+                        : 'rounded-2xl border border-slate-200 bg-white px-4 py-3 text-left text-slate-700 shadow-sm transition-colors hover:border-slate-300 hover:bg-slate-50'}
+                    >
+                      <div className="text-sm font-bold">${option.label}</div>
+                      <p className=${selected ? 'mt-1 text-xs leading-5 text-slate-200' : 'mt-1 text-xs leading-5 text-slate-500'}>
+                        ${option.description}
+                      </p>
+                    </button>
+                  `;
+                })}
+              </div>
+            </div>
+
             <div className="space-y-3">
               <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-500">発光色 (Glow Color)</label>
               <div className="grid grid-cols-5 gap-3">
@@ -171,7 +200,7 @@ export function useGlowHighlightGenerator() {
       </div>
     `,
     preview: html`
-      <${PreviewPanel} darkMode=${false} headerNote="プレビューはサンプル要素を常時発光させています">
+      <${PreviewPanel} darkMode=${false} headerNote="※Onboardingプレビュー機能では表示されません。本番環境タグ、検証環境タグのみに表示されます">
           <div className="py-2" dangerouslySetInnerHTML=${{ __html: previewHtml }} />
       </${PreviewPanel}>
     `,

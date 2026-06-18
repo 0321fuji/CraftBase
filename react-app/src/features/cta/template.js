@@ -60,13 +60,14 @@ export function buildCtaHtml(state, blockId) {
       ? `background-color: ${startColor};`
       : `background-color: ${startColor}; background: ${startColor}; background: linear-gradient(${state.gradientAngle}, ${startColor} 0%, ${endColor} 100%);`;
   const closeVisibleHintsScript = "document.querySelectorAll('.stands-hint-content').forEach(hint=>{if(window.getComputedStyle(hint).display!=='none'){const closeBtn=hint.querySelector('.stands-hint-close');if(closeBtn)closeBtn.click();}});";
+  const chatBehaviorClasses = 'button_solid019 g-modal-close';
 
   let actionElement = `<a class="${classPrefix}__action" href="${targetUrl}" target="_blank" style="display: inline-block; color: #ffffff; ${backgroundStyle} border: ${borderStyle}; border-radius: ${state.borderRadius}; box-sizing: border-box; cursor: pointer; text-decoration: none; font-size: ${fontSize}; font-weight: bold; margin: 0; padding: ${padTopBottom} ${padLeftRight}; text-transform: none; transition: background-color 0.2s ease, border-color 0.2s ease; ${shadowStyle}">${btnText}</a>`;
 
   if (state.actionType === 'popup') {
     actionElement = `<button type="button" class="${classPrefix}__action" onclick="STANDSMotion.changeGoal('${popupId}');${closeVisibleHintsScript}" style="display: inline-block; color: #ffffff; ${backgroundStyle} border: ${borderStyle}; border-radius: ${state.borderRadius}; box-sizing: border-box; cursor: pointer; text-decoration: none; font-size: ${fontSize}; font-weight: bold; margin: 0; padding: ${padTopBottom} ${padLeftRight}; text-transform: none; transition: background-color 0.2s ease, border-color 0.2s ease; ${shadowStyle}">${btnText}</button>`;
   } else if (state.actionType === 'chat') {
-    actionElement = `<button type="button" class="${classPrefix}__action" onclick="STANDSMotion.mountAiChat('${chatId}');${closeVisibleHintsScript}" style="display: inline-block; color: #ffffff; ${backgroundStyle} border: ${borderStyle}; border-radius: ${state.borderRadius}; box-sizing: border-box; cursor: pointer; text-decoration: none; font-size: ${fontSize}; font-weight: bold; margin: 0; padding: ${padTopBottom} ${padLeftRight}; text-transform: none; transition: background-color 0.2s ease, border-color 0.2s ease; ${shadowStyle}">${btnText}</button>`;
+    actionElement = `<button type="button" class="${classPrefix}__action ${chatBehaviorClasses}" onclick="STANDSMotion.mountAiChat('${chatId}');${closeVisibleHintsScript}" style="display: inline-block; color: #ffffff; ${backgroundStyle} border: ${borderStyle}; border-radius: ${state.borderRadius}; box-sizing: border-box; cursor: pointer; text-decoration: none; font-size: ${fontSize}; font-weight: bold; margin: 0; padding: ${padTopBottom} ${padLeftRight}; text-transform: none; transition: background-color 0.2s ease, border-color 0.2s ease; ${shadowStyle}">${btnText}</button>`;
   }
 
   return `<!-- CTA BUTTON SECTION START -->\n<div class="${classPrefix}" style="text-align: ${state.alignment}; margin: 20px 0; font-family: ${state.fontFamily};">\n  ${actionElement}\n</div>\n<!-- CTA BUTTON SECTION END -->`;
