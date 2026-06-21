@@ -47,7 +47,7 @@ const syncAiTabs = [
   { id: 'sync-ai-basic', label: '基本フォーム' },
   { id: 'sync-ai-pulldown', label: 'プルダウン' },
   { id: 'sync-ai-extract', label: '会話の途中ボタン' },
-  { id: 'sync-ai-shortcut', label: '会話の選択肢' }
+  { id: 'sync-ai-shortcut', label: '会話の選択肢', disabled: true, disabledReason: '現在は選択できません' }
 ];
 
 function PlaceholderGenerator({ label }) {
@@ -148,8 +148,12 @@ export function App() {
     'sync-ai-extract': syncAiCustomTagGenerator,
     'sync-ai-shortcut': syncAiShortcutGenerator
   };
+  const enabledSyncAiTabs = syncAiTabs.filter((tab) => !tab.disabled);
+  const safeActiveSyncAiTab = enabledSyncAiTabs.some((tab) => tab.id === activeSyncAiTab)
+    ? activeSyncAiTab
+    : 'sync-ai-basic';
   const generator = activeSection === 'sync-ai'
-    ? syncAiGenerators[activeSyncAiTab] || syncAiPlaceholderGenerator
+    ? syncAiGenerators[safeActiveSyncAiTab] || syncAiPlaceholderGenerator
     : generators[activeTab] || placeholderGenerator;
   const headerNav = html`
     <div className="max-w-full overflow-x-auto">
@@ -162,14 +166,14 @@ export function App() {
             setActiveTab((current) => (partTabs.some((tab) => tab.id === current) ? current : 'cta'));
           }
           if (sectionId === 'sync-ai') {
-            setActiveSyncAiTab((current) => (syncAiTabs.some((tab) => tab.id === current) ? current : 'sync-ai-basic'));
+            setActiveSyncAiTab((current) => (enabledSyncAiTabs.some((tab) => tab.id === current) ? current : 'sync-ai-basic'));
           }
         }}
       />
     </div>
   `;
   const currentTabs = activeSection === 'parts' ? partTabs : syncAiTabs;
-  const currentActiveTab = activeSection === 'parts' ? activeTab : activeSyncAiTab;
+  const currentActiveTab = activeSection === 'parts' ? activeTab : safeActiveSyncAiTab;
   const handleTabChange = activeSection === 'parts' ? setActiveTab : setActiveSyncAiTab;
 
   return html`

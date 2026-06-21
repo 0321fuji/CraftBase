@@ -8,10 +8,16 @@ export function TabNavigation({ tabs, activeTab, onChange }) {
           <button
             key=${tab.id}
             type="button"
-            onClick=${() => onChange(tab.id)}
-            className=${activeTab === tab.id
-              ? 'rounded-xl bg-white px-4 py-2 font-bold text-slate-900 shadow-sm transition-all'
-              : 'rounded-xl px-4 py-2 font-bold text-slate-600 transition-all hover:text-slate-900'}
+            disabled=${tab.disabled}
+            title=${tab.disabled ? tab.disabledReason || '現在は選択できません' : ''}
+            onClick=${() => {
+              if (!tab.disabled) onChange(tab.id);
+            }}
+            className=${tab.disabled
+              ? 'cursor-not-allowed rounded-xl px-4 py-2 font-bold text-slate-400 opacity-70'
+              : activeTab === tab.id
+                ? 'rounded-xl bg-white px-4 py-2 font-bold text-slate-900 shadow-sm transition-all'
+                : 'rounded-xl px-4 py-2 font-bold text-slate-600 transition-all hover:text-slate-900'}
           >
             ${tab.label}
           </button>
