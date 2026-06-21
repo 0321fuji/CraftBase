@@ -53,10 +53,6 @@ function updateArrayItem(items, index, updater) {
   return items.map((item, itemIndex) => (itemIndex === index ? updater(item) : item));
 }
 
-function getBranchSummary(branch, index) {
-  return branch.title || branch.condition || `最初の入力${index + 1}`;
-}
-
 function getChoiceSummary(choice, index) {
   return choice.label || choice.message || `選択肢${index + 1}`;
 }
@@ -73,10 +69,19 @@ function buildLabelLinkedPatch(choice, nextLabel) {
   return patch;
 }
 
+function getConditionLabel(index) {
+  return `条件${String(index + 1).replace('1', '①').replace('2', '②').replace('3', '③')}`;
+}
+
+function getChoiceLabel(index) {
+  return `選択肢${String(index + 1).replace('1', '①').replace('2', '②').replace('3', '③').replace('4', '④')}`;
+}
+
 export function useSyncAiShortcutGenerator() {
   const [form, setForm] = useState(cloneDefaults);
   const [selectedBranchIndex, setSelectedBranchIndex] = useState(0);
   const [selectedChoiceIndex, setSelectedChoiceIndex] = useState(0);
+  const [previewInputs, setPreviewInputs] = useState([]);
   const [copiedPrompt, setCopiedPrompt] = useState(false);
   const promptText = useMemo(() => buildSyncAiShortcutPrompt(form), [form]);
   const previewButtonStyle = useMemo(() => getPreviewButtonStyle(form), [form]);
@@ -150,6 +155,7 @@ export function useSyncAiShortcutGenerator() {
     const nextIndex = Math.min(branches.length, MAX_BRANCHES - 1);
     setSelectedBranchIndex(nextIndex);
     setSelectedChoiceIndex(0);
+    setPreviewInputs([]);
   }
 
   function addChoice() {
@@ -186,6 +192,7 @@ export function useSyncAiShortcutGenerator() {
     });
     setSelectedBranchIndex((current) => Math.max(0, current > index ? current - 1 : Math.min(current, branches.length - 2)));
     setSelectedChoiceIndex(0);
+    setPreviewInputs([]);
   }
 
   function removeChoice(index) {
@@ -210,6 +217,17 @@ export function useSyncAiShortcutGenerator() {
     setForm(cloneDefaults());
     setSelectedBranchIndex(0);
     setSelectedChoiceIndex(0);
+    setPreviewInputs([]);
+  }
+
+  function appendPreviewInput(choice) {
+    const value = String(choice?.message || choice?.label || '').trim();
+
+    if (!value) {
+      return;
+    }
+
+    setPreviewInputs((current) => [...current, value]);
   }
 
   async function handleCopyPrompt() {
@@ -239,33 +257,54 @@ export function useSyncAiShortcutGenerator() {
           <div className="grid gap-4 xl:grid-cols-[260px_260px_minmax(360px,1fr)]">
             <div className="space-y-3">
               <div className="flex items-center justify-between">
-                <h3 className="text-sm font-bold text-slate-800">最初の入力</h3>
+                <h3 className="text-sm font-bold text-slate-800">表示条件</h3>
                 <span className="rounded-full bg-slate-100 px-2 py-0.5 text-[11px] font-bold text-slate-500">${branches.length}/${MAX_BRANCHES}</span>
               </div>
 
               <div className="space-y-2">
                 ${branches.map((branch, index) => {
                   const selected = index === selectedBranchIndex;
-                  const childCount = Array.isArray(branch.items) ? branch.items.length : 0;
 
                   return html`
-                    <button
+                    <div
                       key=${index}
-                      type="button"
                       onClick=${() => {
                         setSelectedBranchIndex(index);
                         setSelectedChoiceIndex(0);
+                        setPreviewInputs([]);
                       }}
                       className=${selected
-                        ? 'flex w-full items-center justify-between gap-3 rounded-lg border border-indigo-300 bg-indigo-50 px-3 py-2 text-left shadow-sm'
-                        : 'flex w-full items-center justify-between gap-3 rounded-lg border border-slate-200 bg-white px-3 py-2 text-left transition-colors hover:border-slate-300'}
+                        ? 'space-y-3 rounded-xl border border-indigo-300 bg-indigo-50 px-3 py-3 shadow-sm'
+                        : 'space-y-3 rounded-xl border border-slate-200 bg-white px-3 py-3 transition-colors hover:border-slate-300'}
                     >
-                      <span className="min-w-0">
-                        <span className="block truncate text-sm font-bold text-slate-800">${getBranchSummary(branch, index)}</span>
-                        <span className="mt-0.5 block text-[11px] font-medium text-slate-500">${childCount}/${MAX_CHOICES}個設定済み</span>
-                      </span>
-                      <span className=${selected ? 'text-sm font-bold text-indigo-600' : 'text-sm font-bold text-slate-300'}>›</span>
-                    </button>
+                      <div className="flex items-center justify-between gap-3">
+                        <div className="text-sm font-bold text-slate-800">${getConditionLabel(index)}</div>
+                        <div className="flex items-center gap-2">
+                          <button
+                            type="button"
+                            onClick=${(event) => {
+                              event.stopPropagation();
+                              removeBranch(index);
+                            }}
+                            disabled=${branches.length <= 1}
+                            className="text-[11px] font-bold text-rose-600 transition-colors hover:text-rose-700 disabled:pointer-events-none disabled:opacity-40"
+                          >
+                            削除
+                          </button>
+                        </div>
+                      </div>
+
+                      <div className="space-y-2">
+                        <textarea
+                          rows="3"
+                          value=${branch.condition || ''}
+                          onClick=${(event) => event.stopPropagation()}
+                          onChange=${(event) => updateBranch(index, { condition: event.target.value })}
+                          className="w-full rounded-xl border border-slate-300 bg-white px-3 py-3 text-sm leading-6 text-slate-700"
+                          placeholder="例: 料金やプランについて質問されたとき"
+                        />
+                      </div>
+                    </div>
                   `;
                 })}
               </div>
@@ -274,38 +313,11 @@ export function useSyncAiShortcutGenerator() {
                 type="button"
                 onClick=${addBranch}
                 disabled=${!canAddBranch}
-                title=${canAddBranch ? '' : '登録できる最初の入力は最大3個までです'}
+                title=${canAddBranch ? '' : '登録できる表示条件は最大3個までです'}
                 className="flex w-full items-center justify-center rounded-lg border border-dashed border-indigo-200 bg-indigo-50/70 px-3 py-2 text-sm font-bold text-indigo-700 transition-colors hover:bg-indigo-100 disabled:cursor-not-allowed disabled:border-slate-200 disabled:bg-slate-100 disabled:text-slate-400"
               >
-                ＋ 最初の入力を追加
+                ＋ 表示条件を追加
               </button>
-
-              <div className="space-y-2 border-t border-slate-200 pt-3">
-                <label className="block text-xs font-bold text-slate-500">表示名</label>
-                <input
-                  type="text"
-                  value=${activeBranch.title || ''}
-                  onChange=${(event) => updateBranch(selectedBranchIndex, { title: event.target.value })}
-                  className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm"
-                  placeholder="例: 料金プランについて"
-                />
-                <label className="block text-xs font-bold text-slate-500">表示条件</label>
-                <textarea
-                  rows="4"
-                  value=${activeBranch.condition || ''}
-                  onChange=${(event) => updateBranch(selectedBranchIndex, { condition: event.target.value })}
-                  className="w-full rounded-xl border border-slate-300 bg-white px-3 py-3 text-sm leading-6 text-slate-700"
-                  placeholder="例: 料金やプランについて質問されたとき"
-                />
-                <button
-                  type="button"
-                  onClick=${() => removeBranch(selectedBranchIndex)}
-                  disabled=${branches.length <= 1}
-                  className="text-xs font-bold text-rose-600 transition-colors hover:text-rose-700 disabled:pointer-events-none disabled:opacity-40"
-                >
-                  この入力を削除
-                </button>
-              </div>
             </div>
 
             <div className="space-y-3 border-l border-slate-200 pl-4">
@@ -319,20 +331,58 @@ export function useSyncAiShortcutGenerator() {
                   const selected = index === selectedChoiceIndex;
 
                   return html`
-                    <button
+                    <div
                       key=${index}
-                      type="button"
                       onClick=${() => setSelectedChoiceIndex(index)}
                       className=${selected
-                        ? 'flex w-full items-center justify-between gap-3 rounded-lg border border-indigo-300 bg-indigo-50 px-3 py-2 text-left shadow-sm'
-                        : 'flex w-full items-center justify-between gap-3 rounded-lg border border-slate-200 bg-white px-3 py-2 text-left transition-colors hover:border-slate-300'}
+                        ? 'space-y-3 rounded-xl border border-indigo-300 bg-indigo-50 px-3 py-3 shadow-sm'
+                        : 'space-y-3 rounded-xl border border-slate-200 bg-white px-3 py-3 transition-colors hover:border-slate-300'}
                     >
-                      <span className="min-w-0">
-                        <span className="block truncate text-sm font-bold text-slate-800">${getChoiceSummary(choice, index)}</span>
-                        <span className="mt-0.5 block truncate text-[11px] font-medium text-slate-500">${choice.message || '送信メッセージ未設定'}</span>
-                      </span>
-                      <span className=${selected ? 'text-sm font-bold text-indigo-600' : 'text-sm font-bold text-slate-300'}>›</span>
-                    </button>
+                      <div className="flex items-start justify-between gap-3">
+                        <div className="min-w-0">
+                          <div className="text-sm font-bold text-slate-800">${getChoiceLabel(index)}</div>
+                          <div className="truncate text-sm font-bold text-slate-800">${getChoiceSummary(choice, index)}</div>
+                          <div className="mt-0.5 truncate text-[11px] font-medium text-slate-500">${choice.message || 'クリック時の入力値を入力'}</div>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <button
+                            type="button"
+                            onClick=${(event) => {
+                              event.stopPropagation();
+                              removeChoice(index);
+                            }}
+                            disabled=${activeChoices.length <= 1}
+                            className="text-[11px] font-bold text-rose-600 transition-colors hover:text-rose-700 disabled:pointer-events-none disabled:opacity-40"
+                          >
+                            削除
+                          </button>
+                        </div>
+                      </div>
+
+                      <div className="space-y-2">
+                        <label className="block text-xs font-bold text-slate-500">ボタン表示名</label>
+                        <input
+                          type="text"
+                          value=${choice.label || ''}
+                          onClick=${(event) => event.stopPropagation()}
+                          onChange=${(event) => updateChoice(selectedBranchIndex, index, buildLabelLinkedPatch(choice, event.target.value))}
+                          className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm"
+                          placeholder="例: 個人向けプラン"
+                        />
+                      </div>
+
+                      <div className="space-y-2">
+                        <label className="block text-xs font-bold text-slate-500">クリック時の入力値</label>
+                        <textarea
+                          rows="3"
+                          value=${choice.message || ''}
+                          onClick=${(event) => event.stopPropagation()}
+                          onChange=${(event) => updateChoice(selectedBranchIndex, index, { message: event.target.value })}
+                          className="w-full rounded-xl border border-slate-300 bg-white px-3 py-3 text-sm leading-6 text-slate-700"
+                          placeholder="例: 個人向けプランについて知りたいです。"
+                        />
+                      </div>
+                    </div>
                   `;
                 })}
               </div>
@@ -349,74 +399,42 @@ export function useSyncAiShortcutGenerator() {
             </div>
 
             <div className="space-y-4 border-l border-slate-200 pl-4">
-              <div className="rounded-lg border border-indigo-200 bg-indigo-50 px-3 py-2">
-                <div className="truncate text-xs font-bold text-indigo-700">${getBranchSummary(activeBranch, selectedBranchIndex)} › ${getChoiceSummary(activeChoice, selectedChoiceIndex)}</div>
-              </div>
-
-              <div className="space-y-3">
-                <div className="space-y-1.5">
-                  <label className="block text-sm font-bold text-slate-700">ボタン表示文言</label>
-                  <input
-                    type="text"
-                    value=${activeChoice.label || ''}
-                    onChange=${(event) => updateChoice(selectedBranchIndex, selectedChoiceIndex, buildLabelLinkedPatch(activeChoice, event.target.value))}
-                    className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm"
-                    placeholder="例: 個人向けプラン"
-                  />
-                </div>
-
-                <div className="space-y-1.5">
-                  <label className="block text-sm font-bold text-slate-700">送信メッセージ</label>
-                  <textarea
-                    rows="3"
-                    value=${activeChoice.message || ''}
-                    onChange=${(event) => updateChoice(selectedBranchIndex, selectedChoiceIndex, { message: event.target.value })}
-                    className="w-full rounded-xl border border-slate-300 bg-white px-3 py-3 text-sm leading-6 text-slate-700"
-                    placeholder="例: 個人向けプランについて知りたいです。"
-                  />
-                </div>
-
-                <button
-                  type="button"
-                  onClick=${() => removeChoice(selectedChoiceIndex)}
-                  disabled=${activeChoices.length <= 1}
-                  className="text-xs font-bold text-rose-600 transition-colors hover:text-rose-700 disabled:pointer-events-none disabled:opacity-40"
-                >
-                  この選択肢を削除
-                </button>
-              </div>
-
               <div className="rounded-xl border border-slate-200 bg-slate-50 p-4">
                 <div className="space-y-3">
-                  <div>
-                    <div className="text-xs font-bold text-slate-500">ユーザーの入力</div>
-                    <div className="mt-1 rounded-lg bg-white px-3 py-2 text-sm text-slate-700">${activeBranch.condition || activeBranch.title || '最初の入力の条件がここに入ります'}</div>
+                  <div className="flex flex-wrap justify-start gap-3">
+                    ${activeChoices.map((choice, index) => html`
+                      <button
+                        key=${index}
+                        type="button"
+                        onClick=${() => appendPreviewInput(choice)}
+                        className="px-5 py-2.5 text-sm font-bold shadow-sm"
+                        style=${{
+                          color: previewButtonStyle.color,
+                          backgroundColor: previewButtonStyle.backgroundColor,
+                          borderColor: index === selectedChoiceIndex ? previewButtonStyle.borderColor : '#CBD5E1',
+                          borderRadius: previewButtonStyle.borderRadius,
+                          borderStyle: 'solid',
+                          borderWidth: index === selectedChoiceIndex ? '2px' : '1px'
+                        }}
+                      >
+                        ${choice.label || `選択肢${index + 1}`}
+                      </button>
+                    `)}
                   </div>
-                  <div>
-                    <div className="text-xs font-bold text-slate-500">ボットの返答</div>
-                    <div className="mt-1 rounded-lg bg-white px-3 py-3">
-                      <p className="text-sm leading-6 text-slate-700">次の選択肢を選んでください：</p>
-                      <div className="mt-3 flex flex-col gap-2">
-                        ${activeChoices.map((choice, index) => html`
-                          <button
-                            key=${index}
-                            type="button"
-                            className="w-full px-4 py-2.5 text-sm font-bold shadow-sm"
-                            style=${{
-                              color: previewButtonStyle.color,
-                              backgroundColor: previewButtonStyle.backgroundColor,
-                              borderColor: index === selectedChoiceIndex ? previewButtonStyle.borderColor : '#CBD5E1',
-                              borderRadius: previewButtonStyle.borderRadius,
-                              borderStyle: 'solid',
-                              borderWidth: index === selectedChoiceIndex ? '2px' : '1px'
-                            }}
-                          >
-                            ${choice.label || `選択肢${index + 1}`}
-                          </button>
-                        `)}
-                      </div>
-                    </div>
-                  </div>
+
+                  ${previewInputs.length
+                    ? html`
+                        <div className="space-y-2">
+                          ${previewInputs.map((value, index) => html`
+                            <div key=${`${value}-${index}`} className="flex justify-end">
+                              <div className="max-w-[85%] rounded-2xl rounded-br-md bg-white px-4 py-2.5 text-sm leading-6 text-slate-900 shadow-sm">
+                                ${value}
+                              </div>
+                            </div>
+                          `)}
+                        </div>
+                      `
+                    : null}
                 </div>
               </div>
             </div>

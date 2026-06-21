@@ -58,7 +58,6 @@ export function createSyncAiButtonItems(purpose = 'popup') {
 
 export function createSyncAiShortcutBranch(index = 0) {
   return {
-    title: `最初の入力${index + 1}`,
     condition: '',
     items: [createSyncAiButtonItem('shortcut', 0)]
   };

@@ -47,7 +47,7 @@ const syncAiTabs = [
   { id: 'sync-ai-basic', label: '基本フォーム' },
   { id: 'sync-ai-pulldown', label: 'プルダウン' },
   { id: 'sync-ai-extract', label: '会話の途中ボタン' },
-  { id: 'sync-ai-shortcut', label: '会話の選択肢', disabled: true, disabledReason: '現在は選択できません' }
+  { id: 'sync-ai-shortcut', label: '会話の選択肢' }
 ];
 
 function PlaceholderGenerator({ label }) {

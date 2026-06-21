@@ -302,7 +302,6 @@ export function buildSyncAiShortcutPrompt(state) {
     ? state.branches
     : [
         {
-          title: '最初の入力1',
           condition: state.condition || '',
           items: Array.isArray(state.items) ? state.items : []
         }
@@ -320,8 +319,7 @@ export function buildSyncAiShortcutPrompt(state) {
         : '   選択肢は未入力です。';
 
       return [
-        `${branchIndex + 1}. 最初の入力: ${String(branch.title || `最初の入力${branchIndex + 1}`)}`,
-        `   表示条件: ${String(branch.condition || '未入力')}`,
+        `${branchIndex + 1}. 表示条件: ${String(branch.condition || '未入力')}`,
         '   表示する選択肢:',
         optionLines
       ].join('\n');
@@ -329,13 +327,13 @@ export function buildSyncAiShortcutPrompt(state) {
     .join('\n\n');
 
   const sections = [
-    'ユーザーの質問内容を確認し、以下の「最初の入力」ごとの表示条件に一致する場合は、通常の回答のあとに該当する会話の選択肢ボタンを出力してください。',
-    '一致する最初の入力がない場合は、ボタンを出さず、通常の回答のみ返してください。',
+    'ユーザーの質問内容を確認し、以下の表示条件に一致する場合は、通常の回答のあとに該当する会話の選択肢ボタンを出力してください。',
+    '一致する表示条件がない場合は、ボタンを出さず、通常の回答のみ返してください。',
     [
-      '分岐一覧',
-      '※ 各分岐は「最初の入力」「表示条件」「表示する選択肢」を含みます。',
+      '条件一覧',
+      '※ 各条件は「表示条件」「表示する選択肢」を含みます。',
       '',
-      branchListText || '分岐一覧は未入力です。'
+      branchListText || '条件一覧は未入力です。'
     ].join('\n'),
     `【出力テンプレート】\n${templateTag}`,
     [
@@ -345,8 +343,8 @@ export function buildSyncAiShortcutPrompt(state) {
     ].join('\n'),
     [
       '【制約】',
-      'label と message は、一致した最初の入力に紐づく選択肢一覧にある値のみを使用してください（新しく生成しない）。',
-      '一致していない最初の入力に紐づく選択肢は含めないでください。',
+      'label と message は、一致した表示条件に紐づく選択肢一覧にある値のみを使用してください（新しく生成しない）。',
+      '一致していない表示条件に紐づく選択肢は含めないでください。',
       '下記のタグはMarkdownのコードブロックやバッククォートで囲まずにそのまま出力してください。',
       '前後に余計な記号やインデントをつけないでください。',
       'data 内の各オブジェクトに label と message を必ず指定してください。',
