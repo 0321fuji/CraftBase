@@ -17,6 +17,8 @@ import { useConfettiGenerator } from './features/confetti/ConfettiGenerator.js';
 import { SnippetSection } from './features/snippets/SnippetSection.js';
 import { useSyncAiGenerator } from './features/sync-ai/SyncAiGenerator.js';
 import { useSyncAiPulldownGenerator } from './features/sync-ai/SyncAiPulldownGenerator.js';
+import { useSyncAiCustomTagGenerator } from './features/sync-ai/SyncAiCustomTagGenerator.js';
+import { useSyncAiShortcutGenerator } from './features/sync-ai/SyncAiShortcutGenerator.js';
 import { SectionCard } from './components/ui/SectionCard.js';
 
 const sectionTabs = [
@@ -44,7 +46,8 @@ const partTabs = [
 const syncAiTabs = [
   { id: 'sync-ai-basic', label: '基本フォーム' },
   { id: 'sync-ai-pulldown', label: 'プルダウン' },
-  { id: 'sync-ai-extract', label: '抽出生成' }
+  { id: 'sync-ai-extract', label: '会話の途中ボタン' },
+  { id: 'sync-ai-shortcut', label: '会話の選択肢' }
 ];
 
 function PlaceholderGenerator({ label }) {
@@ -118,6 +121,8 @@ export function App() {
   const confettiGenerator = useConfettiGenerator();
   const syncAiGenerator = useSyncAiGenerator();
   const syncAiPulldownGenerator = useSyncAiPulldownGenerator();
+  const syncAiCustomTagGenerator = useSyncAiCustomTagGenerator();
+  const syncAiShortcutGenerator = useSyncAiShortcutGenerator();
   const snippetLibraryGenerator = createSnippetLibraryGenerator();
   const placeholderGenerator = PlaceholderGenerator({ label: partTabs.find((tab) => tab.id === activeTab)?.label || '未選択' });
   const syncAiPlaceholderGenerator = SyncAiPlaceholderGenerator({ label: syncAiTabs.find((tab) => tab.id === activeSyncAiTab)?.label || '未選択' });
@@ -140,7 +145,8 @@ export function App() {
   const syncAiGenerators = {
     'sync-ai-basic': syncAiGenerator,
     'sync-ai-pulldown': syncAiPulldownGenerator,
-    'sync-ai-extract': syncAiPlaceholderGenerator
+    'sync-ai-extract': syncAiCustomTagGenerator,
+    'sync-ai-shortcut': syncAiShortcutGenerator
   };
   const generator = activeSection === 'sync-ai'
     ? syncAiGenerators[activeSyncAiTab] || syncAiPlaceholderGenerator
