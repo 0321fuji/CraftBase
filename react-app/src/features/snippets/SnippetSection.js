@@ -6,7 +6,7 @@ export const SNIPPET_ITEMS = [
     id: 'hide-next-btn',
     title: '「次へ」「終了」ボタンを非表示にする',
     description: 'ステップ・イントロのナビゲーションボタンを非表示にする',
-    warning: 'ステップ・イントロが対象です。ヒントには効きません。',
+    warning: 'ステップが対象です。ヒントには効きません。',
     code: `<style>
   .gBtn.g-modal-next, .gBtn-manage.g-modal-next-manage {
     display: none;
@@ -17,7 +17,7 @@ export const SNIPPET_ITEMS = [
     id: 'hide-close-btn',
     title: '✕ボタンを非表示にする',
     description: 'ステップ・イントロの閉じるボタンを非表示にする',
-    warning: 'ステップ・イントロが対象です。ヒントには効きません。',
+    warning: 'ステップが対象です。ヒントには効きません。',
     code: `<style>
   .g-modal-close, .g-modal-close-manage {
     display: none !important;
